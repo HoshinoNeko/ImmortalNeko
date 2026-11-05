@@ -1,0 +1,4 @@
+# Keep upstream hardware defaults and default LuCI theme.
+luci
+luci-i18n-base-zh-cn
+ca-bundle

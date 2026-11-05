@@ -1,0 +1,24 @@
+{
+  "name": "x86-ha",
+  "target": "x86",
+  "subtarget": "64",
+  "hardware_status": "generic-x86",
+  "fragments": [
+    "config/x86.config"
+  ],
+  "packages": [
+    "packages/base.list",
+    "packages/ha.list"
+  ],
+  "overlays": [
+    "files/common",
+    "files/x86-ha"
+  ],
+  "required_artifacts": [
+    "*ext4-combined.img.gz",
+    "*ext4-combined-efi.img.gz",
+    "*squashfs-combined.img.gz",
+    "*squashfs-combined-efi.img.gz",
+    "*.manifest"
+  ]
+}

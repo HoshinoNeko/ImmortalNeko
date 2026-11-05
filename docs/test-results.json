@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-05",
+  "environment": "macOS arm64 / Python 3.14.5",
+  "unit_tests": {
+    "count": 35,
+    "result": "passed",
+    "seconds": 13.89
+  },
+  "static": {
+    "configuration": "passed",
+    "python_ast_files": 11,
+    "shell_syntax_files": 8,
+    "actionlint": "1.7.12 passed (SHA256 verified)",
+    "shellcheck": "not run"
+  },
+  "not_run": [
+    "real source make defconfig",
+    "full firmware compilation",
+    "Linux namespace integration",
+    "GitHub Actions",
+    "device boot",
+    "real PPPoE failover",
+    "memory/load verification"
+  ]
+}

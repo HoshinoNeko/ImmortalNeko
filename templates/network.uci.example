@@ -1,0 +1,6 @@
+# Documentation-only example. Never copied into firmware automatically.
+# Resolve actual device names/VLANs, LAN addresses, netmask and firewall zones first.
+# A first-boot script belongs under files/<profile>/etc/uci-defaults/ only after review.
+# Keep PPPoE credentials, Wi-Fi keys and VPN secrets on the device, not in this repo.
+# For HA the two management addresses are distinct; clients use a third VIP.
+# For cold PPPoE, explicitly set the WAN interface auto=0 AFTER provisioning locally.

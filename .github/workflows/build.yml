@@ -1,0 +1,127 @@
+name: Build firmware
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        default: x86-basic
+        options: [x86-basic, x86-ha, r619ac-ha, all]
+        description: Build profile (R619AC assumes 128M NAND hardware)
+      publish:
+        type: boolean
+        default: false
+        description: Create a draft GitHub Release
+permissions:
+  contents: read
+concurrency:
+  group: firmware-${{ github.ref }}-${{ inputs.profile }}
+  cancel-in-progress: false
+jobs:
+  check:
+    uses: ./.github/workflows/ci.yml
+  plan:
+    needs: check
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - id: matrix
+        env:
+          PROFILE: ${{ inputs.profile }}
+        run: echo "value=$(python3 scripts/build.py matrix --profile "$PROFILE")" >> "$GITHUB_OUTPUT"
+  build:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      CCACHE_DIR: ${{ github.workspace }}/.work/ccache
+      CCACHE_MAXSIZE: 4G
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Host dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential clang flex bison g++ gawk gcc-multilib gettext git libncurses-dev libssl-dev python3 python3-setuptools rsync swig unzip zlib1g-dev file wget curl zstd libelf-dev pkgconf
+          df -h .
+      - name: Restore downloads and compiler cache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            .work/downloads
+            .work/ccache
+          key: fw-${{ runner.os }}-${{ matrix.profile }}-${{ hashFiles('config/**', 'profiles/**', 'packages/**', 'local-packages/**') }}-${{ github.run_id }}
+          restore-keys: fw-${{ runner.os }}-${{ matrix.profile }}-${{ hashFiles('config/**', 'profiles/**', 'packages/**', 'local-packages/**') }}-
+      - name: Prepare pinned source and resolve configuration
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: |
+          set -o pipefail
+          mkdir -p .work/logs
+          python3 scripts/build.py prepare --profile "$PROFILE" 2>&1 | tee .work/logs/prepare.log
+      - name: Download source archives
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: |
+          set -o pipefail
+          python3 scripts/build.py download --profile "$PROFILE" --jobs 4 2>&1 | tee .work/logs/download.log
+      - name: Compile full source
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: |
+          set -o pipefail
+          python3 scripts/build.py compile --profile "$PROFILE" --jobs 2 2>&1 | tee .work/logs/compile.log
+      - name: Collect verified outputs
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: python3 scripts/build.py collect --profile "$PROFILE" --out "artifacts/$PROFILE"
+      - name: Upload firmware and provenance
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: firmware-${{ matrix.profile }}
+          path: artifacts/${{ matrix.profile }}/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload build logs even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            .work/logs/
+            .work/source/logs/
+            .work/requested.config
+            .work/source/.config
+          include-hidden-files: true
+          retention-days: 14
+  release:
+    if: inputs.publish
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: firmware-*
+          path: release-input
+      - name: Package and draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          BUILDER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir release-assets
+          for dir in release-input/firmware-*; do
+            (cd "$dir" && sha256sum -c SHA256SUMS)
+            name=$(basename "$dir")
+            tar -czf "release-assets/$name.tar.gz" -C "$dir" .
+          done
+          (cd release-assets && sha256sum *.tar.gz > SHA256SUMS)
+          gh release create "build-$RUN_ID-$RUN_ATTEMPT" release-assets/* --target "$BUILDER_SHA" --title "Firmware build $RUN_ID" --notes-file docs/release-notes.md --draft

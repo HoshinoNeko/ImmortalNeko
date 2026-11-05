@@ -1,0 +1,16 @@
+# Explicitly requested services, from the locked official feeds.
+firmware-ha
+keepalived
+ip-full
+iputils-ping
+openvpn-openssl
+luci-app-openvpn
+kmod-wireguard
+wireguard-tools
+luci-proto-wireguard
+ddns-go
+luci-app-ddns-go
+zerotier
+luci-app-zerotier
+frpc
+luci-app-frpc

@@ -1,0 +1,5 @@
+{
+  "ddns-scripts": {"replacement": ["ddns-go"], "reason": "User requested ddns-go; provider and domain settings must be migrated locally."},
+  "luci-app-ddns": {"replacement": ["luci-app-ddns-go"], "reason": "ddns-go LuCI UI; old ddns UCI schema is incompatible."},
+  "luci-i18n-ddns-zh-cn": {"replacement": [], "reason": "Translation is not a service; review translation availability separately."}
+}

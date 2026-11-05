@@ -1,0 +1,12 @@
+{
+  "status": "needs-user-network-details",
+  "primary": {"board": "x86_64", "lan_device": "", "wan_l2_device": "", "management_ip": ""},
+  "backup": {"board": "p2w_r619ac-128m (confirm)", "lan_device": "", "wan_l2_device": "", "management_ip": ""},
+  "lan_vip_cidr": "",
+  "heartbeat_primary_ip": "",
+  "heartbeat_backup_ip": "",
+  "provider_allows_two_sessions": null,
+  "ipv6_required": null,
+  "proxy_implementation": "pending legacy inventory",
+  "note": "No passwords, tokens or private keys belong in this topology file."
+}
