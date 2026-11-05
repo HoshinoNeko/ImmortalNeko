@@ -1,0 +1,33 @@
+{
+  "checked_at_utc": "2026-11-05T16:32:55.039521+00:00",
+  "scope": "real make defconfig and requested option/package equality; no firmware compilation",
+  "source_and_feed_heads": {
+    "source": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",
+    "packages": "84bd86384928955b568988ca0e09e2c78c75173d",
+    "luci": "d6167ea0645cbd1327708d85f94824f42d0eb872",
+    "routing": "e49d76035aafb85ddc993b59271d8c7ba56b5362",
+    "telephony": "2618106d5846a4a542fdf5809f0d3ed228ce439b",
+    "video": "094bf58da6682f895255a35a84349a79dab4bf95"
+  },
+  "profiles": [
+    {
+      "name": "x86-basic",
+      "exit_code": 0,
+      "result": "passed",
+      "resolved_config_sha256": "7acbed14163e0dcd88e06f9607e6a5288a67eed3ee2827dc53dac1ded366c66a"
+    },
+    {
+      "name": "x86-ha",
+      "exit_code": 0,
+      "result": "passed",
+      "resolved_config_sha256": "cb36564d277c5a1e2e7b909ec1ac269b16d05c321f8e6627c68e00b73fa9d22f"
+    },
+    {
+      "name": "r619ac-ha",
+      "exit_code": 0,
+      "result": "passed",
+      "resolved_config_sha256": "d55432c1d95e0fe9c37178647bb7bfff5c8ae1dbd03df349215309c54fd60be5"
+    }
+  ],
+  "controller_makefile_sha256": "339c1bf3f94d875802dfdeb65e9c398e930484848879586876e96f7a33530f51"
+}

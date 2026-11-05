@@ -1,0 +1,587 @@
+{
+  "status": "incomplete-retention-plan",
+  "baseline": "current x86 read-only SSH snapshot; supersedes historical backups",
+  "installed_package_count": 680,
+  "inventory_sha256": "a4fe957b459d21740c39289b28b5d78451395fd01d70f1a1e40a84cb3627a3c3",
+  "plugin_count": 66,
+  "unresolved_plugin_count": 21,
+  "all_plugins_preserved": false,
+  "source_commit": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",
+  "plugins": [
+    {
+      "old": "luci-app-accesscontrol",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-advanced-reboot",
+      "action": "keep",
+      "packages": [
+        "luci-app-advanced-reboot"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-aliyundrive-fuse",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-aliyundrive-webdav",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-amule",
+      "action": "keep",
+      "packages": [
+        "luci-app-amule"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-argon-config",
+      "action": "keep",
+      "packages": [
+        "luci-app-argon-config"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-aria2",
+      "action": "keep",
+      "packages": [
+        "luci-app-aria2"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-arpbind",
+      "action": "keep",
+      "packages": [
+        "luci-app-arpbind"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-autoreboot",
+      "action": "keep",
+      "packages": [
+        "luci-app-autoreboot"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-baidupcs-web",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-commands",
+      "action": "keep",
+      "packages": [
+        "luci-app-commands"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-ddns",
+      "action": "replace",
+      "packages": [
+        "luci-app-ddns-go"
+      ],
+      "note": "ddns-go LuCI UI; old ddns UCI schema is incompatible.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-design-config",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-diskman",
+      "action": "keep",
+      "packages": [
+        "luci-app-diskman"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-docker",
+      "action": "keep",
+      "packages": [
+        "luci-app-docker"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-dockerman",
+      "action": "keep",
+      "packages": [
+        "luci-app-dockerman"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-filetransfer",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-firewall",
+      "action": "keep",
+      "packages": [
+        "luci-app-firewall"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-frpc",
+      "action": "keep",
+      "packages": [
+        "luci-app-frpc"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-frps",
+      "action": "keep",
+      "packages": [
+        "luci-app-frps"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-hd-idle",
+      "action": "keep",
+      "packages": [
+        "luci-app-hd-idle"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-ipsec-vpnd",
+      "action": "keep",
+      "packages": [
+        "luci-app-ipsec-vpnd"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-iptvhelper",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-mwan3",
+      "action": "keep",
+      "packages": [
+        "luci-app-mwan3"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-mwan3helper",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-nlbwmon",
+      "action": "keep",
+      "packages": [
+        "luci-app-nlbwmon"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-ntpc",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-omcproxy",
+      "action": "keep",
+      "packages": [
+        "luci-app-omcproxy"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-openvpn",
+      "action": "keep",
+      "packages": [
+        "luci-app-openvpn"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-openvpn-server",
+      "action": "keep",
+      "packages": [
+        "luci-app-openvpn-server"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-p910nd",
+      "action": "keep",
+      "packages": [
+        "luci-app-p910nd"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-pptp-server",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-qbittorrent",
+      "action": "keep",
+      "packages": [
+        "luci-app-qbittorrent"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-ramfree",
+      "action": "keep",
+      "packages": [
+        "luci-app-ramfree"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-rclone",
+      "action": "keep",
+      "packages": [
+        "luci-app-rclone"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-samba4",
+      "action": "keep",
+      "packages": [
+        "luci-app-samba4"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-serverchan",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-socat",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-sqm",
+      "action": "keep",
+      "packages": [
+        "luci-app-sqm"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-ssr-plus",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-statistics",
+      "action": "keep",
+      "packages": [
+        "luci-app-statistics"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-syncdial",
+      "action": "keep",
+      "packages": [
+        "luci-app-syncdial"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-tinyproxy",
+      "action": "keep",
+      "packages": [
+        "luci-app-tinyproxy"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-ttyd",
+      "action": "keep",
+      "packages": [
+        "luci-app-ttyd"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-turboacc",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-udpxy",
+      "action": "keep",
+      "packages": [
+        "luci-app-udpxy"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-upnp",
+      "action": "keep",
+      "packages": [
+        "luci-app-upnp"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-usb-printer",
+      "action": "keep",
+      "packages": [
+        "luci-app-usb-printer"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-uugamebooster",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-v2ray-server",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-verysync",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-vlmcsd",
+      "action": "keep",
+      "packages": [
+        "luci-app-vlmcsd"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-vsftpd",
+      "action": "keep",
+      "packages": [
+        "luci-app-vsftpd"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-wireguard",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-wol",
+      "action": "keep",
+      "packages": [
+        "luci-app-wol"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-wrtbwmon",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-xlnetacc",
+      "action": "keep",
+      "packages": [
+        "luci-app-xlnetacc"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-app-zerotier",
+      "action": "keep",
+      "packages": [
+        "luci-app-zerotier"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-proto-bonding",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-proto-ipv6",
+      "action": "keep",
+      "packages": [
+        "luci-proto-ipv6"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-proto-ppp",
+      "action": "keep",
+      "packages": [
+        "luci-proto-ppp"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-proto-wireguard",
+      "action": "keep",
+      "packages": [
+        "luci-proto-wireguard"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-theme-argon",
+      "action": "keep",
+      "packages": [
+        "luci-theme-argon"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-theme-bootstrap",
+      "action": "keep",
+      "packages": [
+        "luci-theme-bootstrap"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-theme-design",
+      "action": "review",
+      "packages": [],
+      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    },
+    {
+      "old": "luci-theme-material",
+      "action": "keep",
+      "packages": [
+        "luci-theme-material"
+      ],
+      "unavailable": [],
+      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+    }
+  ],
+  "additional_standalone_service": "tailscale (present in current snapshot; not silently omitted)"
+}

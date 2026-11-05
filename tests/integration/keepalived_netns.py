@@ -53,10 +53,10 @@ def main():
     for tool in ('ip','keepalived','ping'):
         if not shutil.which(tool): raise SystemExit('Missing tool: '+tool)
     prefix='fh'+str(os.getpid())
-    bridges=[prefix+'l',prefix+'w']
+    bridges=[prefix+'l',prefix+'w',prefix+'i']
     namespaces=[prefix+'p',prefix+'b',prefix+'u']
     created_ns=[];created_br=[];processes=[];logs=[]
-    with tempfile.TemporaryDirectory(prefix='firmware-ha-integration-') as tmp:
+    with tempfile.TemporaryDirectory(prefix='firmware-ha-integration-',dir='/run') as tmp:
         base=Path(tmp);base.chmod(0o755)
         lib=base/'lib';shutil.copytree(ROOT/'local-packages/firmware-ha/files',lib)
         bins=base/'bin';bins.mkdir()
@@ -70,16 +70,16 @@ def main():
                 run(['ip','netns','add',ns]);created_ns.append(ns)
                 run(['ip','-n',ns,'link','set','lo','up'])
                 for side,bridge in enumerate(bridges):
-                    if index==2 and side==0: continue
+                    if index==2 and side!=1: continue
                     host=prefix+str(index)+str(side)
                     peer=host+'n'
                     run(['ip','link','add',host,'type','veth','peer','name',peer])
                     run(['ip','link','set',host,'master',bridge])
                     run(['ip','link','set',host,'up'])
                     run(['ip','link','set',peer,'netns',ns])
-                    dev='lan0' if side==0 else 'wan0'
+                    dev=('lan0','wan0','iot0')[side]
                     run(['ip','-n',ns,'link','set',peer,'name',dev])
-                    addr=f'192.0.2.{index+2}/24' if side==0 else f'198.18.0.{index+2}/24'
+                    addr=f'{("192.0.2","198.18.0","198.51.100")[side]}.{index+2}/24'
                     run(['ip','-n',ns,'addr','add',addr,'dev',dev])
                     run(['ip','-n',ns,'link','set',dev,'up'])
             for address in ('198.18.0.1/24','198.18.0.254/24'):
@@ -88,7 +88,7 @@ def main():
                 state=base/role;state.mkdir(mode=0o700)
                 settings={'enabled':'1','role':role,'mode':'warm','lan_device':'lan0','election_device':'lan0',
                     'election_source':f'192.0.2.{i+2}','election_peer':f'192.0.2.{3-i}','vip':'192.0.2.1/24',
-                    'wan_interface':'wan','wan_l2_device':'wan0','vrid':'173','preempt_delay':'1','acquire_grace':'10',
+                    'extra_vip':'198.51.100.1/24@iot0','wan_interface':'wan','wan_l2_device':'wan0','vrid':'173','preempt_delay':'1','acquire_grace':'10',
                     'retry_base':'10','retry_max':'20','probe_quorum':'1','probe':'198.18.0.1 198.18.0.254','service':'dnsmasq'}
                 setting_file=state/'settings.json';setting_file.write_text(json.dumps(settings))
                 env={**os.environ,'HA_SETTINGS':str(setting_file),'HA_LIB':str(lib),'HA_RUN':str(state),
@@ -100,12 +100,14 @@ def main():
                 command=['ip','netns','exec',namespaces[i],'keepalived','-n','-P','-l',
                     '-p',str(state/'parent.pid'),'-r',str(state/'vrrp.pid'),'-f',str(cfg)]
                 processes.append(subprocess.Popen(command,env=env,stdout=log,stderr=subprocess.STDOUT))
-            def has_vip(index):
-                result=run(['ip','-n',namespaces[index],'-j','-4','addr','show','dev','lan0'],capture_output=True)
-                return any(a.get('local')=='192.0.2.1' for item in json.loads(result.stdout) for a in item.get('addr_info',[]))
-            def only(index): return has_vip(index) and not has_vip(1-index)
-            wait_for(lambda:only(0),'initial x86 primary election',processes)
-            print('PASS: primary elected, exactly one VIP owner',flush=True)
+            def has_vip(index,device,address):
+                result=run(['ip','-n',namespaces[index],'-j','-4','addr','show','dev',device],capture_output=True)
+                return any(a.get('local')==address for item in json.loads(result.stdout) for a in item.get('addr_info',[]))
+            gateways=[('lan0','192.0.2.1'),('iot0','198.51.100.1')]
+            def only(index):
+                return all(has_vip(index,device,address) and not has_vip(1-index,device,address) for device,address in gateways)
+            wait_for(lambda:only(0),'initial x86 primary election on both LANs',processes)
+            print('PASS: primary elected, exactly one owner for both VLAN gateways',flush=True)
             run(['ip','-n',namespaces[0],'link','set','wan0','down'])
             wait_for(lambda:only(1),'backup takeover after primary WAN loss',processes)
             print('PASS: backup takes over after primary WAN loss',flush=True)

@@ -2,10 +2,13 @@
 set -eu
 HA_LIB=${HA_LIB:-/usr/libexec/firmware-ha}
 . "$HA_LIB/lib.sh"
-load_settings || exit 1
-case "${1:-}" in MASTER|BACKUP|FAULT|STOP) :;; *) exit 2;; esac
+case "${1:-}" in
+    MASTER) load_settings || exit 1;;
+    BACKUP|FAULT|STOP) load_settings cleanup || exit 1;;
+    *) exit 2;;
+esac
 mkdir -p "$HA_RUN"
-# A single keepalived instance serializes transitions. Refuse overlapping callbacks.
+# The FIFO consumer delivers native events serially. Reject concurrent manual calls.
 mkdir "$HA_RUN/transition.lock" 2>/dev/null || { fail 'transition already in progress'; exit 1; }
 trap 'rmdir "$HA_RUN/transition.lock"' EXIT
 old=$(read_state state BACKUP)

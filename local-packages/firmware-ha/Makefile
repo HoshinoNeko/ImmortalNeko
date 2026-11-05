@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=firmware-ha
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=Local firmware maintainer
 include $(INCLUDE_DIR)/package.mk
@@ -28,6 +28,7 @@ define Package/firmware-ha/install
 	$(INSTALL_DIR) $(1)/usr/libexec/firmware-ha $(1)/usr/sbin
 	$(INSTALL_BIN) ./files/lib.sh $(1)/usr/libexec/firmware-ha/lib.sh
 	$(INSTALL_BIN) ./files/render.sh $(1)/usr/libexec/firmware-ha/render.sh
+	$(INSTALL_BIN) ./files/events.sh $(1)/usr/libexec/firmware-ha/events.sh
 	$(INSTALL_BIN) ./files/check.sh $(1)/usr/libexec/firmware-ha/check.sh
 	$(INSTALL_BIN) ./files/notify.sh $(1)/usr/libexec/firmware-ha/notify.sh
 	$(INSTALL_BIN) ./files/ha-status.sh $(1)/usr/sbin/firmware-ha-status

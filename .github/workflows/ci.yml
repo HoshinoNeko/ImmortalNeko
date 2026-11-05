@@ -14,7 +14,7 @@ jobs:
       - run: python3 scripts/build.py validate
       - run: python3 -m unittest discover -s tests -v
       - name: Shell syntax
-        run: find local-packages scripts -type f \( -name '*.sh' -o -name '*.init' \) -exec sh -n {} \;
+        run: find local-packages scripts -type f \( -name '*.sh' -o -name '*.init' \) -print0 | xargs -0 -n 1 sh -n
 
   ha-integration:
     runs-on: ubuntu-24.04

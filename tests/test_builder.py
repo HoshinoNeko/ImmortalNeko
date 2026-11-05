@@ -74,3 +74,11 @@ class BuilderTests(unittest.TestCase):
     def test_compiler_cache_uses_work_directory(self):
         values=requested_config(profile('x86-basic'),Path('/tmp/test-work'))
         self.assertEqual(values['CONFIG_CCACHE_DIR'],'"/tmp/test-work/ccache"')
+
+    def test_private_data_cannot_be_selected_through_relative_overlay_paths(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);(root/'profiles').mkdir();(root/'files').mkdir();(root/'private').mkdir()
+            (root/'profiles/leak.json').write_text(json.dumps({'name':'leak','fragments':[],'packages':[],'overlays':['files/../private']}))
+            with patch('scripts.fwlib.ROOT',root):
+                with self.assertRaisesRegex(BuildError,'approved firmware directory'):profile('leak')

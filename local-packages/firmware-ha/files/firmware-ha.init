@@ -5,7 +5,10 @@ USE_PROCD=1
 
 start_service() {
     [ "$(uci -q get firmware-ha.main.enabled)" = 1 ] || return 0
-    local HA_LIB=/usr/libexec/firmware-ha
+    local HA_LIB=${HA_LIB:-/usr/libexec/firmware-ha}
+    local HA_CONFIG_FILE=${HA_CONFIG_FILE:-/etc/config/firmware-ha}
+    local HA_KEEPALIVED=${HA_KEEPALIVED:-/usr/sbin/keepalived}
+    local HA_USE_LIVE_CONFIG=1
     . "$HA_LIB/lib.sh"
     load_settings || return 1
     # Validate all preconditions before stopping or disabling existing services.
@@ -13,25 +16,31 @@ start_service() {
         [ "$(uci -q get network.$wan.proto)" = pppoe ] || { fail 'cold mode requires configured PPPoE'; return 1; }
         [ "$(uci -q get network.$wan.auto)" = 0 ] || { fail 'set WAN auto=0 before enabling cold HA'; return 1; }
     }
-    mkdir -p "$HA_RUN"
-    chmod 700 "$HA_RUN"
-    /usr/libexec/firmware-ha/render.sh > "$HA_RUN/keepalived.conf.new" || return 1
-    /usr/sbin/keepalived --config-test -f "$HA_RUN/keepalived.conf.new" || return 1
-    mv "$HA_RUN/keepalived.conf.new" "$HA_RUN/keepalived.conf"
-    # Never run both the stock UCI daemon and our private config daemon.
-    /etc/init.d/keepalived stop || return 1
-    /etc/init.d/keepalived disable || return 1
+    mkdir -p "$HA_RUN/config"
+    chmod 700 "$HA_RUN" "$HA_RUN/config"
+    "$HA_LIB/render.sh" > "$HA_RUN/keepalived.conf.new" || return 1
+    "$HA_KEEPALIVED" --config-test -f "$HA_RUN/keepalived.conf.new" || return 1
+    # Preserve the settings actually applied. Edits/disable must not skip old cleanup.
+    (umask 077; cp "$HA_CONFIG_FILE" "$HA_RUN/config/firmware-ha.new") || return 1
+    mv "$HA_RUN/config/firmware-ha.new" "$HA_RUN/config/firmware-ha" || return 1
+    mv "$HA_RUN/keepalived.conf.new" "$HA_RUN/keepalived.conf" || return 1
+    "$HA_INIT/keepalived" stop || return 1
+    "$HA_INIT/keepalived" disable || return 1
     for service in $services; do "$HA_INIT/$service" disable || return 1; done
-    /usr/libexec/firmware-ha/notify.sh BACKUP || return 1
+    HA_USE_LIVE_CONFIG=0 "$HA_LIB/notify.sh" BACKUP || return 1
     procd_open_instance
-    procd_set_param command /usr/sbin/keepalived -n -f "$HA_RUN/keepalived.conf"
-    procd_set_param file /etc/config/firmware-ha
+    procd_set_param command "$HA_KEEPALIVED" -n -f "$HA_RUN/keepalived.conf"
+    procd_set_param env HA_USE_LIVE_CONFIG=0
+    procd_set_param file "$HA_CONFIG_FILE"
+    procd_set_param term_timeout 45
     procd_set_param respawn 3600 5 5
     procd_close_instance
 }
 stop_service() {
-    [ "$(uci -q get firmware-ha.main.enabled)" = 1 ] || return 0
-    /usr/libexec/firmware-ha/notify.sh STOP
+    local HA_LIB=${HA_LIB:-/usr/libexec/firmware-ha}
+    local HA_RUN=${HA_RUN:-/tmp/firmware-ha}
+    [ -r "$HA_RUN/config/firmware-ha" ] || [ -r "$HA_RUN/state" ] || return 0
+    HA_USE_LIVE_CONFIG=0 "$HA_LIB/notify.sh" STOP
 }
 service_triggers() {
     procd_add_reload_trigger firmware-ha

@@ -3,8 +3,12 @@ set -eu
 HA_LIB=${HA_LIB:-/usr/libexec/firmware-ha}
 . "$HA_LIB/lib.sh"
 load_settings || exit 1
+# A failed event consumer must not leave an otherwise healthy MASTER eligible.
+consumer=$(read_state consumer_pid 0)
+valid_number "$consumer" && [ "$consumer" -gt 1 ] && kill -0 "$consumer" 2>/dev/null || exit 1
 [ ! -e "$HA_RUN/inhibit" ] || exit 1
 link_up "$lan" && link_up "$wan_l2" || exit 1
+for entry in $extra_vips; do link_up "${entry##*@}" || exit 1; done
 current=$(now)
 [ "$current" -ge "$(read_state retry_after 0)" ] || exit 1
 state=$(read_state state BACKUP)

@@ -65,7 +65,10 @@ def profile(name):
         for f in p[group]:
             if not f.startswith(allowed[group]):
                 raise BuildError('Input outside approved firmware directory: '+f)
-            if not safe_path(ROOT, f).exists():
+            path = safe_path(ROOT, f)
+            if not any(path.resolve().is_relative_to((ROOT/parent).resolve()) for parent in allowed[group]):
+                raise BuildError('Input resolves outside approved firmware directory: '+f)
+            if not path.exists():
                 raise BuildError('Missing profile input: '+f)
     return p
 

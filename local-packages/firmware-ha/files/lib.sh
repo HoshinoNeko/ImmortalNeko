@@ -8,7 +8,13 @@ HA_UPTIME=${HA_UPTIME:-/proc/uptime}
 
 fail() { echo "firmware-ha: $*" >&2; return 1; }
 now() { cut -d. -f1 "$HA_UPTIME"; }
-get() { uci -q get "firmware-ha.main.$1"; }
+get() {
+    if [ "${HA_USE_LIVE_CONFIG:-0}" != 1 ] && [ -r "$HA_RUN/config/firmware-ha" ]; then
+        uci -c "$HA_RUN/config" -q get "firmware-ha.main.$1"
+    else
+        uci -q get "firmware-ha.main.$1"
+    fi
+}
 valid_name() { case "$1" in ''|*[!a-zA-Z0-9_.:-]*) return 1;; esac; }
 valid_number() { case "$1" in ''|*[!0-9]*) return 1;; esac; }
 valid_ip() {
@@ -16,7 +22,7 @@ valid_ip() {
 }
 load_settings() {
     enabled=$(get enabled) || return 1
-    [ "$enabled" = 1 ] || return 1
+    if [ "${1:-normal}" != cleanup ]; then [ "$enabled" = 1 ] || return 1; fi
     role=$(get role); mode=$(get mode)
     lan=$(get lan_device); election=$(get election_device)
     source_ip=$(get election_source); peer_ip=$(get election_peer)
@@ -44,14 +50,31 @@ load_settings() {
     count=0
     for value in $probes; do valid_ip "$value" || return 1; count=$((count+1)); done
     [ "$count" -ge 2 ] && [ "$count" -le 3 ] && [ "$quorum" -ge 1 ] && [ "$quorum" -le "$count" ] || return 1
+    extra_vips=$(get extra_vip || true)
+    seen_ips=" ${vip%/*} "
+    for value in $extra_vips; do
+        case "$value" in *@*) :;; *) fail 'additional VIP requires address/prefix@device'; return 1;; esac
+        extra_address=${value%@*}; extra_device=${value##*@}
+        valid_name "$extra_device" || return 1
+        case "$extra_address" in */*) :;; *) return 1;; esac
+        valid_ip "${extra_address%/*}" && valid_number "${extra_address#*/}" && [ "${extra_address#*/}" -le 32 ] || return 1
+        case "$seen_ips" in *" ${extra_address%/*} "*) fail 'duplicate VIP address'; return 1;; esac
+        [ "${extra_address%/*}" != "$source_ip" ] && [ "${extra_address%/*}" != "$peer_ip" ] || return 1
+        seen_ips="$seen_ips${extra_address%/*} "
+    done
     interfaces=$(get managed_interface || true)
     for value in $interfaces; do
         valid_name "$value" && [ "$value" != "$wan" ] || return 1
-        [ "$(uci -q get "network.$value.proto")" = wireguard ] || { fail 'only explicitly named WireGuard interfaces may be managed'; return 1; }
+        if [ "${1:-normal}" != cleanup ]; then
+            [ "$(uci -q get "network.$value.proto")" = wireguard ] || { fail 'only explicitly named WireGuard interfaces may be managed'; return 1; }
+        fi
     done
     services=$(get service) || return 1
     for value in $services; do
-        valid_name "$value" && [ -x "$HA_INIT/$value" ] || { fail 'missing service executable'; return 1; }
+        valid_name "$value" || return 1
+        if [ "${1:-normal}" != cleanup ]; then
+            [ -x "$HA_INIT/$value" ] || { fail 'missing service executable'; return 1; }
+        fi
         case "$value" in keepalived|firmware-ha|network|firewall|dropbear) fail 'forbidden managed service'; return 1;; esac
     done
 }
