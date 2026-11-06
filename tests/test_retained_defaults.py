@@ -109,11 +109,14 @@ class RetainedDefaultsTests(unittest.TestCase):
         self.assertFalse(any(n.startswith(('network.','firewall.')) for n in state))
 
     def export_script(self):
-        root=self.base/'openvpn';pki=root/'pki';pki.mkdir(parents=True)
+        # Include /tmp/ even on macOS so recursive replacement regresses here too.
+        root=self.base/'tmp/openvpn';pki=root/'pki';pki.mkdir(parents=True)
         for name in ('ca.crt','client1.crt','client1.key'):(pki/name).write_text('fixture-'+name+'\n')
-        (self.base/'tmp').mkdir()
+        (self.base/'tmp').mkdir(exist_ok=True)
         text=(self.app/'root/etc/openvpn/genovpn.sh').read_text()
-        text=text.replace('/etc/openvpn',str(root)).replace('/tmp/',str(self.base/'tmp')+'/')
+        # Substitute original paths once: on Linux, root itself contains /tmp/.
+        text=re.sub(r'/etc/openvpn|/tmp/',
+                    lambda match: str(root) if match[0]=='/etc/openvpn' else str(self.base/'tmp')+'/',text)
         script=self.base/'export.sh';script.write_text(text)
         self.store.write_text(json.dumps({'openvpn.myvpn.ddns':'vpn.example.test',
             'openvpn.myvpn.port':'1194','openvpn.myvpn.proto':'tcp4-server'}))

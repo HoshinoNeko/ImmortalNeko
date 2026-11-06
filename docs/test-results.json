@@ -2,25 +2,19 @@
   "date": "2026-11-06",
   "environment": "macOS arm64 / Python 3.14.5",
   "unit_tests": {
-    "count": 160,
-    "seconds": 134.477,
+    "count": 164,
+    "seconds": 127.487,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "result": "passed",
-    "log": ".work/notification-full-tests.log",
-    "scope": "all discovered unit tests; actual service shells with mocked UCI/procd/core/kernel interfaces; native network/core tests recorded separately",
-    "follow_up": {
-      "count": 7,
-      "seconds": 0.34,
-      "result": "passed",
-      "log": ".work/notification-followup-tests.log",
-      "scope": "WeChatPush suite after adding the upstream Chinese PO duplicate fix and msgfmt assertion"
-    }
+    "log": ".work/ci-fix-full-tests.log",
+    "scope": "all discovered tests on macOS with TMPDIR=/tmp and sh resolved to /bin/dash; source/config helpers, procd/core/kernel/build command interfaces mocked where documented; not an Ubuntu or native namespace rerun",
+    "environment": "macOS arm64, Python 3.14.5; TMPDIR=/tmp; PATH sh uses /bin/dash"
   },
   "static": {
     "configuration": "passed",
-    "python_ast_files": 25,
+    "python_ast_files": 26,
     "shell_syntax_files": 20,
     "actionlint": "1.7.12 passed (SHA256 verified)",
     "shellcheck": "not run",
@@ -44,7 +38,7 @@
     },
     "lua": {
       "host": "Lua 5.5.0; patched OpenVPN model syntax passed",
-      "target": "Lua 5.1 installed in CI; CI not run"
+      "target": "Lua 5.1 syntax and SyncDial controller checks passed in the initial Ubuntu Actions run; overall run failed separately"
     },
     "v2ray_translation": "51 messages; msgfmt --check and coverage passed",
     "turboacc_translation": "47 messages; msgfmt --check and coverage passed",
@@ -75,7 +69,7 @@
   "not_run": [
     "full firmware compilation",
     "Linux namespace integration",
-    "GitHub Actions",
+    "full firmware GitHub Actions workflow",
     "device boot",
     "real PPPoE failover",
     "memory/load verification",
@@ -83,18 +77,20 @@
   ],
   "dual_path": {
     "unit_regressions": "passed",
-    "native_linux": "provided in CI; not run locally",
+    "native_linux": "not run: initial Actions compiled keepalived 2.3.3, then failed installing a systemd unit; namespace steps were skipped",
     "pppoe_operator_test": "not run",
     "hardware": "R619AC user-confirmed 128MiB NAND / 512MiB RAM; runtime unverified"
   },
   "repository": {
     "name": "HoshinoNeko/ImmortalNeko",
     "user_created": true,
-    "pushed": false,
+    "pushed": true,
     "limitations": [
-      ".git/config write denied by current sandbox",
-      "GitHub SSH hostname lookup unavailable"
-    ]
+      "Current sandbox makes .git metadata read-only; the user made the recorded commit/push outside it",
+      "GitHub SSH hostname lookup unavailable in the agent execution environment"
+    ],
+    "latest_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04",
+    "current_ci_fixes_pushed": false
   },
   "checked_input_sha256": {
     ".github/workflows/build.yml": "9d8bccfb942dc1cfff6a324eb3b54d08402178b6a64ee4a2a304b81c3f0d6d4d",
@@ -201,7 +197,7 @@
     "scripts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "scripts/artifacts.py": "f2fb2043d73c764573e3780f774c27d7835a33f5bb54ebd9aa40f579311857fb",
     "scripts/build.py": "108f766e4ce31180481a0ced81aecc24ad95057a0eec719c6accc248316317ba",
-    "scripts/build_test_keepalived.py": "f6aaa06d2720d1b7acb7314f54d48f85c29306c586a02ee6c6d01eac5930455d",
+    "scripts/build_test_keepalived.py": "9aa88e455f5c974e97c5a463b7862c75fa73ef31827af3572c420717b8b83aa5",
     "scripts/check_workflows.py": "36d73d604954a5d2c6915b1b0cf3405235785edf1affa7bb92a00288831f0a77",
     "scripts/collect-legacy.sh": "fde211e755fbf00788f2be7c04a8d798817d1307f12bc751c477d1e37fb70549",
     "scripts/collect_device.py": "9cf0efabad03e2dfdae797532074a28b03c9d6d2c4731192d673f0afda042e15",
@@ -267,9 +263,10 @@
     "tests/test_collection.py": "2520c9327dabbfb509c6b590f181342619dd3760781e6805db83e16f0c5c9dff",
     "tests/test_firstboot.py": "03590c5f7f6d62dca77e0db2fa5916dac77d7e56162957a6d9e60f587f08eb01",
     "tests/test_ha.py": "24c52def45431dccde1ae0700408f865a6049d1ed6d9bb3ecdf6c7a57568cb38",
+    "tests/test_keepalived_builder.py": "43cb6a2a05b1f02ecffdce66db02cb2e10b3a58f59dcb0d666351412331355e6",
     "tests/test_migration_plan.py": "4d47c9047f5e7c255b99cbecb258097c5d26d3746f065fd7bebe4ecc4d9502a2",
     "tests/test_pptpd.py": "6257aefff22642c520f0ad925b18614c9f156d3874b936559dbe318b19d01c48",
-    "tests/test_retained_defaults.py": "0fa57bc60b7639fcee6a54a2c9e85988d8b6521037854491fe38f43f9e28a31a",
+    "tests/test_retained_defaults.py": "1aeefcbcfad1230810a2072336b2d1b732ec1b291db53cf27261c110b0173fbb",
     "tests/test_source_patches.py": "6de006f6297384bec6e43b57d4952fa79735ee8d1e3429df86afbb8cced9c77c",
     "tests/test_v2ray_server.py": "38e5daa3187b743644810226fdb623f3261b70a9d7c99300f8df5f18364cbc53",
     "tests/test_wechatpush.py": "816dc9510641bd967ecf39a4757b1ba0b22d8cba214e5c0ca00b39350b880743",
@@ -337,7 +334,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current inputs; full 160-test suite plus 7-test WeChatPush follow-up after the duplicate-translation patch, all five local JS suites, pinned WeChatPush JS syntax, source syntax and translation checks",
+  "checked_input_scope": "current local CI fixes: full 164-test suite using /tmp and dash; configuration scan, 26 Python AST files and workflow lint passed; initial remote failure recorded separately, fixed remote run pending",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -392,5 +389,40 @@
       "login/firewall rules and advanced features",
       "child-process shutdown and HA runtime"
     ]
+  },
+  "initial_ci_failure": {
+    "url": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/42173306468",
+    "workflow": "Static checks",
+    "head": "4806fc4c511c014491403486c77fee2466905f04",
+    "result": "failed",
+    "evidence": "public Actions summary plus failure logs pasted by the user",
+    "unit_tests": {
+      "count": 160,
+      "seconds": 91.114,
+      "failures": 1,
+      "test": "test_export_maps_tcp_server_to_client_and_protects_profile"
+    },
+    "keepalived": {
+      "version": "2.3.3",
+      "compilation": "passed according to provided build/install output",
+      "installation": "failed: unprivileged make install tried /usr/lib/systemd/system/keepalived.service",
+      "namespace_tests": "not run"
+    },
+    "export_root_cause": "the second test-fixture string replacement rewrote /tmp/ introduced by the first replacement in Linux temporary paths; production export script unchanged",
+    "export_reproduction": {
+      "result": "reproduced before fix on macOS with TMPDIR=/tmp",
+      "log": ".work/ci-export-repro.log"
+    },
+    "fixes": [
+      "one-pass fixture path substitution; fixture PKI path includes /tmp/ on every host",
+      "copy only the built keepalived executable into .work/tools and preserve its mode; do not run make install"
+    ],
+    "targeted_follow_up": {
+      "count": 16,
+      "result": "passed",
+      "environment": "TMPDIR=/tmp",
+      "log": ".work/ci-fix-targeted-tests.log"
+    },
+    "remote_rerun_after_fix": "not run"
   }
 }

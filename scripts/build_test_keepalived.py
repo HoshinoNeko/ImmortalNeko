@@ -2,14 +2,15 @@
 """Build the feed's exact keepalived version for Linux namespace tests."""
 import hashlib
 from pathlib import Path
+import shutil
 import subprocess
 import tarfile
 
 VERSION='2.3.3'
 SHA256='2288c5c7609fa452782b7acefa19acce742d0204dc17f54d36da46b10f8b590c'
 
-def main():
-    root=Path(__file__).resolve().parents[1]
+def build(root):
+    root=Path(root).resolve()
     work=root/'.work/ha-integration';work.mkdir(parents=True,exist_ok=True)
     archive=work/f'keepalived-{VERSION}.tar.gz'
     subprocess.run(['curl','-fL','--connect-timeout','10','--max-time','120',
@@ -23,7 +24,17 @@ def main():
     subprocess.run(['./configure',f'--prefix={prefix}','--disable-lvs','--disable-bfd',
                     '--disable-nftables','--disable-iptables','--disable-libipset-dynamic'],cwd=source,check=True)
     subprocess.run(['make','-j2'],cwd=source,check=True)
-    subprocess.run(['make','install'],cwd=source,check=True)
-    print(prefix/'sbin/keepalived')
+    # Namespace tests only need the executable. Upstream's install target also
+    # writes systemd units outside --prefix, into the runner's /usr/lib.
+    binary=source/'keepalived/keepalived'
+    if not binary.is_file() or not binary.stat().st_mode & 0o111:
+        raise SystemExit('keepalived build did not produce an executable')
+    target=prefix/'sbin/keepalived'
+    target.parent.mkdir(parents=True,exist_ok=True)
+    shutil.copy2(binary,target)
+    return target
+
+def main():
+    print(build(Path(__file__).resolve().parents[1]))
 
 if __name__=='__main__':main()

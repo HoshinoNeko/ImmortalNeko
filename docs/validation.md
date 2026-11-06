@@ -5,13 +5,13 @@
 
 ## 已执行并通过
 
-* 完整160项回归测试全部通过，134.477秒，无跳过项；包含15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
+* 完整164项回归测试全部通过，127.487秒，无跳过项；包含15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
   覆盖构建配置、产物、旧清单分析、采集器、双路径探测、释放确认、单会话限制与可恢复退避事件。
-  修复 WeChatPush 中文 PO 重复消息后，7项通知插件测试再次通过，0.340秒。
+  首次 Ubuntu Actions 的失败及本地修复见下文；本机通过不等同于远程流水线通过。
 * Socat、PPTP、设备流量、V2Ray Server 及 Turbo ACC 五组实际JS表单/视图模拟测试通过。
   流量页覆盖IPv4/IPv6、计数基线、筛选/排序及只读ACL；V2Ray 页面覆盖隐藏字段保留、凭据遮蔽、UUID及协议参数校验。
-* 25个Python文件 AST、20个 .sh/.init Shell语法检查通过；6个本地JS语法、5份中文PO的 msgfmt 检查通过，Turbo ACC 的47条及V2Ray的51条消息覆盖通过。
-* 固定源插件补丁测试12项、首次安装/保留配置升级测试4项通过；实际LuCI Lua文件通过本机Lua 5.5语法解析，目标Lua 5.1检查已加入CI，尚未运行。
+* 26个Python文件 AST、20个 .sh/.init Shell语法检查通过；6个本地JS语法、5份中文PO的 msgfmt 检查通过，Turbo ACC 的47条及V2Ray的51条消息覆盖通过。
+* 固定源插件补丁测试12项、首次安装/保留配置升级测试4项通过；实际LuCI Lua文件通过本机Lua 5.5语法解析，首次Actions的Lua 5.1解析及SyncDial入口检查也通过。
 * Shell语法门禁负向验证：临时错误脚本在旧写法中返回0，修正后返回1；实际工程脚本返回0。
 * actionlint v1.7.12：工作流通过；二进制经过固定SHA256校验。未运行shellcheck。
 * 固件输入扫描及目录边界校验通过；private/ 不能通过 files/../private 误选为覆盖层。
@@ -37,6 +37,21 @@
 针对固定源码复制出的3份 init 文件完成真实补丁应用和 sh -n，HomeProxy 的 TUN 缺失/存在/删除失败及
 首次日志目录创建用模拟 ip/config helper 执行；未触碰真实网络或服务，记录见 .work/vendor-patch-audit.json。
 
+## 首次 Actions 失败与修复
+
+用户已推送 `4806fc4c511c014491403486c77fee2466905f04`，
+[Static checks #1](https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/42173306468) 运行失败。
+用户提供的日志确认 Ubuntu 单元测试运行160项，只有 OpenVPN 导出夹具失败；
+keepalived 2.3.3 已编译成功，随后 `make install` 尝试写入 `/usr/lib/systemd/system` 而失败。
+
+OpenVPN 测试原先连续替换 PKI 和 `/tmp/` 前缀，第二次替换会改写 Linux 临时目录中已经替换好的路径。
+在本机设置 `TMPDIR=/tmp` 后复现了相同失败，现改为单次替换；夹具自身包含 `/tmp/`，确保本机也覆盖此路径布局。
+修复未改动固件中的 OpenVPN 导出逻辑。测试用 keepalived 现只复制构建产物到 `.work/tools/.../sbin/keepalived`，
+保留可执行权限，不运行安装服务单元和示例配置的完整安装目标。
+新增4项离线构建助手测试覆盖工作目录产物、权限、编译失败、缺失可执行文件及源校验失败。
+16项相关测试在 `TMPDIR=/tmp` 下通过，随后164项完整测试也在 `/tmp` 和 dash 下通过，127.487秒。
+下载/编译命令在助手测试中被模拟，本机未运行真实Linux编译或namespace测试，远程流水线尚未重跑。
+
 ## 已提供但未执行
 
 Linux集成测试：sudo python3 tests/integration/keepalived_netns.py。
@@ -44,7 +59,7 @@ Linux集成测试：sudo python3 tests/integration/keepalived_netns.py。
 WAN断开接管、x86恢复抢占、主进程停止接管。新增 --dual-path 覆盖两条独立链路、稳定 /32 路由、
 仅心跳故障及仅 WAN 监测故障时保持原主。CI 从固定SHA256源码编译与固件一致的 keepalived 2.3.3；
 UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 VRRP，不模拟 SSH 或运营商PPPoE。
-本机只完成脚本语法检查；CI中的该测试尚未运行。
+本机只完成脚本语法检查；首次CI停在测试用二进制安装步骤，namespace测试尚未运行。
 
 真实 V2Ray 核心配置校验入口为 `tests/integration/v2ray_generated.py --core <V2Ray-5.53.0>`，
 提供12份配置及1份负向配置，临时证书和配置会在测试结束后清理。
@@ -52,15 +67,15 @@ UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 V
 后端流程测试使用模拟核心/procd；真实配置解析、认证、传输握手与流量验收仍待执行。
 
 没有执行：make download、完整make、实际固件Manifest与SHA256产物生成、Linux集成、
-GitHub Actions构建、Release、刷机/启动、真实PPPoE切换、内存压力与吞吐测试。
-用户已创建 HoshinoNeko/ImmortalNeko。当前沙箱禁止写入 .git/config，且 GitHub SSH/DNS 不可用；
-添加 origin 和 ls-remote 均失败，未提交本次改动、未推送、未触发Actions。
+固件构建工作流、Release、刷机/启动、真实PPPoE切换、内存压力与吞吐测试。
+用户已创建并推送 HoshinoNeko/ImmortalNeko，首次静态检查已运行并失败。
+当前沙箱禁止写入 .git，且 GitHub SSH/DNS 不可用；本次修复尚未提交或推送，仍需重跑Actions。
 
 ## 完整目标的验收审计
 
 | 需求 | 当前证据 | 仍缺的证据 |
 | --- | --- | --- |
-| 独立模块化工程 | 本地Git、用户已建远程仓库、脚本/配置/包/补丁/主题目录 | 本次提交、推送与实际流水线 |
+| 独立模块化工程 | 本地Git、用户已推送远程仓库、首次CI及错误日志 | 修复提交、推送及流水线通过 |
 | 官方稳定分支与固定Commit/Feed | 锁文件、真实HEAD核对、三个defconfig | 全量编译与长期更新验证 |
 | x86 Legacy/UEFI、ext4/SquashFS | 四类镜像选项通过真实解析、产物硬门禁 | 四类镜像实际生成与启动 |
 | R619AC 128M支持 | 用户确认128MiB NAND / 512MiB RAM、上一版配置解析通过 | 真实board/内存信息、启动/功能测试；设备目前不可访问 |
