@@ -1,0 +1,8 @@
+{
+  "admin/services/v2ray_server": {
+    "title": "V2Ray Server",
+    "order": 65,
+    "action": {"type": "view", "path": "services/v2ray-server"},
+    "depends": {"acl": ["luci-app-v2ray-server"], "uci": {"v2ray_server": true}}
+  }
+}

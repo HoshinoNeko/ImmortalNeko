@@ -1,0 +1,7 @@
+{
+  "luci-app-pptp-server": {
+    "description": "Manage PPTP server configuration",
+    "read": {"uci": ["pptpd"]},
+    "write": {"uci": ["pptpd"]}
+  }
+}

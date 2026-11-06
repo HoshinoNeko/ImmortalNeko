@@ -9,6 +9,13 @@ mkdir -p "$HA_RUN"
 chmod 700 "$HA_RUN"
 priority=100
 [ "$role" = primary ] && priority=200
+transport="interface $election"
+down_timer=''
+if [ "$peer_mode" = dual-path ]; then
+    # Stable /32 endpoints are routed through either live physical path.
+    transport='# Routed unicast: deliberately no bound interface.'
+    down_timer='down_timer_adverts 10'
+fi
 extra_addresses=''
 extra_tracks=''
 tracked=" $lan "
@@ -43,7 +50,7 @@ vrrp_script local_health {
 }
 vrrp_instance ROUTER {
     state BACKUP
-    interface $election
+    $transport
     unicast_src_ip $source_ip
     unicast_peer {
         $peer_ip
@@ -52,6 +59,7 @@ vrrp_instance ROUTER {
     virtual_router_id $vrid
     priority $priority
     advert_int 1
+    $down_timer
     preempt_delay $preempt_delay
     virtual_ipaddress {
         $vip dev $lan$extra_addresses

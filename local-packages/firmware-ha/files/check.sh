@@ -7,6 +7,7 @@ load_settings || exit 1
 consumer=$(read_state consumer_pid 0)
 valid_number "$consumer" && [ "$consumer" -gt 1 ] && kill -0 "$consumer" 2>/dev/null || exit 1
 [ ! -e "$HA_RUN/inhibit" ] || exit 1
+[ "$peer_mode" != dual-path ] || monitor_healthy || exit 1
 link_up "$lan" && link_up "$wan_l2" || exit 1
 for entry in $extra_vips; do link_up "${entry##*@}" || exit 1; done
 current=$(now)
@@ -23,5 +24,5 @@ if [ "$state" = MASTER ]; then
 fi
 if [ "$mode" = warm ]; then wan_probe; exit $?; fi
 # Cold standby cannot test a PPPoE session owned by the peer.
-# Eligibility permits a timed takeover trial, not a claim of Internet health.
+# The MASTER callback separately verifies peer release before starting PPPoE.
 exit 0

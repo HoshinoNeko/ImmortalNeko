@@ -2,13 +2,17 @@
   "name": "r619ac-ha",
   "target": "ipq40xx",
   "subtarget": "generic",
-  "hardware_status": "candidate-confirm-128m-nand-board",
+  "hardware_status": "user-confirmed-128m-nand-512m-ram-runtime-unverified",
+  "flash_mib": 128,
+  "ram_mib": 512,
   "fragments": [
-    "config/r619ac-128m.config"
+    "config/r619ac-128m.config",
+    "config/proxy.config"
   ],
   "packages": [
     "packages/base.list",
-    "packages/ha.list"
+    "packages/ha.list",
+    "packages/proxy.list"
   ],
   "overlays": [
     "files/common",

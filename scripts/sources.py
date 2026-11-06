@@ -27,7 +27,17 @@ def prepare_source(work):
     return src
 
 def apply_patches(src, p):
-    for directory in [ROOT/'patches/common', ROOT/'patches'/p['name']]:
+    targets = [(src, ROOT/'patches/common'), (src, ROOT/'patches'/p['name'])]
+    _, feeds = locked_repos()
+    for feed in feeds:
+        directory = ROOT/'patches/feeds'/feed['name']
+        for series_dir in (directory, directory/p['name']):
+            if (series_dir/'series').exists():
+                target = safe_path(src/'feeds', feed['name'])
+                if not target.is_dir():
+                    raise BuildError('Missing pinned feed patch target: '+feed['name'])
+                targets.append((target, series_dir))
+    for target, directory in targets:
         series = directory/'series'
         if not series.exists():
             continue
@@ -36,8 +46,8 @@ def apply_patches(src, p):
             if not name:
                 continue
             patch = safe_path(directory, name)
-            run(['git', 'apply', '--check', patch], src)
-            run(['git', 'apply', patch], src)
+            run(['git', 'apply', '--check', patch], target)
+            run(['git', 'apply', patch], target)
 
 def install_files(src, p):
     from scripts.fwlib import scan_tree

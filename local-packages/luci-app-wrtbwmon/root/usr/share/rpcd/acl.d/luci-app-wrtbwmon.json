@@ -1,0 +1,13 @@
+{
+  "luci-app-wrtbwmon": {
+    "description": "Read per-device nlbwmon traffic counters",
+    "read": {
+      "cgi-io": ["exec"],
+      "uci": ["nlbwmon"],
+      "file": {
+        "/usr/libexec/nlbwmon-action download -g family,mac,ip -o -rx_bytes,-tx_bytes": ["exec"]
+      },
+      "ubus": {"luci-rpc": ["getHostHints"]}
+    }
+  }
+}

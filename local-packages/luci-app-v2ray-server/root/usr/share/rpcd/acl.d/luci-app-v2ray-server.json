@@ -1,0 +1,7 @@
+{
+  "luci-app-v2ray-server": {
+    "description": "Manage V2Ray Server entries",
+    "read": {"uci": ["v2ray_server"]},
+    "write": {"uci": ["v2ray_server"]}
+  }
+}

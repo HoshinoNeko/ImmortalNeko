@@ -1,0 +1,73 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ImmortalNeko luci-app-wrtbwmon 1.0.0\n"
+"PO-Revision-Date: 2026-11-06 00:00+0800\n"
+"Last-Translator: ImmortalNeko contributors\n"
+"Language-Team: Chinese (Simplified)\n"
+"Language: zh_Hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Per-device traffic"
+msgstr "设备流量"
+
+msgid "Last sample:"
+msgstr "最近采样："
+
+msgid "Traffic data unavailable. Start nlbwmon after configuring its monitored networks. Displayed totals are from the last successful sample."
+msgstr "无法读取流量数据。请配置监测网段后启动 nlbwmon。当前累计值来自上一次成功采样。"
+
+msgid "No matching traffic data."
+msgstr "没有匹配的流量数据。"
+
+msgid "Hostname, MAC or IP address"
+msgstr "主机名、MAC 或 IP 地址"
+
+msgid "Filter devices"
+msgstr "筛选设备"
+
+msgid "Sort by"
+msgstr "排序方式"
+
+msgid "Total traffic"
+msgstr "总流量"
+
+msgid "Download traffic"
+msgstr "下载流量"
+
+msgid "Upload traffic"
+msgstr "上传流量"
+
+msgid "Sampled rate"
+msgstr "采样速率"
+
+msgid "Device"
+msgstr "设备"
+
+msgid "MAC address"
+msgstr "MAC 地址"
+
+msgid "IPv4 / IPv6 addresses"
+msgstr "IPv4 / IPv6 地址"
+
+msgid "Downloaded"
+msgstr "已下载"
+
+msgid "Uploaded"
+msgstr "已上传"
+
+msgid "Download rate"
+msgstr "下载速率"
+
+msgid "Upload rate"
+msgstr "上传速率"
+
+msgid "Totals cover the active nlbwmon accounting period. Rates use differences between samples; counter refresh follows the daemon interval, so these are sampled averages. The first sample, failed reads and decreasing counters have no rate."
+msgstr "累计值覆盖 nlbwmon 当前统计周期。速率由两次采样的差值计算；计数更新取决于守护进程的刷新间隔，因此显示的是采样平均值。首次采样、读取失败和计数下降时不显示速率。"
+
+msgid "Accounting settings"
+msgstr "流量统计设置"
+
+msgid "Database backup"
+msgstr "数据库备份"

@@ -1,0 +1,7 @@
+{
+  "package/kernel/linux/files/sysctl-tcp-bbr.conf": "ff6849f9d6e774560aee52828d3f4dbf4940f367fb87476d4d252e91d6a60c11",
+  "feeds/packages/net/dnsproxy/files/dnsproxy.config": "59a086a1cf6d0c71eea604ba99dcacfc6e2c86ed324356246d0ac49e3296f3d1",
+  "feeds/packages/net/dnsproxy/files/dnsproxy.init": "0eeae76a43e588279917763d3eeb08e0d7d9bc4519795e5897c4605e06761da2",
+  "feeds/packages/net/dnsproxy/files/dnsproxy.sysctl": "fdf8434fcad3c10fe93881b0ab5dc7b3212dc6a91ffb6a4d1993f002dbd31380",
+  "package/base-files/files/lib/functions.sh": "9517db82e694624559c41f3773f3f18bf5d3cd1b0ffc41bfb514fa2c08d08062"
+}

@@ -1,0 +1,14 @@
+{
+  "luci-app-turboacc": {
+    "description": "Manage explicit acceleration settings",
+    "read": {
+      "uci": ["turboacc", "firewall", "dnsproxy"],
+      "file": {
+        "/proc/sys/net/ipv4/tcp_congestion_control": ["read"],
+        "/proc/sys/net/ipv4/tcp_available_congestion_control": ["read"]
+      },
+      "ubus": {"file": ["read"]}
+    },
+    "write": {"uci": ["turboacc", "firewall", "dnsproxy"]}
+  }
+}

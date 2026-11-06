@@ -16,6 +16,7 @@ start_service() {
         [ "$(uci -q get network.$wan.proto)" = pppoe ] || { fail 'cold mode requires configured PPPoE'; return 1; }
         [ "$(uci -q get network.$wan.auto)" = 0 ] || { fail 'set WAN auto=0 before enabling cold HA'; return 1; }
     }
+    "$HA_LIB/preflight.sh" || return 1
     mkdir -p "$HA_RUN/config"
     chmod 700 "$HA_RUN" "$HA_RUN/config"
     "$HA_LIB/render.sh" > "$HA_RUN/keepalived.conf.new" || return 1
@@ -24,11 +25,19 @@ start_service() {
     (umask 077; cp "$HA_CONFIG_FILE" "$HA_RUN/config/firmware-ha.new") || return 1
     mv "$HA_RUN/config/firmware-ha.new" "$HA_RUN/config/firmware-ha" || return 1
     mv "$HA_RUN/keepalived.conf.new" "$HA_RUN/keepalived.conf" || return 1
+    if [ "$peer_mode" = dual-path ]; then
+        HA_USE_LIVE_CONFIG=0 "$HA_LIB/paths.sh" once || return 1
+        procd_open_instance paths
+        procd_set_param command "$HA_LIB/paths.sh"
+        procd_set_param env HA_USE_LIVE_CONFIG=0
+        procd_set_param respawn 3600 5 5
+        procd_close_instance
+    fi
     "$HA_INIT/keepalived" stop || return 1
     "$HA_INIT/keepalived" disable || return 1
     for service in $services; do "$HA_INIT/$service" disable || return 1; done
     HA_USE_LIVE_CONFIG=0 "$HA_LIB/notify.sh" BACKUP || return 1
-    procd_open_instance
+    procd_open_instance vrrp
     procd_set_param command "$HA_KEEPALIVED" -n -f "$HA_RUN/keepalived.conf"
     procd_set_param env HA_USE_LIVE_CONFIG=0
     procd_set_param file "$HA_CONFIG_FILE"
@@ -40,7 +49,14 @@ stop_service() {
     local HA_LIB=${HA_LIB:-/usr/libexec/firmware-ha}
     local HA_RUN=${HA_RUN:-/tmp/firmware-ha}
     [ -r "$HA_RUN/config/firmware-ha" ] || [ -r "$HA_RUN/state" ] || return 0
-    HA_USE_LIVE_CONFIG=0 "$HA_LIB/notify.sh" STOP
+    local stop_result=0
+    HA_USE_LIVE_CONFIG=0 "$HA_LIB/notify.sh" STOP || stop_result=$?
+    # Remove only the host route owned by the dual-path controller.
+    . "$HA_LIB/lib.sh"
+    if load_settings cleanup && [ "$peer_mode" = dual-path ]; then
+        ip -4 route del "$peer_ip/32" proto 186 2>/dev/null || true
+    fi
+    return "$stop_result"
 }
 service_triggers() {
     procd_add_reload_trigger firmware-ha

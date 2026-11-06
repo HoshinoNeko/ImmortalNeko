@@ -1,11 +1,15 @@
 {
   "status": "needs-user-network-details",
-  "primary": {"board": "x86_64", "lan_device": "", "wan_l2_device": "", "management_ip": ""},
-  "backup": {"board": "p2w_r619ac-128m (confirm)", "lan_device": "", "wan_l2_device": "", "management_ip": ""},
+  "primary": {"board": "x86_64", "current_management_ip": "172.16.10.1", "lan_device": "", "wan_l2_device": "", "management_ip": ""},
+  "backup": {"board": "p2w_r619ac-128m", "flash_mib": 128, "ram_mib": 512, "runtime_verified": false, "lan_device": "", "wan_l2_device": "", "management_ip": ""},
   "lan_vip_cidr": "",
   "heartbeat_primary_ip": "",
   "heartbeat_backup_ip": "",
-  "provider_allows_two_sessions": null,
+  "provider_allows_two_sessions": false,
+  "mode": "cold-pppoe",
+  "peer_mode": "dual-path",
+  "wan_monitor": {"protocol": "dhcp", "subnet": "192.168.1.0/24", "primary_reserved_ip": "", "backup_reserved_ip": "", "default_route": false},
+  "control_loopback": {"primary_ip": "", "backup_ip": ""},
   "ipv6_required": null,
   "proxy_implementation": "pending legacy inventory",
   "note": "No passwords, tokens or private keys belong in this topology file."

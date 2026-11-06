@@ -1,0 +1,155 @@
+msgid ""
+msgstr "Project-Id-Version: ImmortalNeko luci-app-v2ray-server 1.0.0\nPO-Revision-Date: 2026-11-06 00:00+0800\nLast-Translator: ImmortalNeko contributors\nLanguage-Team: Chinese (Simplified)\nLanguage: zh_Hans\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n"
+
+msgid "ALPN protocols"
+msgstr "ALPN 协议列表"
+
+msgid "Allow private destinations"
+msgstr "允许访问私有地址"
+
+msgid "Allow proxy clients to connect to private, loopback and link-local addresses."
+msgstr "允许代理客户端连接私有地址、回环地址和链路本地地址。"
+
+msgid "Basic settings"
+msgstr "基本设置"
+
+msgid "Certificate file"
+msgstr "证书文件"
+
+msgid "Choose an address explicitly before enabling a listener. Loopback-only mode uses 127.0.0.1 when no address is supplied."
+msgstr "启用监听前请明确选择地址。仅回环模式在未指定地址时使用 127.0.0.1。"
+
+msgid "Configure listener addresses and credentials locally. Keep the generic V2Ray service disabled. Add firewall rules separately; this page does not open ports or change network interfaces."
+msgstr "请在设备本地配置监听地址和凭据，并保持通用 V2Ray 服务关闭。防火墙规则需单独配置；此页面不会放行端口或修改网络接口。"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Enable TLS"
+msgstr "启用 TLS"
+
+msgid "Global settings"
+msgstr "全局设置"
+
+msgid "HTTP/2 hosts"
+msgstr "HTTP/2 主机列表"
+
+msgid "HTTP/2 path"
+msgstr "HTTP/2 路径"
+
+msgid "KCP MTU"
+msgstr "KCP MTU"
+
+msgid "KCP TTI"
+msgstr "KCP TTI"
+
+msgid "KCP congestion control"
+msgstr "KCP 拥塞控制"
+
+msgid "KCP downlink capacity"
+msgstr "KCP 下行容量"
+
+msgid "KCP read buffer (MiB)"
+msgstr "KCP 读取缓冲（MiB）"
+
+msgid "KCP seed"
+msgstr "KCP 种子"
+
+msgid "KCP uplink capacity"
+msgstr "KCP 上行容量"
+
+msgid "KCP write buffer (MiB)"
+msgstr "KCP 写入缓冲（MiB）"
+
+msgid "Listen IP address"
+msgstr "监听 IP 地址"
+
+msgid "Listen port"
+msgstr "监听端口"
+
+msgid "Log level"
+msgstr "日志级别"
+
+msgid "Loopback only"
+msgstr "仅监听回环地址"
+
+msgid "Packet header"
+msgstr "数据包头部伪装"
+
+msgid "Password"
+msgstr "密码"
+
+msgid "Protocol"
+msgstr "协议"
+
+msgid "QUIC credential"
+msgstr "QUIC 凭据"
+
+msgid "QUIC encryption"
+msgstr "QUIC 加密方式"
+
+msgid "Remarks"
+msgstr "备注"
+
+msgid "SOCKS UDP"
+msgstr "SOCKS UDP"
+
+msgid "Server entries"
+msgstr "服务端条目"
+
+msgid "Shadowsocks encryption"
+msgstr "Shadowsocks 加密方式"
+
+msgid "Shadowsocks level must be between 0 and 255."
+msgstr "Shadowsocks 用户等级须为 0 至 255。"
+
+msgid "Shadowsocks network"
+msgstr "Shadowsocks 网络"
+
+msgid "TCP header"
+msgstr "TCP 头部伪装"
+
+msgid "TLS keyfile"
+msgstr "TLS 私钥文件"
+
+msgid "TLS server name"
+msgstr "TLS 服务器名称"
+
+msgid "TLS settings"
+msgstr "TLS 设置"
+
+msgid "Transport"
+msgstr "传输方式"
+
+msgid "Transport settings"
+msgstr "传输设置"
+
+msgid "UUIDs"
+msgstr "UUID 列表"
+
+msgid "Use an absolute local file path."
+msgstr "请使用本地文件的绝对路径。"
+
+msgid "Use canonical UUID values."
+msgstr "请使用标准 UUID 格式。"
+
+msgid "User level"
+msgstr "用户等级"
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "V2Ray Server"
+msgstr "V2Ray 服务端"
+
+msgid "VMess alterId"
+msgstr "VMess alterId"
+
+msgid "WebSocket Host"
+msgstr "WebSocket Host"
+
+msgid "WebSocket path"
+msgstr "WebSocket 路径"
+
+msgid "gRPC service name"
+msgstr "gRPC 服务名称"

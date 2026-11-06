@@ -1,0 +1,34 @@
+--- a/applications/luci-app-homeproxy/root/etc/init.d/homeproxy
++++ b/applications/luci-app-homeproxy/root/etc/init.d/homeproxy
+@@ -24,10 +24,17 @@
+ fi
+ 
+ log() {
++	mkdir -p "$RUN_DIR" || return 1
+ 	echo -e "$(date "+%Y-%m-%d %H:%M:%S") [DAEMON] $*" >> "$LOG_PATH"
+ }
+ 
+ start_service() {
++	# Standby must not be reactivated by hotplug or another service.
++	if [ -x /usr/libexec/firmware-ha/service-guard.sh ] && \
++		! /usr/libexec/firmware-ha/service-guard.sh homeproxy; then
++		return 0
++	fi
++
+ 	config_load "$CONF"
+ 
+ 	local routing_mode proxy_mode
+@@ -321,8 +328,11 @@
+ 	config_get tun_name "infra" "tun_name" "singtun0"
+ 
+ 	# TUN
+-	ip link set "$tun_name" down 2>"/dev/null"
+-	ip tuntap del mode tun name "$tun_name" 2>"/dev/null"
++	if ip link show dev "$tun_name" >"/dev/null" 2>&1; then
++		ip link set "$tun_name" down || return 1
++		ip tuntap del mode tun name "$tun_name" || return 1
++	fi
++	return 0
+ }
+ 
+ reload_service() {

@@ -1,0 +1,23 @@
+{
+  "scope": "unmodified pinned upstream fixture bytes; no device data",
+  "files": {
+    "luci/themes/luci-theme-argon/root/etc/uci-defaults/30_luci-theme-argon": "6f4acab86d7d63e850869bc1c9523dda909472905265478813f6b1cc38c9e42b",
+    "luci/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material": "39446e084abca46966dc54e72f3a5b357fc96e28598c971e7835d2a384452789",
+    "luci/applications/luci-app-openvpn-server/Makefile": "c8e274ddd1116d94b0facb3db929486906a1b84ef63b4853fde70ae33c4817d7",
+    "luci/applications/luci-app-openvpn-server/root/etc/uci-defaults/openvpn": "ff54e465e1f5be943cb3b8647a906e438700f2091e9e018ab2070520272efcfb",
+    "luci/applications/luci-app-openvpn-server/root/etc/openvpn-addon.conf": "e5e9f7c6d2ee2cf90f2a6a1929064f80c038fd971cf774c112a38e792e6edc47",
+    "luci/applications/luci-app-openvpn-server/root/etc/openvpn/genovpn.sh": "ce0a2f63abe93403c7a7466fdd7a5fe2c4a2381a8bd35c948a4d62e5a78ddb29",
+    "luci/applications/luci-app-openvpn-server/root/etc/openvpn/renewcert.sh": "8168d3ff3b0da3b47fea228ef1671ecc9271bf9b2c1434bc9c9fefa5b3d2e2f8",
+    "luci/applications/luci-app-openvpn-server/luasrc/model/cbi/openvpn-server/openvpn-server.lua": "27301605bbc0b5e4c9736ccc5b95cdaf00efbc4c42996e7e9be58860676fa74d",
+    "luci/applications/luci-app-ipsec-vpnd/Makefile": "0e6ab5f9ce93986694f5d0357f7b6148f8ef6011101b116b99e20a6c0e68ad7c",
+    "luci/applications/luci-app-ipsec-vpnd/root/etc/uci-defaults/luci-ipsec-vpnd": "8dd366952e314e4660adc70d0f159600d764e70e17a78e56de808eb0da0de452",
+    "luci/applications/luci-app-ipsec-vpnd/root/etc/init.d/ipsec-vpnd": "da8cf0c19afec1c5b970fc26b984e0d47ce8209b5d8b86fbd90098dbf13c74e8",
+    "luci/applications/luci-app-syncdial/root/bin/genwancfg": "c311749a90cf2ab11c9cd984f909ef39a73445007265ef20a663ce659658fa7f",
+    "luci/applications/luci-app-syncdial/root/etc/hotplug.d/iface/01-dialcheck": "47481f299fcebd7726615bc4fef4102d8140f28323d6c65d826c20c813a1b7dd",
+    "luci/applications/luci-app-syncdial/root/etc/hotplug.d/iface/01-mvifcreate": "ed3e8191941cb573b90e7afaef688b451b55cd1f5eefb41fcd8984f617537a55",
+    "packages/net/openvpn/files/openvpn.init": "50913b85f2a9031a0521ba1dacb61c1f4d089f0f46ef09bd5de029f29967c21e",
+    "luci/applications/luci-app-openvpn-server/root/etc/config/openvpn": "3e35af7dc35c83885ecfce1c41f98f20975b8569c2b5c4578ba73c87d2b18655",
+    "luci/applications/luci-app-ipsec-vpnd/root/etc/config/ipsec-vpnd": "279f662cf07976041bb7f46a29ed1c1aef08850b9a02b7865214bcefbc9b68fe",
+    "luci/applications/luci-app-syncdial/luasrc/controller/syncdial.lua": "c047c6ed43b3bbc802870156f0d27f97fd6e976da7a824727b3ffe168f2bb3ff"
+  }
+}

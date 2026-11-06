@@ -1,0 +1,8 @@
+{
+  "admin/services/pptp-server": {
+    "title": "PPTP Server",
+    "order": 61,
+    "action": {"type": "view", "path": "services/pptp-server"},
+    "depends": {"acl": ["luci-app-pptp-server"], "uci": {"pptpd": true}}
+  }
+}

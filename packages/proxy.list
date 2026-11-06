@@ -1,0 +1,8 @@
+# Official, pinned firewall4 proxy stack. Configure nodes locally after flashing.
+# This supplies basic proxy capability; SSR Plus migration remains under review.
+sing-box
+luci-app-homeproxy
+luci-i18n-homeproxy-zh-cn
+# HomeProxy's GFW-list mode emits dnsmasq nftset directives.
+-dnsmasq
+dnsmasq-full

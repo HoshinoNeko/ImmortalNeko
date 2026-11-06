@@ -1,0 +1,143 @@
+msgid ""
+msgstr "Project-Id-Version: ImmortalNeko luci-app-turboacc 1.0.0\nPO-Revision-Date: 2026-11-06 00:00+0800\nLast-Translator: ImmortalNeko contributors\nLanguage-Team: Chinese (Simplified)\nLanguage: zh_Hans\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n"
+
+msgid "Algorithm at page load"
+msgstr "页面加载时的算法"
+
+msgid "Bogus response addresses"
+msgstr "需过滤的响应地址"
+
+msgid "Bootstrap resolvers"
+msgstr "引导解析服务器"
+
+msgid "Cache"
+msgstr "缓存"
+
+msgid "Cache size (bytes)"
+msgstr "缓存大小（字节）"
+
+msgid "Change IPv4 FullCone NAT"
+msgstr "修改 IPv4 FullCone NAT"
+
+msgid "Change flow offloading"
+msgstr "修改流量卸载策略"
+
+msgid "Choose upstream resolvers and listener settings before enabling. Configure forwarding in the appropriate DHCP/DNS instance separately; existing DNS servers and network interfaces are preserved. Encrypted upstreams may need explicit bootstrap resolvers."
+msgstr "启用前请配置上游解析服务器和监听参数。请另行在对应的 DHCP/DNS 实例中配置转发；此页面保留现有 DNS 服务器及网络接口配置。加密上游可能需要指定引导解析服务器。"
+
+msgid "Configure at least one upstream resolver."
+msgstr "请至少配置一个上游解析服务器。"
+
+msgid "Configured FullCone value"
+msgstr "当前配置中的 FullCone 值"
+
+msgid "Configured offload values"
+msgstr "当前配置中的卸载值"
+
+msgid "Core default"
+msgstr "核心默认策略"
+
+msgid "DNS cache"
+msgstr "DNS 缓存"
+
+msgid "DNS caching"
+msgstr "DNS 缓存服务"
+
+msgid "Disabled"
+msgstr "禁用"
+
+msgid "Enable DNSProxy"
+msgstr "启用 DNSProxy"
+
+msgid "Enable cache"
+msgstr "启用缓存"
+
+msgid "Enabled"
+msgstr "启用"
+
+msgid "Enabling records the previous algorithm. Disabling restores that value when the current value is still managed BBR; a different manual selection is preserved. Forwarded clients choose their own TCP algorithm."
+msgstr "启用时记录原算法。关闭时若当前算法仍为受管的 BBR，则恢复记录值；若已手动改为其他算法，则保留手动选择。转发客户端使用其自身的 TCP 算法。"
+
+msgid "Fallback resolvers"
+msgstr "备用解析服务器"
+
+msgid "Fastest address"
+msgstr "最快地址"
+
+msgid "Firewall acceleration"
+msgstr "防火墙加速"
+
+msgid "FullCone mode"
+msgstr "FullCone 模式"
+
+msgid "Hardware offload"
+msgstr "硬件卸载"
+
+msgid "Keep current settings"
+msgstr "保持当前设置"
+
+msgid "Keep current settings leaves firewall values untouched, including legacy values that still need migration. Hardware offload needs driver support. Check SQM, proxy routing and traffic accounting after enabling offload."
+msgstr "“保持当前设置”会保留防火墙中的值，包括尚待迁移的旧值。硬件卸载需要驱动支持。启用卸载后请检查 SQM、代理分流和流量统计。"
+
+msgid "Legacy modes 1 and 2 used a different implementation. Choose the new policy explicitly after checking NAT behavior."
+msgstr "旧模式 1 和 2 使用不同的实现。请检查 NAT 行为后明确选择新策略。"
+
+msgid "Legacy offload values are reference data. Select changes in the actual firewall settings below. SFE is replaced by nftables flow offloading; MediaTek WED requires different hardware."
+msgstr "旧卸载值仅供参考。请在下方实际防火墙设置中选择变更。SFE 由 nftables 流量卸载替代；MediaTek WED 需要相应硬件支持。"
+
+msgid "Legacy reference values"
+msgstr "旧配置参考值"
+
+msgid "Listener addresses"
+msgstr "监听地址"
+
+msgid "Listener ports"
+msgstr "监听端口"
+
+msgid "Load balance"
+msgstr "负载均衡"
+
+msgid "Manage BBR for new local TCP connections"
+msgstr "为本机新建 TCP 连接管理 BBR"
+
+msgid "Maximum TTL (seconds)"
+msgstr "最大 TTL（秒）"
+
+msgid "Minimum TTL (seconds)"
+msgstr "最小 TTL（秒）"
+
+msgid "Optimistic cache"
+msgstr "乐观缓存"
+
+msgid "Parallel"
+msgstr "并行查询"
+
+msgid "Registered algorithms at page load"
+msgstr "页面加载时已注册的算法"
+
+msgid "Resolver"
+msgstr "解析服务"
+
+msgid "Return NXDOMAIN for these addresses"
+msgstr "对这些响应地址返回 NXDOMAIN"
+
+msgid "Software offload"
+msgstr "软件卸载"
+
+msgid "TCP congestion control"
+msgstr "TCP 拥塞控制"
+
+msgid "Turbo ACC"
+msgstr "Turbo ACC 加速设置"
+
+msgid "Upstream mode"
+msgstr "上游查询策略"
+
+msgid "Upstream resolvers"
+msgstr "上游解析服务器"
+
+msgid "Upstreams"
+msgstr "上游列表"
+
+msgid "Use DNSProxy upstream syntax, including encrypted resolver URLs or an upstream file."
+msgstr "使用 DNSProxy 上游语法，可填写加密解析服务器 URL 或上游配置文件。"

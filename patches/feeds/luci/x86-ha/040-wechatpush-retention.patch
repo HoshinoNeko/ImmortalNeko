@@ -1,0 +1,127 @@
+--- a/applications/luci-app-wechatpush/root/etc/init.d/wechatpush
++++ b/applications/luci-app-wechatpush/root/etc/init.d/wechatpush
+@@ -7,9 +7,18 @@
+ dir="/tmp/wechatpush/"
+ 
+ start_service() {
++    local enabled
++    enabled=$(uci -q get wechatpush.config.enable 2>/dev/null) || enabled=0
++    case "$enabled" in
++        0) return 0;;
++        1) :;;
++        *) echo "wechatpush: invalid enable flag" >&2; return 1;;
++    esac
++    if [ -x /usr/libexec/firmware-ha/service-guard.sh ]; then
++        /usr/libexec/firmware-ha/service-guard.sh wechatpush || return 0
++    fi
+     procd_open_instance
+-    enable_value=$(uci get wechatpush.config.enable 2>/dev/null || echo "0")
+-    [ "$enable_value" -ne "0" ] && procd_set_param command /usr/share/wechatpush/wechatpush && echo "wechatpush is starting now ..."
++    procd_set_param command /usr/share/wechatpush/wechatpush
+     procd_close_instance
+ }
+ 
+--- a/applications/luci-app-wechatpush/root/usr/share/wechatpush/wechatpush
++++ b/applications/luci-app-wechatpush/root/usr/share/wechatpush/wechatpush
+@@ -5,14 +5,15 @@
+ #
+ # 读取设置文件
+ get_config() {
+-	while [[ "$*" != "" ]]; do
++	while [ "$#" -gt 0 ]; do
++		[[ "$1" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]] || return 1
+ 		[[ "$1" == "lang" ]] && {
+ 			lang=$(uci get luci.main.lang 2>/dev/null)
+ 			if [ -z "$lang" ] || [[ "$lang" == "auto" ]]; then
+ 				lang=$(echo "${LANG:-${LANGUAGE:-${LC_ALL:-${LC_MESSAGES:-zh_cn}}}}" | awk -F'[ .@]' '{print tolower($1)}' | sed 's/-/_/' 2>/dev/null)
+ 			fi
+ 		} || {
+-			eval "${1}='$(uci get wechatpush.config.$1 2>/dev/null)'"
++			printf -v "$1" '%s' "$(uci -q get "wechatpush.config.$1" 2>/dev/null)"
+ 		}
+ 		shift
+ 	done
+@@ -33,7 +34,8 @@
+ 	for file in "$output_dir"/*; do
+ 		local variable_name=$(basename "$file")
+ 		local variable_value=$(cat "$file")
+-		eval "${variable_name}='${variable_value}'"
++		[[ "$variable_name" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]] || return 1
++		printf -v "$variable_name" '%s' "$variable_value"
+ 	done
+ 	if [ ! -f "${dir}/send_pid" ]; then
+ 		rm "$output_dir"/*
+--- a/applications/luci-app-wechatpush/po/zh_Hans/wechatpush.po
++++ b/applications/luci-app-wechatpush/po/zh_Hans/wechatpush.po
+@@ -757,10 +757,6 @@
+ msgid "AA:AA:AA:AA:AA:AA\\|BB:BB:BB:BB:BB:BB Multiple MAC addresses can be treated as the same user.<br/>Notifications will not be sent once any device is online, and notifications will only be sent when all devices are offline to avoid frequent notifications in dual Wi-Fi scenarios."
+ msgstr "AA:AA:AA:AA:AA:AA\\|BB:BB:BB:BB:BB:BB 可以将多个 MAC 视为同一用户<br/>任一设备在线后不再推送，设备全部离线时才会推送，避免双 wifi 频繁推送"
+ 
+-#: applications/luci-app-wechatpush/htdocs/luci-static/resources/view/wechatpush/config.js:644
+-msgid "Notify only devices using this interface"
+-msgstr "仅通知此接口设备"
+-
+ #: applications/luci-app-wechatpush/htdocs/luci-static/resources/view/wechatpush/config.js:649
+ msgid "MAC Filtering Mode 2"
+ msgstr "MAC 过滤模式二"
+@@ -1045,10 +1041,6 @@
+ #: applications/luci-app-wechatpush/htdocs/luci-static/resources/view/wechatpush/advanced.js:213
+ msgid "MikroTik Router Account"
+ msgstr "ROS 路由器用户名"
+-
+-#: applications/luci-app-wechatpush/htdocs/luci-static/resources/view/wechatpush/advanced.js:216
+-msgid "The main router address is all that is needed in the Mesh wireless network topology."
+-msgstr "Mesh 无线网络拓扑中，只需要填写主路由地址"
+ 
+ #: applications/luci-app-wechatpush/htdocs/luci-static/resources/view/wechatpush/advanced.js:135
+ msgid "IP range to be scanned"
+@@ -1192,9 +1184,6 @@
+ msgid "Disconnected!"
+ msgstr "已断开！"
+ 
+-msgid "System running status"
+-msgstr "系统运行状态"
+-
+ msgid "Average load:"
+ msgstr "平均负载："
+ 
+@@ -1207,9 +1196,6 @@
+ msgid "Global connection:"
+ msgstr "全球互联："
+ 
+-msgid "Device temperature"
+-msgstr "设备温度"
+-
+ msgid "CPU:"
+ msgstr "CPU："
+ 
+@@ -1327,9 +1313,6 @@
+ msgid "If no message received, please check %s or use the following command to test manually"
+ msgstr "如果收不到信息，请检查 %s 文件，或使用下列命令手动测试返回值"
+ 
+-msgid "Total Traffic:"
+-msgstr "总计流量："
+-
+ msgid "%s abnormal traffic"
+ msgstr "%s 流量异常"
+ 
+@@ -1366,9 +1349,6 @@
+ msgid "New device connected"
+ msgstr "新设备连接"
+ 
+-msgid "Device status changed"
+-msgstr "设备状态变化"
+-
+ msgid "Network Interface:"
+ msgstr "网络接口："
+ 
+@@ -1593,9 +1573,6 @@
+ 
+ msgid "Location query timeout, current API: %s"
+ msgstr "归属地获取超时，当前使用的 API 为 %s"
+-
+-msgid "Currently %d online devices, details below"
+-msgstr "现有在线设备 %d 台，具体如下"
+ 
+ msgid "Rebooting router..."
+ msgstr "重启路由器咯"

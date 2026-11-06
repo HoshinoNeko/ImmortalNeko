@@ -1,0 +1,30 @@
+--- a/package/network/services/dnsmasq/files/dnsmasq.init
++++ b/package/network/services/dnsmasq/files/dnsmasq.init
+@@ -1345,6 +1345,12 @@
+ }
+ 
+ start_service() {
++	# Standby must not be reactivated by hotplug or another service.
++	if [ -x /usr/libexec/firmware-ha/service-guard.sh ] && \
++		! /usr/libexec/firmware-ha/service-guard.sh dnsmasq; then
++		return 0
++	fi
++
+ 	local instance="$1"
+ 	local instance_found=0
+ 	local first_instance=""
+--- a/package/network/services/odhcpd/files/odhcpd.init
++++ b/package/network/services/odhcpd/files/odhcpd.init
+@@ -5,6 +5,12 @@
+ USE_PROCD=1
+ 
+ start_service() {
++	# Standby must not be reactivated by hotplug or another service.
++	if [ -x /usr/libexec/firmware-ha/service-guard.sh ] && \
++		! /usr/libexec/firmware-ha/service-guard.sh odhcpd; then
++		return 0
++	fi
++
+ 	procd_open_instance
+ 	procd_set_param command /usr/sbin/odhcpd
+ 	procd_set_param respawn

@@ -1,0 +1,7 @@
+{
+  "luci-app-socat": {
+    "description": "Manage Socat instances",
+    "read": {"uci": ["socat"]},
+    "write": {"uci": ["socat"]}
+  }
+}

@@ -1,0 +1,421 @@
+--- a/themes/luci-theme-argon/root/etc/uci-defaults/30_luci-theme-argon
++++ b/themes/luci-theme-argon/root/etc/uci-defaults/30_luci-theme-argon
+@@ -4,7 +4,6 @@
+ 	uci get luci.themes.Argon >/dev/null 2>&1 || \
+ 	uci batch <<-EOF
+ 		set luci.themes.Argon=/luci-static/argon
+-		set luci.main.mediaurlbase=/luci-static/argon
+ 		commit luci
+ 	EOF
+ fi
+--- a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
++++ b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
+@@ -4,7 +4,6 @@
+ 	uci get luci.themes.Material >/dev/null 2>&1 || \
+ 	uci batch <<-EOF
+ 		set luci.themes.Material=/luci-static/material
+-		set luci.main.mediaurlbase=/luci-static/material
+ 		commit luci
+ 	EOF
+ fi
+--- a/applications/luci-app-openvpn-server/Makefile
++++ b/applications/luci-app-openvpn-server/Makefile
+@@ -12,6 +12,16 @@
+ PKG_VERSION:=3.0
+ PKG_RELEASE:=0
+ 
++define Build/Prepare/luci-app-openvpn-server
++	# The official backend owns /etc/config/openvpn.
++	rm -f $(PKG_BUILD_DIR)/root/etc/config/openvpn
++endef
++
++define Package/luci-app-openvpn-server/conffiles
++/etc/openvpn-addon.conf
++/etc/easy-rsa/vars-server
++endef
++
+ include ../../luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+--- a/applications/luci-app-openvpn-server/root/etc/uci-defaults/openvpn
++++ b/applications/luci-app-openvpn-server/root/etc/uci-defaults/openvpn
+@@ -1,54 +1,20 @@
+ #!/bin/sh
+-
+-openvpn_port="$(uci -q get openvpn.myvpn.port)"
+-[ -z "$openvpn_port" ] && openvpn_port=1194
+-
+-uci -q batch <<-EOF >/dev/null
+-	delete network.vpn0
+-	set network.vpn0=interface
+-	set network.vpn0.ifname='tun0'
+-	set network.vpn0.proto='none'
+-
+-	commit network
+-
+-	delete firewall.openvpn
+-	set firewall.openvpn=rule
+-	set firewall.openvpn.name='openvpn'
+-	set firewall.openvpn.target='ACCEPT'
+-	set firewall.openvpn.src='wan'
+-	set firewall.openvpn.proto='tcp udp'
+-	set firewall.openvpn.dest_port="$openvpn_port"
+-
+-	delete firewall.vpn
+-	set firewall.vpn=zone
+-	set firewall.vpn.name='vpn'
+-	set firewall.vpn.input='ACCEPT'
+-	set firewall.vpn.forward='ACCEPT'
+-	set firewall.vpn.output='ACCEPT'
+-	set firewall.vpn.masq='1'
+-	set firewall.vpn.network='vpn0'
+-
+-	delete firewall.vpntowan
+-	set firewall.vpntowan=forwarding
+-	set firewall.vpntowan.src='vpn'
+-	set firewall.vpntowan.dest='wan'
+-
+-	delete firewall.vpntolan
+-	set firewall.vpntolan=forwarding
+-	set firewall.vpntolan.src='vpn'
+-	set firewall.vpntolan.dest='lan'
+-
+-	delete firewall.lantovpn
+-	set firewall.lantovpn=forwarding
+-	set firewall.lantovpn.src='lan'
+-	set firewall.lantovpn.dest='vpn'
+-
+-	commit firewall
++# Only add a disabled server section. Never change interfaces, firewall or PKI.
++if ! uci -q get openvpn.myvpn >/dev/null; then
++	uci -q batch <<'EOF'
++		set openvpn.myvpn=openvpn
++		set openvpn.myvpn.enabled=0
++		set openvpn.myvpn.dev=tun
++		set openvpn.myvpn.topology=subnet
++		set openvpn.myvpn.ca=/etc/openvpn/pki/ca.crt
++		set openvpn.myvpn.dh=/etc/openvpn/pki/dh.pem
++		set openvpn.myvpn.cert=/etc/openvpn/pki/server.crt
++		set openvpn.myvpn.key=/etc/openvpn/pki/server.key
++		set openvpn.myvpn.persist_key=1
++		set openvpn.myvpn.persist_tun=1
++		set openvpn.myvpn.keepalive='10 120'
++		set openvpn.myvpn.verb=3
++		commit openvpn
+ EOF
+-
+-if [ ! -f "/etc/openvpn/pki/ca.crt" ]; then
+-	sh /etc/openvpn/renewcert.sh 2>&1 >/dev/null
+ fi
+-
+-rm -f /tmp/luci-indexcache
+ exit 0
+--- a/applications/luci-app-openvpn-server/root/etc/openvpn-addon.conf
++++ b/applications/luci-app-openvpn-server/root/etc/openvpn-addon.conf
+@@ -1 +1 @@
+-comp-lzo
++# Optional client directives, configured locally.
+--- a/applications/luci-app-openvpn-server/root/etc/openvpn/genovpn.sh
++++ b/applications/luci-app-openvpn-server/root/etc/openvpn/genovpn.sh
+@@ -1,27 +1,32 @@
+ #!/bin/sh
+-
+-ddns=`uci get openvpn.myvpn.ddns`
+-port=`uci get openvpn.myvpn.port`
+-proto=`uci get openvpn.myvpn.proto|sed -e 's/server/client/g'`
+-
+-cat > /tmp/my.ovpn  <<EOF
+-client
+-dev tun
+-proto $proto
+-remote $ddns $port
+-resolv-retry infinite
+-nobind
+-persist-key
+-persist-tun
+-verb 3
+-EOF
+-echo '<ca>' >> /tmp/my.ovpn
+-cat /etc/openvpn/pki/ca.crt >> /tmp/my.ovpn
+-echo '</ca>' >> /tmp/my.ovpn
+-echo '<cert>' >> /tmp/my.ovpn
+-cat /etc/openvpn/pki/client1.crt >> /tmp/my.ovpn
+-echo '</cert>' >> /tmp/my.ovpn
+-echo '<key>' >> /tmp/my.ovpn
+-cat /etc/openvpn/pki/client1.key >> /tmp/my.ovpn
+-echo '</key>' >> /tmp/my.ovpn
+-[ -f /etc/openvpn-addon.conf ] && cat /etc/openvpn-addon.conf >> /tmp/my.ovpn
++set -eu
++umask 077
++# The GUI consumes and removes this private export after generation.
++rm -f /tmp/my.ovpn
++pki=/etc/openvpn/pki
++ddns=$(uci -q get openvpn.myvpn.ddns)
++port=$(uci -q get openvpn.myvpn.port)
++proto=$(uci -q get openvpn.myvpn.proto)
++case "$ddns" in ''|*[!a-zA-Z0-9._:-]*) exit 1;; esac
++case "$port" in ''|*[!0-9]*) exit 1;; esac
++[ "$port" -ge 1 ] && [ "$port" -le 65535 ] || exit 1
++case "$proto" in
++    tcp|tcp-server) proto=tcp-client;;
++    tcp4|tcp4-server) proto=tcp4-client;;
++    tcp6|tcp6-server) proto=tcp6-client;;
++    udp|udp4|udp6) :;;
++    *) exit 1;;
++esac
++for file in ca.crt client1.crt client1.key; do [ -s "$pki/$file" ] || exit 1; done
++profile=$(mktemp /tmp/openvpn-client.XXXXXX)
++trap 'rm -f "$profile"' EXIT
++{
++    printf 'client\ndev tun\nproto %s\nremote %s %s\n' "$proto" "$ddns" "$port"
++    printf 'resolv-retry infinite\nnobind\npersist-key\npersist-tun\nremote-cert-tls server\nverb 3\n'
++    printf '<ca>\n'; cat "$pki/ca.crt"; printf '\n</ca>\n'
++    printf '<cert>\n'; cat "$pki/client1.crt"; printf '\n</cert>\n'
++    printf '<key>\n'; cat "$pki/client1.key"; printf '\n</key>\n'
++    [ ! -f /etc/openvpn-addon.conf ] || cat /etc/openvpn-addon.conf
++} > "$profile"
++chmod 600 "$profile"
++mv -f "$profile" /tmp/my.ovpn
+--- a/applications/luci-app-openvpn-server/root/etc/openvpn/renewcert.sh
++++ b/applications/luci-app-openvpn-server/root/etc/openvpn/renewcert.sh
+@@ -1,8 +1,16 @@
+ #!/bin/sh
++set -eu
++umask 077
+ 
+ export EASYRSA_PKI="/etc/easy-rsa/pki"
+ export EASYRSA_VARS_FILE="/etc/easy-rsa/vars-server"
+ export EASYRSA_CLI="easyrsa --batch"
++
++# Preserve previous CA/server material before the explicitly requested rotation.
++backup=$(mktemp -d /etc/easy-rsa/neko-pki-backup.XXXXXX)
++if [ -d "$EASYRSA_PKI" ]; then cp -pR "$EASYRSA_PKI" "$backup/easy-rsa-pki"; fi
++if [ -d /etc/openvpn/pki ]; then cp -pR /etc/openvpn/pki "$backup/openvpn-pki"; fi
++chmod 700 "$backup"
+ 
+ # Cleanup
+ echo -en "yes\nyes\n" | $EASYRSA_CLI init-pki
+--- a/applications/luci-app-openvpn-server/luasrc/model/cbi/openvpn-server/openvpn-server.lua
++++ b/applications/luci-app-openvpn-server/luasrc/model/cbi/openvpn-server/openvpn-server.lua
+@@ -5,7 +5,7 @@
+ 
+ mp:section(SimpleSection).template = "openvpn/openvpn_status"
+ 
+-s = mp:section(TypedSection, "openvpn")
++s = mp:section(NamedSection, "myvpn", "openvpn")
+ s.anonymous = true
+ s.addremove = false
+ 
+@@ -14,17 +14,16 @@
+ o = s:taboption("basic", Flag, "enabled", translate("Enable"))
+ 
+ proto = s:taboption("basic", Value, "proto", translate("Proto"))
+-proto:value("tcp4", translate("TCP Server IPv4"))
++proto:value("tcp4-server", translate("TCP Server IPv4"))
+ proto:value("udp4", translate("UDP Server IPv4"))
+-proto:value("tcp6", translate("TCP Server IPv6"))
++proto:value("tcp6-server", translate("TCP Server IPv6"))
+ proto:value("udp6", translate("UDP Server IPv6"))
+ 
+ port = s:taboption("basic", Value, "port", translate("Port"))
+ port.datatype = "range(1, 65535)"
+ 
+ ddns = s:taboption("basic", Value, "ddns", translate("WAN DDNS or IP"))
+-ddns.datatype = "string"
+-ddns.default = "exmple.com"
++ddns.datatype = "host"
+ ddns.rmempty = false
+ 
+ localnet = s:taboption("basic", Value, "server", translate("Client Network"))
+@@ -42,13 +41,18 @@
+ o.description = translate("If you are using IOS client, please download this .ovpn file and send it via QQ or Email to your IOS device")
+ o.inputstyle = "reload"
+ o.write = function()
+-	luci.sys.call("sh /etc/openvpn/genovpn.sh 2>&1 >/dev/null")
+-	Download()
++	local result = luci.sys.call("sh /etc/openvpn/genovpn.sh >/dev/null 2>&1")
++	if result == 0 then
++		Download()
++	else
++		mp.message = translate("Set a valid endpoint, port and protocol, and generate or restore certificates before exporting.")
++	end
+ end
+ 
+ local o
+-o = s:taboption("basic", Button, "renew_certificate", translate("Renew OpenVPN certificate files"))
+-o.inputtitle = translate("Renew")
++o = s:taboption("basic", Button, "renew_certificate", translate("Rotate OpenVPN CA and certificates"))
++o.inputtitle = translate("Rotate certificates")
++o.description = translate("Creates a new CA and client profile. Existing clients must import the new profile; previous material is backed up locally.")
+ o.inputstyle = "reload"
+ o.write = function()
+ 	luci.sys.call("sh /etc/openvpn/renewcert.sh 2>&1 >/dev/null &")
+@@ -97,11 +101,11 @@
+ 		end
+ 	end
+ 	t:close()
++	nixio.fs.unlink("/tmp/my.ovpn")
+ 	luci.http.close()
+ end
+ 
+ function mp.on_after_commit(self)
+-	os.execute("uci set firewall.openvpn.dest_port=$(uci get openvpn.myvpn.port) && uci commit firewall && /etc/init.d/firewall restart")
+ 	os.execute("/etc/init.d/openvpn restart")
+ end
+ 
+--- a/applications/luci-app-ipsec-vpnd/Makefile
++++ b/applications/luci-app-ipsec-vpnd/Makefile
+@@ -8,6 +8,10 @@
+ /etc/config/ipsec-vpnd
+ endef
+ 
++define Build/Prepare/luci-app-ipsec-vpnd
++	$(INSTALL_CONF) ./files/disabled.config $(PKG_BUILD_DIR)/root/etc/config/ipsec-vpnd
++endef
++
+ include ../../luci.mk
+ 
+ # call BuildPackage - OpenWrt buildroot signature
+--- /dev/null
++++ b/applications/luci-app-ipsec-vpnd/files/disabled.config
+@@ -0,0 +1,3 @@
++# Addresses and credentials are supplied locally, never in the image.
++config service 'ipsec'
++	option enabled '0'
+--- a/applications/luci-app-ipsec-vpnd/root/etc/uci-defaults/luci-ipsec-vpnd
++++ b/applications/luci-app-ipsec-vpnd/root/etc/uci-defaults/luci-ipsec-vpnd
+@@ -1,71 +1,3 @@
+ #!/bin/sh
+-
+-uci -q batch <<-EOF >/dev/null
+-	delete firewall.ipsecd
+-	commit firewall
+-EOF
+-
+-uci -q batch <<-EOF >/dev/null
+-	delete network.VPN
+-	set network.VPN=interface
+-	set network.VPN.device="ipsec0"
+-	set network.VPN.proto="static"
+-	set network.VPN.ipaddr="192.168.0.1"
+-	set network.VPN.netmask="255.255.255.0"
+-	commit network
+-
+-	delete firewall.ike
+-	add firewall rule
+-	rename firewall.@rule[-1]="ike"
+-	set firewall.@rule[-1].name="ike"
+-	set firewall.@rule[-1].target="ACCEPT"
+-	set firewall.@rule[-1].src="wan"
+-	set firewall.@rule[-1].proto="udp"
+-	set firewall.@rule[-1].dest_port="500"
+-
+-	delete firewall.ipsec
+-	add firewall rule
+-	rename firewall.@rule[-1]="ipsec"
+-	set firewall.@rule[-1].name="ipsec"
+-	set firewall.@rule[-1].target="ACCEPT"
+-	set firewall.@rule[-1].src="wan"
+-	set firewall.@rule[-1].proto="udp"
+-	set firewall.@rule[-1].dest_port="4500"
+-
+-	delete firewall.ah
+-	add firewall rule
+-	rename firewall.@rule[-1]="ah"
+-	set firewall.@rule[-1].name="ah"
+-	set firewall.@rule[-1].target="ACCEPT"
+-	set firewall.@rule[-1].src="wan"
+-	set firewall.@rule[-1].proto="ah"
+-
+-	delete firewall.esp
+-	add firewall rule
+-	rename firewall.@rule[-1]="esp"
+-	set firewall.@rule[-1].name="esp"
+-	set firewall.@rule[-1].target="ACCEPT"
+-	set firewall.@rule[-1].src="wan"
+-	set firewall.@rule[-1].proto="esp"
+-
+-	delete firewall.VPN
+-	set firewall.VPN=zone
+-	set firewall.VPN.name="VPN"
+-	set firewall.VPN.input="ACCEPT"
+-	set firewall.VPN.forward="ACCEPT"
+-	set firewall.VPN.output="ACCEPT"
+-	set firewall.VPN.network="VPN"
+-
+-	delete firewall.vpn
+-	set firewall.vpn=forwarding
+-	set firewall.vpn.name="vpn"
+-	set firewall.vpn.dest="wan"
+-	set firewall.vpn.src="VPN"
+-
+-	commit firewall
+-EOF
+-
+-[ -f "/etc/config/ipsec" ] && mv "/etc/config/ipsec" "/etc/config/ipsec-vpnd"
+-
+-rm -f /tmp/luci-indexcache
++# Network and firewall topology must be provisioned locally.
+ exit 0
+--- a/applications/luci-app-ipsec-vpnd/root/etc/init.d/ipsec-vpnd
++++ b/applications/luci-app-ipsec-vpnd/root/etc/init.d/ipsec-vpnd
+@@ -429,5 +429,5 @@
+ 
+ 	procd_close_instance
+ 
+-	echo 1 > /proc/sys/net/ipv4/conf/br-lan/proxy_arp
+-}
++	# Any required proxy ARP belongs to the reviewed interface configuration.
++}
+--- a/applications/luci-app-syncdial/root/bin/genwancfg
++++ b/applications/luci-app-syncdial/root/bin/genwancfg
+@@ -1,4 +1,9 @@
+ #!/bin/sh
++if [ -x /usr/libexec/firmware-ha/allow-multidial.sh ] && \
++    ! /usr/libexec/firmware-ha/allow-multidial.sh; then
++    logger -t firmware-ha 'SyncDial blocked by single-session PPPoE policy'
++    exit 1
++fi
+ #macvlan及PPPoE拨号接口配置批量自动生成脚本
+ #Copyright (C) 2016
+ . /lib/functions.sh
+--- a/applications/luci-app-syncdial/root/etc/hotplug.d/iface/01-dialcheck
++++ b/applications/luci-app-syncdial/root/etc/hotplug.d/iface/01-dialcheck
+@@ -1,4 +1,9 @@
+ #!/bin/sh
++if [ -x /usr/libexec/firmware-ha/allow-multidial.sh ] && \
++    ! /usr/libexec/firmware-ha/allow-multidial.sh; then
++    logger -t firmware-ha 'SyncDial blocked by single-session PPPoE policy'
++    exit 0
++fi
+ [ "$ACTION" = "ifdown" ] &&	pppconnectcheck &
+ 
+ wanselect=$(uci get syncdial.config.wanselect)
+--- a/applications/luci-app-syncdial/root/etc/hotplug.d/iface/01-mvifcreate
++++ b/applications/luci-app-syncdial/root/etc/hotplug.d/iface/01-mvifcreate
+@@ -1,4 +1,9 @@
+ #!/bin/sh
++if [ -x /usr/libexec/firmware-ha/allow-multidial.sh ] && \
++    ! /usr/libexec/firmware-ha/allow-multidial.sh; then
++    logger -t firmware-ha 'SyncDial blocked by single-session PPPoE policy'
++    exit 0
++fi
+ [ "$(uci get syncdial.config.enabled)" = "1" ] && \
+ 	[ "$(uci get syncdial.config.old_frame)" = "1" ] && \
+ 	[ "$DEVICE" = "$(uci get network.wan.device)" ] && \
+--- a/applications/luci-app-syncdial/luasrc/controller/syncdial.lua
++++ b/applications/luci-app-syncdial/luasrc/controller/syncdial.lua
+@@ -28,5 +28,13 @@
+ end
+ 
+ function redial()
++	local sys = require "luci.sys"
++	if sys.call("[ ! -x /usr/libexec/firmware-ha/allow-multidial.sh ] || /usr/libexec/firmware-ha/allow-multidial.sh >/dev/null 2>&1") ~= 0 then
++		local http = require "luci.http"
++		http.status(409, "Conflict")
++		http.prepare_content("application/json")
++		http.write_json({error = "Single-session PPPoE policy blocks SyncDial redial"})
++		return
++	end
+ 	os.execute("killall -9 pppd")
+ end

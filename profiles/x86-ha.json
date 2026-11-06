@@ -4,11 +4,16 @@
   "subtarget": "64",
   "hardware_status": "generic-x86",
   "fragments": [
-    "config/x86.config"
+    "config/x86.config",
+    "config/proxy.config",
+    "config/x86-retained.config"
   ],
   "packages": [
     "packages/base.list",
-    "packages/ha.list"
+    "packages/ha.list",
+    "packages/proxy.list",
+    "packages/x86-retained.list",
+    "packages/x86-drivers.list"
   ],
   "overlays": [
     "files/common",

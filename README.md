@@ -1,5 +1,7 @@
-# ImmortalWrt 自定义固件工程
+# ImmortalNeko
 
+项目仓库：[HoshinoNeko/ImmortalNeko](https://github.com/HoshinoNeko/ImmortalNeko)，
+SSH：`git@HoshinoNeko.github:HoshinoNeko/ImmortalNeko.git`。
 独立配置仓库，不 Fork 或提交完整 ImmortalWrt 源码。源码使用官方稳定分支
 `openwrt-25.12` 的发布版 **v25.12.2**，固定 Commit
 `4fc16f2985a358bd43bb522e43f05395fcbd6ed5`；5 个官方 Feed 同样固定完整 Commit。
@@ -8,9 +10,10 @@
 当前交付包括源码构建流水线、三个 Profile、配置验证、缓存、产物与发布、
 旧配置清单分析工具、只读设备采集器和本地 keepalived 控制包。**完整固件编译及实机切换仍待验证**。
 已对现役 x86 完成只读采集：680个已安装包、80个配置文件。当前66个 LuCI 应用/协议/主题条目中，
-21项在锁定源中仍无直接对应项，见 [迁移清单](migration/current-plugin-plan.json)。
-代理已识别为 SSR Plus 及其后端，完整兼容方案尚在核对；现有三个 Profile 不能视为全部旧插件迁移版。
-没有更改默认主题或指定 LAN/WAN 地址。三个 Profile 已通过真实 `make defconfig`，未完成固件编译。
+已有方案的56项均已显式加入 x86-ha（包含原有主题及可用中文翻译），仍有10项待确定迁移方案，见 [迁移清单](migration/current-plugin-plan.json)。
+代理已识别为 SSR Plus 及其后端；两种 HA Profile 选择官方 HomeProxy/Sing-box 作为基础代理候选，
+旧节点、订阅、分流与服务端功能的完整迁移仍待验证。现有三个 Profile 不能视为全部旧插件迁移版。
+没有更改默认主题或指定 LAN/WAN 地址。上一版三个 Profile 已通过真实 `make defconfig`；本次 HA 新增依赖、移植页面与驱动选择仍待重跑配置解析，未完成固件编译。
 
 ## 目录
 
@@ -22,7 +25,7 @@ packages/           base.list、用户已要求的 ha.list
 local-packages/     本仓库维护的软件包；firmware-ha 含 HA 控制逻辑
 files/              common 与各 Profile 的根文件系统覆盖层
 patches/            common 与各 Profile 的 series 补丁序列
-themes/             主题软件包与 LuCI 覆盖扩展入口；默认不安装额外主题
+themes/             主题软件包与 LuCI 覆盖扩展入口；保留上游默认外观
 migration/          旧软件包替代规则
 scripts/            分离的源码、配置、产物、清单迁移模块
 templates/          部署前填写的拓扑、内核和网络配置示例
@@ -37,17 +40,35 @@ artifacts/          被 Git 忽略的固件与构建记录
 | Profile | 硬件与镜像 | 预装范围 |
 | --- | --- | --- |
 | `x86-basic` | x86/64；Legacy/UEFI × ext4/SquashFS 四种镜像 | 上游默认 + LuCI 中文、CA |
-| `x86-ha` | 同上 | 基础 + 下列已要求服务 + HA 控制包 |
+| `x86-ha` | 同上 | 基础 + HA 服务与代理 + 已核对的部分现有 x86 组件 |
 | `r619ac-ha` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 同 HA 服务集，保留上游目标驱动默认值 |
 
 HA 服务集：DHCP/DNS（上游 dnsmasq/odhcpd）、OpenVPN、WireGuard、ddns-go、
-ZeroTier、FRP 客户端、keepalived。WireGuard 由 netifd 管理；在设备本地用 HA 的 managed_interface
+ZeroTier、FRP 客户端、HomeProxy/Sing-box、keepalived。WireGuard 由 netifd 管理；在设备本地用 HA 的 managed_interface
 列表指定需要随角色启停的 WireGuard 接口，默认不选择接口，不停止整个 network 服务。
-软件包选择不等同于具备可工作的 VPN/DDNS 配置；凭据须刷机后在设备本地填写。
+软件包选择不等同于具备可工作的 VPN/DDNS/代理配置；凭据须刷机后在设备本地填写。
+`x86-ha` 另通过 `packages/x86-retained.list` 显式选择已有方案的旧插件与翻译，包括 Socat/PPTP 页面、
+文件管理器、下载/存储/打印服务、多 WAN 管理、原有主题、bonding、系统 NTP 和 Tailscale。
+根分区设为2048MiB，x86-basic 仍为512MiB；R619AC 保持基本服务范围。
+首次安装会关闭额外服务的自动启动，配置完成后再在设备本地启用；已初始化的保留配置升级不重复关闭。
+Argon/Material 只注册可选主题，不切换当前外观；OpenVPN/IPsec 页面不自动改写网络、防火墙或生成 PKI。
+SyncDial 保留页面，但单会话策略下阻止其多拨脚本和重拨按钮，HA 启动前也会拒绝已启用的 SyncDial。
+Socat/PPTP 页面复用官方后端包，不争用其配置/init文件的所有权。Socat 保留旧字符串与逐项参数；
+PPTP 默认关闭、不预设账号/地址，后端补丁保留旧 DNS 字段并保护生成的 PPP 凭据。
+旧流量监视器使用本地只读页面和官方 nlbwmon 后端，显示按 MAC 汇总的 IPv4/IPv6 流量及采样速率。
+访问时间控制改用官方防火墙的 Traffic Rules；规则迁移、时区、已建立连接和卸载路径仍待验收。
+V2Ray Server 使用本地页面及独立适配层，协议实现来自锁定的官方 V2Ray 5.53.0；
+生成配置权限600，交由核心校验后才通过 procd 启动，不自动放行端口或变更网络。
+Turbo ACC 使用本地中文页面管理实际防火墙卸载、BBR 与官方 DNSProxy；旧 FullCone 模式须明确选择新策略。
+BBR 关闭时按记录恢复原算法，DNSProxy 默认关闭且无公共上游预设；详见 [加速配置迁移](docs/migration.md#turbo-acc-加速配置迁移)。
+Server酱由固定 Feed 中的 WeChatPush 及中文界面替代，默认关闭；通知规则及凭据须在设备本地重新配置。
+`packages/x86-drivers.list` 选择当前 x86 已安装的27项网卡/USB/存储模块名，按新内核重新编译；
+源码定义存在不代表当前硬件绑定或启动已经验证。
 
-`p2w_r619ac-128m` 的 128M 是 **NAND 闪存规格**。内存仍须通过 `free -m` 核实；
-不能将名称相近的设备或 64M NAND 固件混刷。上述服务通过配置解析不代表已编译成功，也不代表在 128 MiB RAM
-同时满载可用，必须测量内存、吞吐与 OOM。详见 [硬件与服务验证](docs/validation.md)。
+`p2w_r619ac-128m` 的 128M 是 **128 MiB NAND 闪存**；用户已确认 **512 MiB RAM**。
+设备目前不可访问，仍待实机 board/内存与启动验证，不能混刷64M NAND版本。
+配置解析不代表完整编译或并发负载可用，仍需测量内存、吞吐与 OOM。
+详见 [硬件与服务验证](docs/validation.md)。
 
 ## GitHub Actions
 
@@ -97,7 +118,9 @@ python3 scripts/build.py collect --profile x86-basic --out artifacts/x86-basic
   带密码、私钥、Wi-Fi key、VPN 文件、shadow 等内容会被输入扫描拒绝。
   扫描是防误放辅助措施，提交时仍需检查变更；原始配置只能存入 `private/`。
 * 补丁：写入 `patches/common/` 或 `patches/<profile>/`，在该目录 `series` 中按顺序列相对文件名。
-  每个补丁先 `git apply --check`，失败即停止。补丁只作用于主源码树；Feed 修改宜使用锁定定制 Feed。
+  每个补丁先 `git apply --check`，失败即停止。主树补丁相对主源码树；
+  Feed 补丁放在 `patches/feeds/<feed>/series`，相对已经核对 Commit 的 Feed 根目录，
+  Profile 专用补丁可放 `patches/feeds/<feed>/<profile>/series`。当前含 DHCP/代理 HA 角色保护补丁。
 * 自定义内核：编辑 `config/kernel.config` 添加 `CONFIG_KERNEL_*`；启动参数可在 x86 片段添加
   `CONFIG_GRUB_BOOTOPTS="..."`。新增目标特有设置应独立片段并在 Profile 引用。
 * 网络默认值：参照 `templates/network.uci.example`，得到用户确认后才放入对应覆盖层或首次启动脚本。
@@ -119,10 +142,12 @@ python3 scripts/build.py collect --profile x86-basic --out artifacts/x86-basic
 参见 [HA 部署和故障行为](docs/ha.md)。控制包默认关闭；你尚未确认的端口与地址均留空。
 两个节点都以 BACKUP 状态启动，x86 优先级 200、R619AC 100，允许延迟抢占。
 支持显式配置多个 VLAN 的网关 VIP；FIFO 按序处理角色切换，停止时使用已生效配置快照执行清理。
-`cold-pppoe` 为单会话账号接管；`warm` 适用于两端可同时保持独立外网的环境。
+用户已确认只支持一个 PPPoE 会话，使用 `cold-pppoe`。默认双路径模式同时监测
+WAN DHCP（192.168.1.0/24）与专用心跳口，通过同一个 VRRP 实例选主，拨号前查询对端释放状态。
+`warm` 只允许显式声明 multiple 会话的独立上联环境。双路径同时隔离仍需外部仲裁才能保证不双主。
 
-这不是已验收的开箱即用现网固件：还需解决旧插件兼容、确认 R619AC 硬件与接线、
-宽带会话策略，以及实际编译与设备演练。R619AC 当前无法访问；GitHub 页面需完成登录才能推进云端构建。待这些资料到齐后，可在现有入口完成最终配置，无需重写工作流。
+现网交付仍需解决旧插件兼容、确认端口/VLAN/地址、完成编译与双机演练。R619AC 当前无法访问。
+远程仓库已由用户创建；当前执行环境限制了 .git 写入及 GitHub SSH/DNS，尚未推送或运行 Actions。
 
 ## 安装、升级与产物
 

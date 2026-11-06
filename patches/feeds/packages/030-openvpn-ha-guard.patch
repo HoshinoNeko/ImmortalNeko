@@ -1,0 +1,13 @@
+--- a/net/openvpn/files/openvpn.init
++++ b/net/openvpn/files/openvpn.init
+@@ -268,6 +268,10 @@
+ }
+ 
+ start_service() {
++	if [ -x /usr/libexec/firmware-ha/service-guard.sh ] && \
++		! /usr/libexec/firmware-ha/service-guard.sh openvpn; then
++		return 0
++	fi
+ 	local instance="$1"
+ 	local instance_found=0
+ 

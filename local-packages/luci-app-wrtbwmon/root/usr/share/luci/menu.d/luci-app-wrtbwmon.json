@@ -1,0 +1,8 @@
+{
+  "admin/network/traffic_status": {
+    "title": "Per-device traffic",
+    "order": 90,
+    "action": {"type": "view", "path": "network/traffic-status"},
+    "depends": {"acl": ["luci-app-wrtbwmon"], "uci": {"nlbwmon": true}}
+  }
+}

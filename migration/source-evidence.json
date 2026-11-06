@@ -1,0 +1,411 @@
+{
+  "date": "2026-11-06",
+  "scope": "local inspection of the pinned feed sources; package selection and UI round trips do not prove target compilation or runtime migration",
+  "feed_heads": {
+    "packages": "84bd86384928955b568988ca0e09e2c78c75173d",
+    "luci": "d6167ea0645cbd1327708d85f94824f42d0eb872",
+    "routing": "e49d76035aafb85ddc993b59271d8c7ba56b5362",
+    "telephony": "2618106d5846a4a542fdf5809f0d3ed228ce439b",
+    "video": "094bf58da6682f895255a35a84349a79dab4bf95"
+  },
+  "components": {
+    "filetransfer": {
+      "files": [
+        {
+          "path": "feeds/luci/applications/luci-app-filemanager/Makefile",
+          "sha256": "36c62e9d99aab2e117081d1a3a318628b1a9eb19422b9d7a028d234e2cd82aae"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-filemanager/htdocs/luci-static/resources/view/system/filemanager.js",
+          "sha256": "c0d8dd0c1c0ed096f7bd7f83bd2efa486c1c382069cd682bc8cb7f869dbe523d"
+        }
+      ]
+    },
+    "wireguard": {
+      "files": [
+        {
+          "path": "feeds/luci/protocols/luci-proto-wireguard/Makefile",
+          "sha256": "3bb6cc8dadefb86ecf6fc71c871a211fcc97b05d2de8de2521a4f006c73e81a5"
+        },
+        {
+          "path": "feeds/luci/protocols/luci-proto-wireguard/htdocs/luci-static/resources/view/wireguard/status.js",
+          "sha256": "ab57b4af820fdfc5540829c4120651eb2c0486716ebc58fe111debb573bd444d"
+        }
+      ]
+    },
+    "bonding": {
+      "files": [
+        {
+          "path": "feeds/luci/modules/luci-mod-network/htdocs/luci-static/resources/tools/network.js",
+          "sha256": "d81da1db8b9e462528d17b7e5f97bf2182ab6fbfa8d5e88142217e04e8473522"
+        }
+      ]
+    },
+    "ntpc": {
+      "files": [
+        {
+          "path": "feeds/luci/modules/luci-mod-system/htdocs/luci-static/resources/view/system/system.js",
+          "sha256": "7a79896707f11d126b264ce3a14de034f550c5699786a04bfdc24911c78164dc"
+        }
+      ]
+    },
+    "socat": {
+      "files": [
+        {
+          "path": "feeds/packages/net/socat/Makefile",
+          "sha256": "a8944fee47a24fa8427a3d611c066d5ae6d382b7cb0f6e7cc8f19463cae36950"
+        },
+        {
+          "path": "feeds/packages/net/socat/files/socat.init",
+          "sha256": "ec323f002e29ca0022c495f05a5fb33109c9684fc04274d0868675718002b4cd"
+        },
+        {
+          "path": "feeds/packages/net/socat/files/socat.config",
+          "sha256": "e5d7b03b7f445bf833eb0bd379e4756e80fb5fa2089bb0d5f4c06e1d9d1bca45"
+        }
+      ],
+      "local_ui": {
+        "local-packages/luci-app-socat/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/luci-app-socat/Makefile": "f51829e15a608a1fad023b49a46798aaef479d73fc136a95ad0bfdf5606c9717",
+        "local-packages/luci-app-socat/htdocs/luci-static/resources/view/services/socat.js": "fcdb4f1d3cc7c648ab84629cce2eab4d6a2982314d48067b2e7232e043a3014b",
+        "local-packages/luci-app-socat/po/zh_Hans/socat.po": "be0719714dd8a35c585515442cd776e7afdadbaa2cf3548501c19e35fbdbf090",
+        "local-packages/luci-app-socat/root/usr/share/luci/menu.d/luci-app-socat.json": "f32052c4a818824a7b6de68c48d26aa0f31047173fbd6d9e22ab140d6895eba4",
+        "local-packages/luci-app-socat/root/usr/share/rpcd/acl.d/luci-app-socat.json": "e658734f798a0e7fa1c7c5e311a4dd93da182b722d2b41a3d13bcec54b5219cb"
+      }
+    },
+    "proxy-candidate": {
+      "files": [
+        {
+          "path": "feeds/luci/applications/luci-app-homeproxy/Makefile",
+          "sha256": "e83360f1bc98979d4850c73014a7c5e31f4767dfd0dbe6f2b0c8414bf66943c5"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-homeproxy/htdocs/luci-static/resources/view/homeproxy/node.js",
+          "sha256": "a5135da237de391ef30ad195424164ad80451b9039030d99c20e31c23d696a7b"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-homeproxy/root/etc/init.d/homeproxy",
+          "sha256": "47e624476a7a409209496de47cd64f73fed7dc86698cf6d6ec2b286c25c88340"
+        },
+        {
+          "path": "feeds/packages/net/sing-box/Makefile",
+          "sha256": "81fbc52a64c659db58aa97017ff134a7d94610df7b90aa50ae868af10d6cf0e0"
+        }
+      ],
+      "status": "HomeProxy + sing-box selected in both HA profiles; SSR Plus migration unresolved",
+      "required_validation": [
+        "VMess/VLESS/Trojan/SOCKS node import and connectivity",
+        "WS and gRPC transports, TLS and REALITY settings",
+        "GFW-list routing, DNS and LAN/WAN bypass rules",
+        "server mode and any protocols not represented by current nodes",
+        "HA stop/start ordering, memory and throughput on R619AC"
+      ]
+    },
+    "pptp-server": {
+      "files": [
+        {
+          "path": "feeds/packages/net/pptpd/Makefile",
+          "sha256": "fa001e7e47b228d4b904a669d473ba37b7b1a391b3ef9a8117694b6817d1019c"
+        },
+        {
+          "path": "feeds/packages/net/pptpd/files/pptpd.init",
+          "sha256": "b470591d36762bf548ddd758b86e68c9cf7d9a6d452362540a16ac6ef690ca1c"
+        }
+      ],
+      "patch": "patches/feeds/packages/020-pptpd-retention.patch",
+      "patch_sha256": "8b02eb3a07dfa34acdc9192080d9228d22b249b56fa52583476f2001aa46841e",
+      "local_ui": {
+        "local-packages/luci-app-pptp-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/luci-app-pptp-server/Makefile": "0e064cca6b3762454c978003a1d60c30ab2c81ef57ca9d2aa907984024e27342",
+        "local-packages/luci-app-pptp-server/htdocs/luci-static/resources/view/services/pptp-server.js": "876eb42aa53af93723eb02640d1bdda1f111e5c2fb21f93660c031924b905e59",
+        "local-packages/luci-app-pptp-server/po/zh_Hans/pptp-server.po": "7f131cc25b4c8599dbb2fd2244d2cfa2aed3872ffbee4230b2b0fc59e2d46e19",
+        "local-packages/luci-app-pptp-server/root/usr/share/luci/menu.d/luci-app-pptp-server.json": "78028ca69b739a2a3761d73317e39b123bd9be0289ff48893405228ab1cb9471",
+        "local-packages/luci-app-pptp-server/root/usr/share/rpcd/acl.d/luci-app-pptp-server.json": "abc5998d92a9b26e69732175647b01333ec9ad036d5dd17e0cbe724cd9c16f8e"
+      },
+      "scope": "patched shell formatter/filter/config tests and JS form checks passed; target compilation, real PPP authentication and GRE forwarding unverified"
+    },
+    "accesscontrol": {
+      "files": [
+        {
+          "path": "feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/rules.js",
+          "sha256": "8b73f16b9603dd90b1e3cb223b37fd55d7252017a20e2e0346799722f358b214"
+        },
+        {
+          "path": "package/network/config/firewall4/Makefile",
+          "sha256": "b21d24129807cdfad836e629849b85aabc813e88616993d60d3b6f0f35e9ef2c"
+        }
+      ],
+      "backend_source": "https://github.com/openwrt/firewall4/blob/b6e5157527d361f99ad52eaa6da273cb0f2dfd59/root/usr/share/ucode/fw4.uc",
+      "backend_template": "https://github.com/openwrt/firewall4/blob/b6e5157527d361f99ad52eaa6da273cb0f2dfd59/root/usr/share/firewall4/templates/rule.uc",
+      "replacement": "luci-app-firewall timed traffic rules; src_mac, weekdays, start_time and stop_time",
+      "runtime_acceptance": "pending timezone, rule order, established connections, IPv4/IPv6 and offload tests; no rules or topology are installed"
+    },
+    "wrtbwmon": {
+      "files": [
+        {
+          "path": "feeds/packages/net/nlbwmon/Makefile",
+          "sha256": "92b516473733bf04ff51c04807f789b47a567ab49173e7a80767b94e808725bb"
+        },
+        {
+          "path": "feeds/packages/net/nlbwmon/files/nlbwmon.init",
+          "sha256": "c0db7e06ed75b857d777f9900d8e2740f8ca94b0ec80f409832cc2bf28e4ff90"
+        },
+        {
+          "path": "feeds/packages/net/nlbwmon/files/nlbwmon.config",
+          "sha256": "99f9a73ce6f2865f6aa3f04d3a59e538cbf6bdbe1d63a1b89c26c6d767994244"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-nlbwmon/root/usr/libexec/nlbwmon-action",
+          "sha256": "2125056070c1e387e51994e73083acc094450b0a8fd3ca81d34423b7ce0158d6"
+        },
+        {
+          "path": "feeds/luci/modules/luci-base/htdocs/luci-static/resources/fs.js",
+          "sha256": "f2eda3d529b3053318d034a7f792e6b63e3800ffb27fa34b486592594ffd4e00"
+        }
+      ],
+      "local_ui": {
+        "local-packages/luci-app-wrtbwmon/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/luci-app-wrtbwmon/Makefile": "3954c4e49c614120d12b8e17eb062f7650949ac312860fc2417dd60e4d922698",
+        "local-packages/luci-app-wrtbwmon/htdocs/luci-static/resources/view/network/traffic-status.js": "da4d9cf842c98f97f56af1c6bc5af0d4592ad300102a6ff72ecc0723f0cd181c",
+        "local-packages/luci-app-wrtbwmon/htdocs/luci-static/resources/wrtbwmon.js": "48188d555eb4c29ab1763c164741e12ecfb4f156a85aed8e6942e10cfce054e3",
+        "local-packages/luci-app-wrtbwmon/po/zh_Hans/wrtbwmon.po": "6d84107099430daa9622480ffe7434524480c02b9554755783c5d42fce5e124f",
+        "local-packages/luci-app-wrtbwmon/root/usr/share/luci/menu.d/luci-app-wrtbwmon.json": "ec95ea978b8c5744ef76013915a02e7daf19b007bb660f68c5e0c1b660c9ba46",
+        "local-packages/luci-app-wrtbwmon/root/usr/share/rpcd/acl.d/luci-app-wrtbwmon.json": "309eab3f4d39d0272f83cb29eed0e09993b1fb4b277f1864a497e29f3a72556c"
+      },
+      "backend_commit": "29236be687927b0c81ee6e2642e7caa8787c4ad3",
+      "scope": "per-MAC IPv4/IPv6 totals, sampled rates, filtering and sorting; exact read-only CGI command; no config/init ownership, accounting reset or autostart changes",
+      "legacy_data": "old wrtbwmon databases are incompatible; preserve them privately; persistence and current accounting period are managed by nlbwmon",
+      "runtime_acceptance": "not run; native LuCI, actual counters, refresh cadence, persistence, proxy/offload traffic and target compilation pending",
+      "client_contract_source": "https://github.com/jow-/nlbwmon/blob/29236be687927b0c81ee6e2642e7caa8787c4ad3/client.c"
+    },
+    "iptvhelper-gap": {
+      "legacy_source": "https://github.com/riverscn/openwrt-iptvhelper",
+      "scope": "learn STB connection destinations into an ipset for policy routing and redirect STB DNS; multicast proxy packages alone do not replace these functions",
+      "status": "unresolved; requires nftables-compatible learning/routing/DNS implementation and operator topology; no replacement silently selected"
+    },
+    "v2ray-server": {
+      "files": [
+        {
+          "path": "feeds/packages/net/v2ray-core/Makefile",
+          "sha256": "7766745f757fd1b5743cf9f7e8cdfdab45e0c8ce31009866d157583fec274bc8"
+        },
+        {
+          "path": "feeds/packages/net/v2ray-core/files/v2ray.init",
+          "sha256": "12e130b034c1567ebf8cbfd60c43723c12d972ea08b0a238017b83c1b1a47029"
+        },
+        {
+          "path": "feeds/packages/net/v2ray-core/files/v2ray.conf",
+          "sha256": "52fa5da8d05ae62f1b6a3badc0f702c3962a18d4f44aea761d4fb053a2d2e7d0"
+        },
+        {
+          "path": "feeds/packages/lang/python/python3/Makefile",
+          "sha256": "1d5eb3fc2be8bc3e1f154e5ad6ce0ee6002d33f5df636d98b91497801c3bc38d"
+        },
+        {
+          "path": "feeds/luci/modules/luci-base/htdocs/luci-static/resources/validation.js",
+          "sha256": "27440380ee0fdfd21c354d68549c532a331461c0bb9084815303ce99c537933f"
+        }
+      ],
+      "local_files": {
+        "local-packages/neko-v2ray-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/neko-v2ray-server/Makefile": "eabd3b685ad3a3d55da4ecd3131bd6c5fb8ee232de8c3c4beacd580fa7ffa7fb",
+        "local-packages/neko-v2ray-server/files/render.py": "b99346052baa381057f6a0319a92220a971f7935917dcdfb6725419f29d11fd1",
+        "local-packages/neko-v2ray-server/files/v2ray_server.config": "de98d820598756f859483c587afb9669f15f39ffdb1431f08cf6885278245d09",
+        "local-packages/neko-v2ray-server/files/v2ray_server.init": "8b2c01a2e9023bb534a3d6e58e84d10dad37f3d548e80af2fa50a2b554141b93",
+        "local-packages/luci-app-v2ray-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/luci-app-v2ray-server/Makefile": "9b85c0b8c4790c6207db9eb8d571723db96b500e665f92cc75a284df871e97b1",
+        "local-packages/luci-app-v2ray-server/htdocs/luci-static/resources/view/services/v2ray-server.js": "fb61043c078e8ebc784ca3ee5767edd2c1641bb45f32912821d46839623f161d",
+        "local-packages/luci-app-v2ray-server/po/zh_Hans/v2ray-server.po": "c2879b966be275b0225f30a56b9868200fe8a9ab990b55577a48aa23bb6df4ce",
+        "local-packages/luci-app-v2ray-server/root/etc/uci-defaults/85-neko-v2ray-server.sh": "0df922e3f1df9715a01a5d602d9d91b97d507304ad7874b7b6dac4146f5e2bec",
+        "local-packages/luci-app-v2ray-server/root/usr/share/luci/menu.d/luci-app-v2ray-server.json": "249bf3ce6d505db9bba7054f3154d2195126efdbbc2152dede72bb0c6cd8ec43",
+        "local-packages/luci-app-v2ray-server/root/usr/share/rpcd/acl.d/luci-app-v2ray-server.json": "5bbe31f807d4d822328cee1014ce79d5f91e1860336af57c41897c1d41bf804e"
+      },
+      "core_version": "5.53.0",
+      "core_source_sha256": "f2a78ff50ce36c4a577a39016485cdfb835a75137d514a0a5e8e9e983f0d38bb",
+      "schema_sources": [
+        "https://github.com/v2fly/v2ray-core/blob/v5.53.0/main/commands/test.go",
+        "https://github.com/v2fly/v2ray-core/blob/v5.53.0/infra/conf/v4/v2ray.go",
+        "https://github.com/v2fly/v2ray-core/blob/v5.53.0/infra/conf/v4/transport_internet.go",
+        "https://github.com/v2fly/v2ray-core/blob/v5.53.0/infra/conf/v4/shadowsocks.go",
+        "https://github.com/v2fly/v2ray-core/blob/v5.53.0/infra/conf/v4/socks.go",
+        "https://github.com/v2fly/v2ray-core/blob/v5.53.0/infra/conf/v4/http.go"
+      ],
+      "legacy_reference_only": "https://github.com/coolsnowwolf/luci/blob/master/applications/luci-app-v2ray-server/luasrc/model/cbi/v2ray_server/api/app.lua",
+      "scope": "new local UCI adapter and LuCI UI; six protocols and six legacy transports; no firewall/network changes; private generated JSON, procd lifecycle, native core test before launch; backend and UI own separate paths",
+      "hardware_scope": "x86-ha only; Python runs during rendering, not as the proxy data plane; no R619AC basic-profile dependency",
+      "unsupported": "unknown enabled options, XT/REALITY-specific settings and unsupported legacy cipher names are rejected; they are not silently dropped",
+      "native_validation": "not run; local Go 1.23.4 exists but proxy.golang.org DNS lookup failed and no exact v5.53.0 cache was found",
+      "runtime_acceptance": "not run; target compilation, actual core parser, authentication, transports, firewall, private-destination routing and HA data plane pending"
+    },
+    "turboacc": {
+      "files": [
+        {
+          "path": "package/kernel/linux/Makefile",
+          "sha256": "1863b4e4bff85d5dad50f1805ec14cdd3cd510caa8a0d8ae8e8b965129f239d2"
+        },
+        {
+          "path": "package/kernel/linux/modules/netsupport.mk",
+          "sha256": "6271bbea020cca90da4df3103f1a920d7049ecde9dfd1936cf3be2f483e9210a"
+        },
+        {
+          "path": "package/kernel/linux/files/sysctl-tcp-bbr.conf",
+          "sha256": "ff6849f9d6e774560aee52828d3f4dbf4940f367fb87476d4d252e91d6a60c11"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-firewall/htdocs/luci-static/resources/view/firewall/zones.js",
+          "sha256": "17648299f2edb72749e9045f5f574e95bdedf58b85eb3bb9e3166644d5e07f36"
+        },
+        {
+          "path": "feeds/packages/net/dnsproxy/Makefile",
+          "sha256": "10ed14bd0ecdaf0807517d4ec6c1dce2b7d3de0182f0ef2d01c6907ccaee2215"
+        },
+        {
+          "path": "feeds/packages/net/dnsproxy/files/dnsproxy.config",
+          "sha256": "59a086a1cf6d0c71eea604ba99dcacfc6e2c86ed324356246d0ac49e3296f3d1"
+        },
+        {
+          "path": "feeds/packages/net/dnsproxy/files/dnsproxy.init",
+          "sha256": "0eeae76a43e588279917763d3eeb08e0d7d9bc4519795e5897c4605e06761da2"
+        },
+        {
+          "path": "feeds/packages/net/dnsproxy/files/dnsproxy.sysctl",
+          "sha256": "fdf8434fcad3c10fe93881b0ab5dc7b3212dc6a91ffb6a4d1993f002dbd31380"
+        },
+        {
+          "path": "feeds/packages/net/dnsproxy/files/dnsproxy.defaults",
+          "sha256": "28aa2a252621f7bd8aa7b9111f0b0e46cb5ac660575e75f3502d3279a38bd106"
+        },
+        {
+          "path": "package/network/config/firewall4/patches/001-firewall4-add-support-for-fullcone-nat.patch",
+          "sha256": "e043a5f7d07d7569f32df8af4b70f11b809611dfa5bc8cf8c33f6ee4478fefd9"
+        }
+      ],
+      "local_files": {
+        "local-packages/luci-app-turboacc/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/luci-app-turboacc/Makefile": "b37cbfc9c0fcfe738c882543fcdd63f52a127e2db9a5cb25ce3f987234714455",
+        "local-packages/luci-app-turboacc/htdocs/luci-static/resources/view/network/turboacc.js": "ca9513de034b23a53de48fa64a2e3556a6ff6d841dbfe8c9b6c1d276f243732e",
+        "local-packages/luci-app-turboacc/po/zh_Hans/turboacc.po": "a0744797400ed3723da1aebce984dc13acd84b44e6976d743558389e4af66a7e",
+        "local-packages/luci-app-turboacc/root/etc/uci-defaults/85-neko-bbr.sh": "3764665a91e9e82c2ff1e15bb0b86608b319db1faeb9e8bddfb159407ddd91ac",
+        "local-packages/luci-app-turboacc/root/usr/share/luci/menu.d/luci-app-turboacc.json": "ec7a605436c447feb1686a924eb14fd879c4d0d753d62bbd4ac727f3f6552314",
+        "local-packages/luci-app-turboacc/root/usr/share/rpcd/acl.d/luci-app-turboacc.json": "776f6ada0160464a93c430b1ccf22e7bef3984d68aa1a7b95e27a3530fc68501",
+        "local-packages/neko-bbr/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/neko-bbr/Makefile": "eebd1bb3f2fdb33436a8e6378e05e51eea8bcaaeb70e7e6b07c3b3c6cefdc3bc",
+        "local-packages/neko-bbr/files/apply.sh": "25e347f64ca310db82756a98bfd08406650f875987f4fed9ea4452aae574652e",
+        "local-packages/neko-bbr/files/neko-bbr.init": "1c59e3c7085e842d56f70fb0d459b9918cdbec168a8626de87b893c73e9021e1",
+        "local-packages/neko-bbr/files/turboacc.config": "a27f0df416267e3902e08c6d3fa57596b814184e1ce4aefda8cf68852952ee5d"
+      },
+      "profile_patches": {
+        "patches/x86-ha/010-bbr-preserve-default.patch": "d890f0972a87c3a1541b540c3e8c0d6bd76629161f7c7590e340cfa20d11fd51",
+        "patches/feeds/packages/x86-ha/040-dnsproxy-explicit-config.patch": "5d15ad71f7211d0d48f07cae7cdf99f7e2ce461d6d202136a902c57d2a9dc451"
+      },
+      "fixture_manifest": "tests/fixtures/acceleration/manifest.json",
+      "dnsproxy_version": "0.83.0",
+      "dnsproxy_source_sha256": "53a586f02ca9c5e3e39ccf70c8e8dade7302b3b17800ade171357dc08fc4e89c",
+      "replacement": "local LuCI page using native firewall4 nft flow/fullcone flags, separately owned neko-bbr init/config, and official DNSProxy backend",
+      "hardware_scope": "x86-ha only; R619AC basic profile is unchanged; software/nft offload replaces the old SFE function but requires performance and compatibility acceptance; WED is MediaTek-specific and not enabled for these targets",
+      "legacy_snapshot_flags": {
+        "turboacc": {
+          "sw_flow": "1",
+          "hw_flow": "1",
+          "fullcone_nat": "2",
+          "hw_wed": "0",
+          "dns_caching": "0",
+          "sfe_flow": "0",
+          "bbr_cca": "1"
+        },
+        "firewall": {
+          "flow_offloading": "0",
+          "flow_offloading_hw": "0",
+          "fullcone": "2"
+        }
+      },
+      "legacy_snapshot_interpretation": "UCI flags only; contradictory offload values and old FullCone mode 2 do not prove live kernel state. No private configuration copied or router settings changed.",
+      "firewall_policy": "keep is a no-op; select software/hardware or new boolean FullCone explicitly; never normalize old mode 2 automatically; actual flags are shown separately from legacy references",
+      "bbr_policy": "default disabled; module installation no longer writes a global bbr sysctl; explicit apply records the previous algorithm in private locked runtime state; restore preserves a different manual selection; unavailable previous algorithm is reported with recovery state retained",
+      "dns_policy": "default disabled and no external resolver preset; official init/config/procd jail retained; argument boundaries fixed, enabled startup requires upstreams, optional HA guard; installation does not raise global UDP limits or rewrite DHCP/DNS/network",
+      "legacy_references_only": [
+        "https://github.com/coolsnowwolf/luci/blob/master/applications/luci-app-turboacc/luasrc/model/cbi/turboacc.lua",
+        "https://github.com/coolsnowwolf/luci/blob/master/applications/luci-app-turboacc/root/etc/init.d/turboacc"
+      ],
+      "kernel_reference": "https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html",
+      "runtime_acceptance": "not run: current defconfig/build, real LuCI, kernel BBR, native DNS core/encrypted DNS, NAT behavior, driver offload, SQM/proxy/accounting, throughput and HA data plane"
+    },
+    "serverchan": {
+      "replacement": "official-feed luci-app-wechatpush 3.6.12 and its Chinese translation; x86-ha only",
+      "files": [
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/Makefile",
+          "sha256": "acbd4c231a946a721e12eff4cb0bf7a9840f8ac61e5a788d9cf4c8b541f08a84"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/root/etc/config/wechatpush",
+          "sha256": "78aad2c0e6666f0f35c6fe599a65281760a0e326eb7a62ab59f7cf49ed693520"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/root/etc/init.d/wechatpush",
+          "sha256": "801036d376465aad7ff149aead49b541a9d51563eb5ca1d2d5efacaeae17646f"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/root/etc/uci-defaults/luci-wechatpush",
+          "sha256": "1a6bc49c010c161ae1b178a82a3d5ae7f373587b4971ca1e315b51c74c71ac32"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/root/usr/share/wechatpush/wechatpush",
+          "sha256": "6ef3b3a706a2859042a0dc49574a61c9acea1fbb3847f593a7cfa4a925bbd762"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/root/usr/share/wechatpush/api/serverchan.json",
+          "sha256": "50909a9a0a784e857759be3141aba499d1eed272acbe258cd48da7ad058895cc"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/root/usr/share/wechatpush/api/serverchan3.json",
+          "sha256": "9a07072a7b2c592f0b9079df7a661876784a2159aa66eec99ce0198c67f5c4a8"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/root/usr/share/rpcd/acl.d/luci-app-wechatpush.json",
+          "sha256": "835c5e0fd44c5b3feb6dedd4164abf99b7a4aea9092d6fc4271741a4b2e7bf20"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/htdocs/luci-static/resources/view/wechatpush/config.js",
+          "sha256": "aa71dca72c3bf7282edf0aa02df7d841e3ec18b7efcc899d401a678df04adc00"
+        },
+        {
+          "path": "feeds/luci/applications/luci-app-wechatpush/po/zh_Hans/wechatpush.po",
+          "sha256": "c93f1356ae10ff968dfd8dd6550a344daf47c0c3074040a80e08237ff9196f34"
+        }
+      ],
+      "patch": "patches/feeds/luci/x86-ha/040-wechatpush-retention.patch",
+      "patch_sha256": "4b4f30711dcaeb6ae1ea98e448eba46ceb0077b0959fcf0cb83e7e0374978f0a",
+      "fixture_manifest": "tests/fixtures/wechatpush/manifest.json",
+      "project_reference": "https://github.com/tty228/luci-app-wechatpush",
+      "legacy_snapshot": "one serverchan section, eight options; serverchan_enable=0; no raw private values or credentials published",
+      "configuration_migration": {
+        "serverchan_enable": "wechatpush.config.enable",
+        "sleeptime": "wechatpush.config.sleeptime",
+        "serverchan_ipv6": "review get_ipv6_mode and interface locally; enum values are not copied",
+        "serverchan_up": "device_notification online",
+        "serverchan_down": "device_notification offline",
+        "cpuload_enable": "cpu_notification load",
+        "cpuload": "cpu_load_threshold",
+        "temperature_enable": "cpu_notification temp; choose an explicit threshold locally"
+      },
+      "defaults": "disabled; no credentials or old configuration imported; fresh install disables autostart; initialized upgrades keep their startup choice",
+      "scope": "IP/IPv6 changes, device online/offline, CPU/temperature and scheduled notification settings are present in the pinned source; actual delivery not tested",
+      "patch_scope": "strict enable flag before procd instance creation, optional HA start guard; Bash printf -v with validated identifiers reads UCI/JSON result values as data instead of evaluating them as shell source; remove seven duplicate Simplified Chinese msgids, retaining the first equivalent translation",
+      "unsupported": "built-in per-client traffic monitoring depends on legacy wrtbwmon and is marked BROKEN in the pinned Makefile; not enabled and not replaced by the separate nlbwmon page. It is absent from the eight-field current legacy configuration.",
+      "runtime_acceptance": "not run: current target defconfig/build, actual LuCI, provider authentication and delivery, notification timing/thresholds, device probes, firewall/login rules, child-process shutdown and HA behavior; tests never contact providers or send messages"
+    }
+  },
+  "source_commit": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",
+  "ha_service_guards": {
+    "source_files": {
+      "package/network/services/dnsmasq/files/dnsmasq.init": "4383bdb7452d621b69fafe4f4ff36d0d347d4ddf6f104b5983db0c06a12c2718",
+      "package/network/services/odhcpd/files/odhcpd.init": "4d59c3687e7cacee9e7b82ba9433fa815aafeb8f94af4c6926993653009e0fa4"
+    },
+    "patches": {
+      "patches/common/010-ha-service-guards.patch": "288e851893a9c6d8d436c09deb9594ebcbcdd388e8fa7404373812c3e2532d39",
+      "patches/feeds/luci/010-homeproxy-ha-guard.patch": "51a5eda2a769cd7c2302f7b2f40f37eac3daca2a441c52f9896046e24eb73854"
+    },
+    "validation": "patches apply to exact pinned sources; shell syntax and mocked cleanup checks passed; real service/runtime integration pending"
+  }
+}

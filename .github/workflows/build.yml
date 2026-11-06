@@ -6,7 +6,7 @@ on:
         type: choice
         default: x86-basic
         options: [x86-basic, x86-ha, r619ac-ha, all]
-        description: Build profile (R619AC assumes 128M NAND hardware)
+        description: Build profile (R619AC 128MiB NAND / 512MiB RAM)
       publish:
         type: boolean
         default: false
@@ -29,7 +29,9 @@ jobs:
       - id: matrix
         env:
           PROFILE: ${{ inputs.profile }}
-        run: echo "value=$(python3 scripts/build.py matrix --profile "$PROFILE")" >> "$GITHUB_OUTPUT"
+        run: |
+          matrix=$(python3 scripts/build.py matrix --profile "$PROFILE")
+          echo "value=$matrix" >> "$GITHUB_OUTPUT"
   build:
     needs: plan
     runs-on: ubuntu-24.04

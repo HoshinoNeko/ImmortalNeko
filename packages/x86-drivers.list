@@ -1,0 +1,29 @@
+# NIC, USB and storage module package names from the current x86 inventory.
+# Rebuilt for the locked target/kernel; no legacy .ko files are copied.
+kmod-bnx2
+kmod-bnx2x
+kmod-e1000
+kmod-e1000e
+kmod-igb
+kmod-igbvf
+kmod-ixgbe
+kmod-mii
+kmod-mmc
+kmod-r8125
+kmod-r8126
+kmod-r8168
+kmod-sdhci
+kmod-tg3
+kmod-usb-core
+kmod-usb-hid
+kmod-usb-net
+kmod-usb-net-aqc111
+kmod-usb-net-asix-ax88179
+kmod-usb-net-cdc-ether
+kmod-usb-net-rndis
+kmod-usb-net-rtl8150
+kmod-usb-net-rtl8152-vendor
+kmod-usb-printer
+kmod-usb-storage
+kmod-usb-storage-extras
+kmod-usb-storage-uas

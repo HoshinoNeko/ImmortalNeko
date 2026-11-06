@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+START=55
+STOP=10
+
+start() {
+    /usr/libexec/neko-bbr/apply.sh apply
+}
+
+stop() {
+    /usr/libexec/neko-bbr/apply.sh restore
+}
+
+reload() {
+    start
+}

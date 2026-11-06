@@ -6,7 +6,7 @@ import subprocess
 import tarfile
 import tempfile
 import unittest
-from scripts.collect_device import ARTIFACTS, collect, ssh_arguments
+from scripts.collect_device import ARTIFACTS, EXTRA_INVENTORY, collect, ssh_arguments
 from scripts.fwlib import BuildError
 
 
@@ -72,3 +72,20 @@ class CollectionTests(unittest.TestCase):
             info=tarfile.TarInfo('etc/config/../../outside');info.size=1
             stream.addfile(info,io.BytesIO(b'x'))
         with self.assertRaises(BuildError):validate_archive(archive)
+
+    def test_extra_inventory_is_explicit_and_stays_private(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            result=collect('root@example.test',22,self.destination,workspace=self.root,runner=self.runner,extra_inventory=True)
+        meta=json.loads((result/'snapshot.json').read_text())
+        self.assertTrue(meta['extra_inventory'])
+        self.assertEqual(len(self.commands),len(ARTIFACTS)+len(EXTRA_INVENTORY))
+        for name,_ in EXTRA_INVENTORY:self.assertEqual((result/name).stat().st_mode & 0o777,0o600)
+
+    def test_extra_inventory_failure_cannot_complete_snapshot(self):
+        def fail_extra(args,**kwargs):
+            if args[-1]==EXTRA_INVENTORY[0][1]:return subprocess.CompletedProcess(args,1)
+            return self.runner(args,**kwargs)
+        with self.assertRaises(BuildError):
+            collect('root@example.test',22,self.destination,workspace=self.root,runner=fail_extra,extra_inventory=True)
+        meta=json.loads((self.destination/'snapshot.json').read_text())
+        self.assertEqual(meta['status'],'failed')

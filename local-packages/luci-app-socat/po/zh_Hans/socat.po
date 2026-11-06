@@ -1,0 +1,35 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\nLanguage: zh_Hans\n"
+
+msgid "Manage the official Socat service. Firewall rules must be configured separately."
+msgstr "管理官方 Socat 服务。请单独配置所需防火墙规则。"
+
+msgid "Instances"
+msgstr "实例"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Run as user"
+msgstr "运行用户"
+
+msgid "If empty, the official service runs as root."
+msgstr "留空时，官方服务以 root 身份运行。"
+
+msgid "Argument format"
+msgstr "参数格式"
+
+msgid "Legacy argument string"
+msgstr "旧式参数字符串"
+
+msgid "Separate arguments"
+msgstr "逐项参数"
+
+msgid "Socat arguments"
+msgstr "Socat 参数"
+
+msgid "The official service splits this string on whitespace. Use separate arguments when an argument contains spaces."
+msgstr "官方服务按空白拆分此字符串。参数内部包含空格时，请改用逐项参数。"
+
+msgid "Each entry is one argument, passed directly to Socat. Do not add shell quoting."
+msgstr "每项直接作为一个参数传给 Socat，无需添加 Shell 引号。"

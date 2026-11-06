@@ -1,0 +1,41 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\nLanguage: zh_Hans\n"
+
+msgid "PPTP Server"
+msgstr "PPTP 服务器"
+
+msgid "Server"
+msgstr "服务器"
+
+msgid "Configure server and client addresses locally. Firewall rules for TCP 1723 and GRE must be configured separately."
+msgstr "请在本地配置服务器和客户端地址，并单独配置 TCP 1723 与 GRE 所需的防火墙规则。"
+
+msgid "Server IPv4 address"
+msgstr "服务器 IPv4 地址"
+
+msgid "Client address pool"
+msgstr "客户端地址池"
+
+msgid "Comma-separated IPv4 addresses or ranges in pptpd.conf syntax."
+msgstr "使用 pptpd.conf 支持的 IPv4 地址或地址范围，多个值用逗号分隔。"
+
+msgid "DNS servers offered to clients"
+msgstr "下发给客户端的 DNS 服务器"
+
+msgid "MPPE options"
+msgstr "MPPE 选项"
+
+msgid "Record logins in wtmp"
+msgstr "在 wtmp 中记录登录"
+
+msgid "Accounts"
+msgstr "账号"
+
+msgid "Allowed client addresses"
+msgstr "允许的客户端地址"
+
+msgid "Leave empty for any address, or use the PPP address-list syntax."
+msgstr "留空允许任意地址，也可以填写 PPP 支持的地址列表。"
+
+msgid "Control characters are not supported."
+msgstr "不支持控制字符。"

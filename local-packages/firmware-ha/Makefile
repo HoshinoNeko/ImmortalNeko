@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=firmware-ha
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=2
+PKG_RELEASE:=5
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=Local firmware maintainer
 include $(INCLUDE_DIR)/package.mk
@@ -10,7 +10,7 @@ define Package/firmware-ha
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Local dual router HA controller
-  DEPENDS:=+keepalived +ip-full +iputils-ping +uci +ubus +jsonfilter
+  DEPENDS:=+keepalived +ip-full +iputils-ping +uci +ubus +jsonfilter +openssh-client +openssh-keygen +coreutils-timeout
 endef
 
 define Package/firmware-ha/conffiles
@@ -31,6 +31,12 @@ define Package/firmware-ha/install
 	$(INSTALL_BIN) ./files/events.sh $(1)/usr/libexec/firmware-ha/events.sh
 	$(INSTALL_BIN) ./files/check.sh $(1)/usr/libexec/firmware-ha/check.sh
 	$(INSTALL_BIN) ./files/notify.sh $(1)/usr/libexec/firmware-ha/notify.sh
+	$(INSTALL_BIN) ./files/paths.sh $(1)/usr/libexec/firmware-ha/paths.sh
+	$(INSTALL_BIN) ./files/handoff.sh $(1)/usr/libexec/firmware-ha/handoff.sh
+	$(INSTALL_BIN) ./files/peer-status.sh $(1)/usr/libexec/firmware-ha/peer-status.sh
+	$(INSTALL_BIN) ./files/preflight.sh $(1)/usr/libexec/firmware-ha/preflight.sh
+	$(INSTALL_BIN) ./files/service-guard.sh $(1)/usr/libexec/firmware-ha/service-guard.sh
+	$(INSTALL_BIN) ./files/allow-multidial.sh $(1)/usr/libexec/firmware-ha/allow-multidial.sh
 	$(INSTALL_BIN) ./files/ha-status.sh $(1)/usr/sbin/firmware-ha-status
 endef
 $(eval $(call BuildPackage,firmware-ha))

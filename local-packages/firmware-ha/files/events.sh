@@ -19,8 +19,12 @@ while IFS=' ' read -r type instance state priority extra; do
     [ "$type" = INSTANCE ] && [ "$instance" = '"ROUTER"' ] && [ -z "$extra" ] || continue
     valid_number "$priority" || continue
     case "$state" in MASTER|BACKUP|FAULT|STOP) :;; *) continue;; esac
-    if ! "$HA_LIB/notify.sh" "$state"; then
-        touch "$HA_RUN/inhibit"
-        logger -t firmware-ha "failed $state transition; eligibility inhibited"
-    fi
+    result=0
+    "$HA_LIB/notify.sh" "$state" || result=$?
+    case "$result" in
+        0) :;;
+        3) logger -t firmware-ha 'handoff deferred; retry quarantine is active';;
+        *) touch "$HA_RUN/inhibit"
+           logger -t firmware-ha "failed $state transition; eligibility inhibited";;
+    esac
 done < "$1"

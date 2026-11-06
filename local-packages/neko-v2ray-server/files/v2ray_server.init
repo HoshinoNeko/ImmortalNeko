@@ -1,0 +1,51 @@
+#!/bin/sh /etc/rc.common
+USE_PROCD=1
+START=99
+V2RAY_SERVER_RUN=${V2RAY_SERVER_RUN:-/var/run/neko-v2ray-server}
+V2RAY_SERVER_CORE=${V2RAY_SERVER_CORE:-/usr/bin/v2ray}
+V2RAY_SERVER_RENDER=${V2RAY_SERVER_RENDER:-/usr/libexec/neko-v2ray-server/render.py}
+V2RAY_SERVER_PYTHON=${V2RAY_SERVER_PYTHON:-/usr/bin/python3}
+
+start_service() {
+    if [ -x /usr/libexec/firmware-ha/service-guard.sh ]; then
+        /usr/libexec/firmware-ha/service-guard.sh v2ray_server || return 0
+    fi
+    case "$(uci -q get v2ray.enabled.enabled 2>/dev/null)" in
+        1|true|yes|on|enabled) logger -t neko-v2ray-server 'Disable the generic v2ray service before using this adapter'; return 1;;
+    esac
+    [ ! -L "$V2RAY_SERVER_RUN" ] || return 1
+    umask 077
+    mkdir -p "$V2RAY_SERVER_RUN" && chmod 700 "$V2RAY_SERVER_RUN" || return 1
+    [ ! -L "$V2RAY_SERVER_RUN/config.json" ] && [ ! -d "$V2RAY_SERVER_RUN/config.json" ] || return 1
+    local candidate status
+    candidate=$(mktemp "$V2RAY_SERVER_RUN/config.XXXXXX") || return 1
+    "$V2RAY_SERVER_PYTHON" "$V2RAY_SERVER_RENDER" --output "$candidate" --check-files
+    status=$?
+    if [ "$status" -ne 0 ]; then
+        rm -f "$candidate"
+        [ "$status" -eq 3 ] && return 0
+        return 1
+    fi
+    if ! "$V2RAY_SERVER_CORE" test -format=json -config "$candidate" >/dev/null 2>&1; then
+        rm -f "$candidate"
+        logger -t neko-v2ray-server 'Core configuration validation failed'
+        return 1
+    fi
+    mv -f "$candidate" "$V2RAY_SERVER_RUN/config.json" || { rm -f "$candidate"; return 1; }
+    procd_open_instance server
+    procd_set_param command "$V2RAY_SERVER_CORE" run -format=json -config "$V2RAY_SERVER_RUN/config.json"
+    procd_set_param file "$V2RAY_SERVER_RUN/config.json"
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_set_param respawn
+    procd_close_instance
+}
+
+stop_service() {
+    [ ! -L "$V2RAY_SERVER_RUN" ] || return 1
+    rm -f "$V2RAY_SERVER_RUN/config.json"
+}
+
+service_triggers() {
+    procd_add_reload_trigger v2ray_server
+}

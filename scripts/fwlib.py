@@ -115,7 +115,29 @@ def assert_config(wanted, actual):
     if missing:
         raise BuildError('Unavailable packages/options after defconfig:\n'+'\n'.join(missing))
 
-SECRET = re.compile(r"""(?im)(-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|(?:option\s+)?(?:password|passwd|token|secret|private_key|preshared_key|auth_pass|api_key|key)\s*(?:=|\s)\s*["']?[^\s"'#]+)""")
+_CREDENTIAL_FIELD = r'(?:[A-Za-z0-9]+_)*(?:password|passwd|token|secret|private_key|preshared_key|auth_pass|api_key|key)'
+_CREDENTIAL_VALUE = r'''\s*["']?[^\s"'#]+'''
+SECRET = re.compile(
+    r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|'
+    r'(?<!\$)(?:option\s+)?'+_CREDENTIAL_FIELD+r'\s*='+_CREDENTIAL_VALUE+r'|'
+    r'(?<![\w.$/-])(?:option[ \t]+)?'+_CREDENTIAL_FIELD+r'[ \t]+'+_CREDENTIAL_VALUE,
+    re.I | re.M)
+
+_OPENVPN_REFERENCE = re.compile(r'''\s*set\s+openvpn\.[A-Za-z0-9_-]+\.key=(['"]?)(/etc/openvpn/[A-Za-z0-9_./-]+)\1\s*''')
+_OPENVPN_BOOLEAN = re.compile(r'\s*set\s+openvpn\.[A-Za-z0-9_-]+\.persist_key=[01]\s*')
+
+def credential_scan_text(text, patch=False):
+    # OpenVPN's key option is a filename, not inline credential material.
+    # Only this fully qualified UCI form is exempt; private files remain forbidden.
+    result=[]
+    for line in text.splitlines():
+        source=line[1:] if patch and line[:1] in {'+', '-', ' '} else line
+        reference=_OPENVPN_REFERENCE.fullmatch(source)
+        if (reference and '..' not in Path(reference[2]).parts) or _OPENVPN_BOOLEAN.fullmatch(source):
+            result.append('')
+        else:
+            result.append(line)
+    return '\n'.join(result)
 
 def scan_tree(base):
     base = Path(base)
@@ -134,5 +156,5 @@ def scan_tree(base):
             text = f.read_text()
         except UnicodeError:
             raise BuildError('Binary overlay requires explicit review: '+str(f))
-        if SECRET.search(text):
+        if SECRET.search(credential_scan_text(text, f.suffix == '.patch')):
             raise BuildError('Possible credential in firmware input: '+str(f))

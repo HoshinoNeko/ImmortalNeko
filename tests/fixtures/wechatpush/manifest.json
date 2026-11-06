@@ -1,0 +1,7 @@
+{
+  "applications/luci-app-wechatpush/Makefile": "acbd4c231a946a721e12eff4cb0bf7a9840f8ac61e5a788d9cf4c8b541f08a84",
+  "applications/luci-app-wechatpush/root/etc/config/wechatpush": "78aad2c0e6666f0f35c6fe599a65281760a0e326eb7a62ab59f7cf49ed693520",
+  "applications/luci-app-wechatpush/root/etc/init.d/wechatpush": "801036d376465aad7ff149aead49b541a9d51563eb5ca1d2d5efacaeae17646f",
+  "applications/luci-app-wechatpush/root/usr/share/wechatpush/wechatpush": "6ef3b3a706a2859042a0dc49574a61c9acea1fbb3847f593a7cfa4a925bbd762",
+  "applications/luci-app-wechatpush/po/zh_Hans/wechatpush.po": "c93f1356ae10ff968dfd8dd6550a344daf47c0c3074040a80e08237ff9196f34"
+}

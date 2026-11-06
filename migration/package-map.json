@@ -1,5 +1,12 @@
 {
   "ddns-scripts": {"replacement": ["ddns-go"], "reason": "User requested ddns-go; provider and domain settings must be migrated locally."},
+  "luci-app-serverchan": {"replacement": ["luci-app-wechatpush"], "reason": "Use official-feed WeChatPush 3.6.12 for ServerChan, IP changes, device online/offline, CPU/temperature and scheduled notifications. The old serverchan schema is not imported; credentials, thresholds and notification choices must be configured locally. Built-in per-client traffic notifications still depend on unavailable legacy wrtbwmon and are not replaced by the separate nlbwmon page. Target compilation and actual notification delivery remain unverified."},
   "luci-app-ddns": {"replacement": ["luci-app-ddns-go"], "reason": "ddns-go LuCI UI; old ddns UCI schema is incompatible."},
-  "luci-i18n-ddns-zh-cn": {"replacement": [], "reason": "Translation is not a service; review translation availability separately."}
+  "luci-i18n-ddns-zh-cn": {"replacement": [], "reason": "Translation is not a service; review translation availability separately."},
+  "luci-app-filetransfer": {"replacement": ["luci-app-filemanager"], "reason": "The locked official LuCI File Manager implements upload/download; its UI and configuration differ from the legacy file-transfer page."},
+  "luci-app-accesscontrol": {"replacement": ["luci-app-firewall"], "reason": "Use the locked official Firewall/Traffic Rules UI: source MAC, weekdays, start_time and stop_time are supported by the pinned firewall4 backend. Review old firewall rules, timezone and rule ordering locally; established connections and offload behavior still require runtime acceptance."},
+  "luci-app-wireguard": {"replacement": ["luci-proto-wireguard", "kmod-wireguard"], "reason": "The locked WireGuard protocol package includes interface configuration, peer status, its menu and RPC implementation. Keep the existing network UCI schema; provision secrets locally."},
+  "luci-proto-bonding": {"replacement": ["luci-mod-network", "kmod-bonding"], "reason": "Bonding is now a device type in the official Network UI. Convert the old protocol section into a network device section; do not import the old protocol verbatim."},
+  "luci-app-ntpc": {"replacement": ["busybox", "luci-mod-system"], "reason": "Use BusyBox sysntpd and System/Time Synchronization. NTPD must stay enabled in the resolved BusyBox configuration. Server names move to system.ntp; ntpclient interval/drift options are not copied."},
+  "ntpclient": {"replacement": ["busybox"], "reason": "Use the target's sysntpd NTP client, with BUSYBOX_DEFAULT_NTPD=y; migrate server candidates locally rather than restoring old ntpclient UCI."}
 }

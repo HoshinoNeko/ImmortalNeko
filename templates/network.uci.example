@@ -4,3 +4,38 @@
 # Keep PPPoE credentials, Wi-Fi keys and VPN secrets on the device, not in this repo.
 # For HA the two management addresses are distinct; clients use a third VIP.
 # For cold PPPoE, explicitly set the WAN interface auto=0 AFTER provisioning locally.
+
+# Schematic ONLY: replace every <...> before using, resolve zones/ports locally.
+# Both routers keep this DHCP interface up, even when PPPoE is down.
+# Configure separate reservations on the upstream DHCP server in 192.168.1.0/24.
+config interface 'wan_monitor'
+	option proto 'dhcp'
+	option device '<same-lower-device-as-pppoe>'
+	option auto '1'
+	option defaultroute '0'
+	option peerdns '0'
+	option delegate '0'
+
+config interface 'ha_heartbeat'
+	option proto 'static'
+	option device '<dedicated-heartbeat-device>'
+	option ipaddr '<local-heartbeat-ip>'
+	option netmask '<heartbeat-netmask>'
+	option auto '1'
+	option delegate '0'
+
+# Stable endpoint, distinct from management IP, all monitor IPs, and client VIPs.
+config interface 'ha_control'
+	option proto 'static'
+	option device 'lo'
+	option ipaddr '<local-dedicated-control-ip>'
+	option netmask '255.255.255.255'
+	option auto '1'
+	option delegate '0'
+
+# Required separately: narrow firewall rules for peer ICMP, status SSH and routed
+# VRRP protocol 112 on BOTH paths, plus rp_filter=2 on the input devices.
+# Exempt the dedicated control /32 VRRP traffic from WAN masquerade/SNAT;
+# verify the source remains election_source with packet capture on both paths.
+# Match firmware-ha election_source/peer to the two control /32 endpoints;
+# election_device=lo, wan_monitor_source/peer to the reserved DHCP addresses.

@@ -1,1 +1,2 @@
 # One relative patch path per line; applied in order.
+010-ha-service-guards.patch

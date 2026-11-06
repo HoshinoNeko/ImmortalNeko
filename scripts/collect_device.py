@@ -28,6 +28,12 @@ ARTIFACTS = [
     ('etc-config-private.tar.gz', 'tar -C / -czf - etc/config'),
 ]
 
+# Optional metadata only: no certificate contents, identities or service data copied.
+EXTRA_INVENTORY = [
+    ('network-drivers.txt', 'for n in /sys/class/net/*; do [ -e "$n/device" ] || continue; printf "%s " "${n##*/}"; if [ -L "$n/device/driver" ]; then readlink -f "$n/device/driver" || exit 1; else echo driver-unavailable; fi; done; echo end-network-driver-inventory'),
+    ('service-asset-paths.txt', 'failed=0; for p in /etc/openvpn /etc/easy-rsa /etc/ipsec.d /etc/strongswan.d /etc/frp /etc/wireguard /etc/zerotier /etc/zerotier-one /var/lib/zerotier-one /etc/tailscale /var/lib/tailscale /etc/rclone /root/.config/rclone /etc/samba; do if [ -e "$p" ] || [ -L "$p" ]; then printf "\\nDIRECTORY %s\\n" "$p"; ls -ld "$p" || failed=1; find "$p" -maxdepth 5 -type f || failed=1; fi; done; echo end-fixed-root-asset-inventory; exit "$failed"'),
+]
+
 
 def ssh_arguments(host, port, identity=None):
     if not re.fullmatch(r'[-A-Za-z0-9_@.:\[\]]+', host) or host.startswith('-'):
@@ -97,18 +103,19 @@ def validate_archive(path):
         raise BuildError('Invalid configuration archive') from exc
 
 
-def collect(host, port, output, identity=None, workspace=ROOT, runner=subprocess.run):
+def collect(host, port, output, identity=None, workspace=ROOT, runner=subprocess.run, extra_inventory=False):
     command = ssh_arguments(host, port, identity)
     dest = private_destination(workspace, output)
     meta = {'status': 'collecting', 'host': host, 'port': port,
             'collected_at_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            'artifacts': [], 'scope': 'read-only snapshot; no firmware or network changes'}
+            'artifacts': [], 'scope': 'read-only snapshot; no firmware or network changes',
+            'extra_inventory': bool(extra_inventory)}
     save_metadata(dest, meta)
     errors = dest/'ssh-errors.log'
     try:
         with errors.open('wb') as stderr:
             errors.chmod(0o600)
-            for name, remote in ARTIFACTS:
+            for name, remote in ARTIFACTS+(EXTRA_INVENTORY if extra_inventory else []):
                 path = dest/name
                 with path.open('wb') as stdout:
                     path.chmod(0o600)
@@ -148,8 +155,9 @@ def main():
     parser.add_argument('--port', type=int, default=22)
     parser.add_argument('--identity', type=Path, help='Existing local SSH identity; never copied into snapshot')
     parser.add_argument('--output', required=True, type=Path, help='New directory under private/')
+    parser.add_argument('--extra-inventory', action='store_true', help='Also list NIC driver names and fixed-root service asset paths; contents are not copied')
     args = parser.parse_args()
-    collect(args.host, args.port, args.output, args.identity)
+    collect(args.host, args.port, args.output, args.identity, extra_inventory=args.extra_inventory)
 
 
 if __name__ == '__main__':

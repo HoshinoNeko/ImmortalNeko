@@ -3,18 +3,41 @@
   "baseline": "current x86 read-only SSH snapshot; supersedes historical backups",
   "installed_package_count": 680,
   "inventory_sha256": "a4fe957b459d21740c39289b28b5d78451395fd01d70f1a1e40a84cb3627a3c3",
+  "metadata_sha256": "788048b65ce979fb1dfd43dec8901ca3ebd8bdeaa0b4dbe4c16ffd1fec6aed95",
   "plugin_count": 66,
-  "unresolved_plugin_count": 21,
+  "unresolved_plugin_count": 10,
+  "profile_request_coverage": {
+    "r619ac-ha": {
+      "explicit_plugin_mapping_count": 6,
+      "defined_but_not_explicitly_requested": 50,
+      "scope": "direct package requests only; dependencies and actual image require manifest verification"
+    },
+    "x86-basic": {
+      "explicit_plugin_mapping_count": 0,
+      "defined_but_not_explicitly_requested": 56,
+      "scope": "direct package requests only; dependencies and actual image require manifest verification"
+    },
+    "x86-ha": {
+      "explicit_plugin_mapping_count": 56,
+      "defined_but_not_explicitly_requested": 0,
+      "scope": "direct package requests only; dependencies and actual image require manifest verification"
+    }
+  },
   "all_plugins_preserved": false,
   "source_commit": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",
   "plugins": [
     {
       "old": "luci-app-accesscontrol",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "replace",
+      "packages": [
+        "luci-app-firewall"
+      ],
+      "note": "Use the locked official Firewall/Traffic Rules UI: source MAC, weekdays, start_time and stop_time are supported by the pinned firewall4 backend. Review old firewall rules, timezone and rule ordering locally; established connections and offload behavior still require runtime acceptance.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-advanced-reboot",
@@ -23,7 +46,10 @@
         "luci-app-advanced-reboot"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-aliyundrive-fuse",
@@ -31,7 +57,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-aliyundrive-webdav",
@@ -39,7 +66,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-amule",
@@ -48,7 +76,10 @@
         "luci-app-amule"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-argon-config",
@@ -57,7 +88,10 @@
         "luci-app-argon-config"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-aria2",
@@ -66,7 +100,10 @@
         "luci-app-aria2"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-arpbind",
@@ -75,7 +112,10 @@
         "luci-app-arpbind"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-autoreboot",
@@ -84,7 +124,10 @@
         "luci-app-autoreboot"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-baidupcs-web",
@@ -92,7 +135,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-commands",
@@ -101,7 +145,10 @@
         "luci-app-commands"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-ddns",
@@ -111,7 +158,11 @@
       ],
       "note": "ddns-go LuCI UI; old ddns UCI schema is incompatible.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "r619ac-ha",
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-design-config",
@@ -119,7 +170,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-diskman",
@@ -128,7 +180,10 @@
         "luci-app-diskman"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-docker",
@@ -137,7 +192,10 @@
         "luci-app-docker"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-dockerman",
@@ -146,15 +204,23 @@
         "luci-app-dockerman"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-filetransfer",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "replace",
+      "packages": [
+        "luci-app-filemanager"
+      ],
+      "note": "The locked official LuCI File Manager implements upload/download; its UI and configuration differ from the legacy file-transfer page.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-firewall",
@@ -163,7 +229,10 @@
         "luci-app-firewall"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-frpc",
@@ -172,7 +241,11 @@
         "luci-app-frpc"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "r619ac-ha",
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-frps",
@@ -181,7 +254,10 @@
         "luci-app-frps"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-hd-idle",
@@ -190,7 +266,10 @@
         "luci-app-hd-idle"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-ipsec-vpnd",
@@ -199,7 +278,10 @@
         "luci-app-ipsec-vpnd"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-iptvhelper",
@@ -207,7 +289,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-mwan3",
@@ -216,7 +299,10 @@
         "luci-app-mwan3"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-mwan3helper",
@@ -224,7 +310,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-nlbwmon",
@@ -233,15 +320,24 @@
         "luci-app-nlbwmon"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-ntpc",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "replace",
+      "packages": [
+        "busybox",
+        "luci-mod-system"
+      ],
+      "note": "Use BusyBox sysntpd and System/Time Synchronization. NTPD must stay enabled in the resolved BusyBox configuration. Server names move to system.ntp; ntpclient interval/drift options are not copied.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-omcproxy",
@@ -250,7 +346,10 @@
         "luci-app-omcproxy"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-openvpn",
@@ -259,7 +358,11 @@
         "luci-app-openvpn"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "r619ac-ha",
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-openvpn-server",
@@ -268,7 +371,10 @@
         "luci-app-openvpn-server"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-p910nd",
@@ -277,15 +383,24 @@
         "luci-app-p910nd"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-pptp-server",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "port",
+      "packages": [
+        "luci-app-pptp-server"
+      ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "note": "Local LuCI implementation; backend ownership and compatibility boundaries are documented in source-evidence.json; target compilation and runtime acceptance remain pending.",
+      "definition": "local-packages/luci-app-pptp-server/Makefile",
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-qbittorrent",
@@ -294,7 +409,10 @@
         "luci-app-qbittorrent"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-ramfree",
@@ -303,7 +421,10 @@
         "luci-app-ramfree"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-rclone",
@@ -312,7 +433,10 @@
         "luci-app-rclone"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-samba4",
@@ -321,23 +445,37 @@
         "luci-app-samba4"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-serverchan",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "replace",
+      "packages": [
+        "luci-app-wechatpush"
+      ],
+      "note": "Use official-feed WeChatPush 3.6.12 for ServerChan, IP changes, device online/offline, CPU/temperature and scheduled notifications. The old serverchan schema is not imported; credentials, thresholds and notification choices must be configured locally. Built-in per-client traffic notifications still depend on unavailable legacy wrtbwmon and are not replaced by the separate nlbwmon page. Target compilation and actual notification delivery remain unverified.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-socat",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "port",
+      "packages": [
+        "luci-app-socat"
+      ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "note": "Local LuCI implementation; backend ownership and compatibility boundaries are documented in source-evidence.json; target compilation and runtime acceptance remain pending.",
+      "definition": "local-packages/luci-app-socat/Makefile",
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-sqm",
@@ -346,7 +484,10 @@
         "luci-app-sqm"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-ssr-plus",
@@ -354,7 +495,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-statistics",
@@ -363,7 +505,10 @@
         "luci-app-statistics"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-syncdial",
@@ -372,7 +517,10 @@
         "luci-app-syncdial"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-tinyproxy",
@@ -381,7 +529,10 @@
         "luci-app-tinyproxy"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-ttyd",
@@ -390,15 +541,24 @@
         "luci-app-ttyd"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-turboacc",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "port",
+      "packages": [
+        "luci-app-turboacc"
+      ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "note": "Local LuCI implementation; backend ownership and compatibility boundaries are documented in source-evidence.json; target compilation and runtime acceptance remain pending.",
+      "definition": "local-packages/luci-app-turboacc/Makefile",
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-udpxy",
@@ -407,7 +567,10 @@
         "luci-app-udpxy"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-upnp",
@@ -416,7 +579,10 @@
         "luci-app-upnp"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-usb-printer",
@@ -425,7 +591,10 @@
         "luci-app-usb-printer"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-uugamebooster",
@@ -433,15 +602,22 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-v2ray-server",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "port",
+      "packages": [
+        "luci-app-v2ray-server"
+      ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "note": "Local LuCI implementation; backend ownership and compatibility boundaries are documented in source-evidence.json; target compilation and runtime acceptance remain pending.",
+      "definition": "local-packages/luci-app-v2ray-server/Makefile",
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-verysync",
@@ -449,7 +625,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-vlmcsd",
@@ -458,7 +635,10 @@
         "luci-app-vlmcsd"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-vsftpd",
@@ -467,15 +647,25 @@
         "luci-app-vsftpd"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-wireguard",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "replace",
+      "packages": [
+        "luci-proto-wireguard",
+        "kmod-wireguard"
+      ],
+      "note": "The locked WireGuard protocol package includes interface configuration, peer status, its menu and RPC implementation. Keep the existing network UCI schema; provision secrets locally.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "r619ac-ha",
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-wol",
@@ -484,15 +674,24 @@
         "luci-app-wol"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-wrtbwmon",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "port",
+      "packages": [
+        "luci-app-wrtbwmon"
+      ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "note": "Local LuCI implementation; backend ownership and compatibility boundaries are documented in source-evidence.json; target compilation and runtime acceptance remain pending.",
+      "definition": "local-packages/luci-app-wrtbwmon/Makefile",
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-xlnetacc",
@@ -501,7 +700,10 @@
         "luci-app-xlnetacc"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-app-zerotier",
@@ -510,15 +712,25 @@
         "luci-app-zerotier"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "r619ac-ha",
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-proto-bonding",
-      "action": "review",
-      "packages": [],
-      "note": "No confirmed equivalent in selected target; do not silently drop.",
+      "action": "replace",
+      "packages": [
+        "luci-mod-network",
+        "kmod-bonding"
+      ],
+      "note": "Bonding is now a device type in the official Network UI. Convert the old protocol section into a network device section; do not import the old protocol verbatim.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-proto-ipv6",
@@ -527,7 +739,10 @@
         "luci-proto-ipv6"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-proto-ppp",
@@ -536,7 +751,10 @@
         "luci-proto-ppp"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-proto-wireguard",
@@ -545,7 +763,11 @@
         "luci-proto-wireguard"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "r619ac-ha",
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-theme-argon",
@@ -554,7 +776,10 @@
         "luci-theme-argon"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-theme-bootstrap",
@@ -563,7 +788,10 @@
         "luci-theme-bootstrap"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-theme-design",
@@ -571,7 +799,8 @@
       "packages": [],
       "note": "No confirmed equivalent in selected target; do not silently drop.",
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     },
     {
       "old": "luci-theme-material",
@@ -580,8 +809,22 @@
         "luci-theme-material"
       ],
       "unavailable": [],
-      "verification": "metadata-only; target selection, compilation and behavior not yet verified"
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "package definitions and explicit profile selections only; defconfig, compilation and runtime acceptance pending"
     }
   ],
-  "additional_standalone_service": "tailscale (present in current snapshot; not silently omitted)"
+  "standalone_services": [
+    {
+      "old": "tailscale",
+      "packages": [
+        "tailscale"
+      ],
+      "selected_in": [
+        "x86-ha"
+      ],
+      "verification": "selected only; target compilation and runtime pending"
+    }
+  ]
 }

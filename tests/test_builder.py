@@ -40,6 +40,17 @@ class BuilderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             (Path(d)/'authorized_keys').write_text('')
             with self.assertRaises(BuildError): scan_tree(d)
+    def test_runtime_shell_references_do_not_hide_literal_credentials(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/'service.sh'
+            p.write_text('printf "%s %s\\n" "$password $remoteip" "$token $name"\ncat /etc/openvpn/client.key >> "$destination"\nset openvpn.main.key=/etc/openvpn/pki/server.key\nset openvpn.main.persist_key=1\npersist-key\npersist-tun\n')
+            scan_tree(d)
+            for literal in ("option password 'example-value'\n", 'api_key=example-value\n', 'my_password=example-value\n',
+                            'obj.password="example-value"\n', 'obj.key="example-value"\n', 'option my_password "example-value"\n',
+                            'set network.wg.private_key=example-value\n', 'set openvpn.main.key=example-value\n',
+                            'set openvpn.main.key=/etc/openvpn/../other.key\n', 'set app.api_key=/etc/openvpn/pki/server.key\n'):
+                p.write_text(literal)
+                with self.assertRaises(BuildError):scan_tree(d)
     def test_legacy_unknown_plugins_never_silently_disappear(self):
         names=installed_names('luci-app-ddns - 1.0\nunknown-proxy - 2\n')
         rows=propose(names,{'luci-app-ddns-go'},{'luci-app-ddns':{'replacement':['luci-app-ddns-go'],'reason':'migration'}})
