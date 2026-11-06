@@ -17,18 +17,29 @@ if [ "$peer_mode" = dual-path ]; then
     down_timer='down_timer_adverts 10'
 fi
 extra_addresses=''
-extra_tracks=''
-tracked=" $lan "
+tracks=''
+tracked=' '
+# A bound VRRP interface is tracked implicitly; repeating it is a config error.
+# Routed dual-path VRRP has no bound interface, so track every gateway device.
+[ "$peer_mode" = dual-path ] || tracked=" $election "
+add_track() {
+    case "$tracked" in *" $1 "*) return 0;; esac
+    tracks="$tracks
+        $1"
+    tracked="$tracked$1 "
+}
+add_track "$lan"
 for entry in $extra_vips; do
     address=${entry%@*}; device=${entry##*@}
     extra_addresses="$extra_addresses
         $address dev $device"
-    case "$tracked" in
-        *" $device "*) :;;
-        *) extra_tracks="$extra_tracks
-        $device"; tracked="$tracked$device ";;
-    esac
+    add_track "$device"
 done
+track_block=''
+if [ -n "$tracks" ]; then
+    track_block="    track_interface {$tracks
+    }"
+fi
 cat <<EOF
 global_defs {
     router_id FW_${role}
@@ -64,9 +75,7 @@ vrrp_instance ROUTER {
     virtual_ipaddress {
         $vip dev $lan$extra_addresses
     }
-    track_interface {
-        $lan$extra_tracks
-    }
+$track_block
     track_script {
         local_health
     }

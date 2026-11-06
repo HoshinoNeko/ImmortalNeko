@@ -143,6 +143,11 @@ DHCP 租约同步尚未实现，需按现网决定静态租约或经认证的同
 主 VIP 使用 vip 和 lan_device；额外网关使用显式的 `list extra_vip 'IPv4/prefix@设备名'`。
 默认额外列表为空，不导入或猜测现网地址。所有网关在同一 VRRP 实例内共同接管，
 对应 Linux 接口都会加入链路检查。重复地址、非法设备名和配置片段注入会被拒绝。
+单路径模式中，绑定的选举接口由 keepalived 隐式跟踪，不再重复放入 `track_interface`；
+其余网关接口按设备去重后显式跟踪，列表为空时不输出该配置块。
+双路径模式没有绑定 VRRP 接口，仍显式跟踪所有网关接口。
+这与 [keepalived 2.3.3 的接口处理](https://github.com/acassen/keepalived/blob/v2.3.3/keepalived/vrrp/vrrp.c#L3528) 一致；
+配置校验继续要求零退出码。健康检查仍检查 LAN、WAN 底层及每个额外网关的链路状态。
 这为现有多个 VLAN 保留了迁移入口；R619AC 的 VLAN/DSA 端口关系仍需按实际硬件确认。
 
 角色事件使用 keepalived 原生 vrrp_notify_fifo，由一个进程顺序执行。

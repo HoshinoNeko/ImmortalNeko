@@ -2,14 +2,14 @@
   "date": "2026-11-06",
   "environment": "macOS arm64 / Python 3.14.5",
   "unit_tests": {
-    "count": 164,
-    "seconds": 127.487,
+    "count": 166,
+    "seconds": 130.295,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "result": "passed",
-    "log": ".work/ci-fix-full-tests.log",
-    "scope": "all discovered tests on macOS with TMPDIR=/tmp and sh resolved to /bin/dash; source/config helpers, procd/core/kernel/build command interfaces mocked where documented; not an Ubuntu or native namespace rerun",
+    "log": ".work/ci-track-full-tests.log",
+    "scope": "all discovered tests on macOS with TMPDIR=/tmp and sh resolved to /bin/dash; native Linux config-test and failover after renderer fix remain pending",
     "environment": "macOS arm64, Python 3.14.5; TMPDIR=/tmp; PATH sh uses /bin/dash"
   },
   "static": {
@@ -68,7 +68,7 @@
   },
   "not_run": [
     "full firmware compilation",
-    "Linux namespace integration",
+    "Linux namespace election/failover scenarios",
     "full firmware GitHub Actions workflow",
     "device boot",
     "real PPPoE failover",
@@ -77,7 +77,7 @@
   ],
   "dual_path": {
     "unit_regressions": "passed",
-    "native_linux": "not run: initial Actions compiled keepalived 2.3.3, then failed installing a systemd unit; namespace steps were skipped",
+    "native_linux": "attempted: namespaces created and native config-test executed; single-path check failed with exit 5 for repeated primary-interface tracking; election/failover and dual-path scenarios not completed",
     "pppoe_operator_test": "not run",
     "hardware": "R619AC user-confirmed 128MiB NAND / 512MiB RAM; runtime unverified"
   },
@@ -89,8 +89,9 @@
       "Current sandbox makes .git metadata read-only; the user made the recorded commit/push outside it",
       "GitHub SSH hostname lookup unavailable in the agent execution environment"
     ],
-    "latest_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04",
-    "current_ci_fixes_pushed": false
+    "current_ci_fixes_pushed": false,
+    "latest_observed_local_commit": "95f165551efe651d3836175d0e77782f1ad415d4",
+    "initial_confirmed_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04"
   },
   "checked_input_sha256": {
     ".github/workflows/build.yml": "9d8bccfb942dc1cfff6a324eb3b54d08402178b6a64ee4a2a304b81c3f0d6d4d",
@@ -109,7 +110,7 @@
     "files/x86-basic/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "files/x86-ha/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "files/x86-ha/etc/firmware-ha/retained-services": "155c0353e9e42f85c231be622e410b711f20cdc3542dc0795c2c70df206b73cd",
-    "local-packages/firmware-ha/Makefile": "d1ccdb10df16ae5b5fa6357f45601729cba4ba7027c45dd27a2a65647f53b094",
+    "local-packages/firmware-ha/Makefile": "a13cfa11d3e656c1d2b9438e90879451cf9441801c44b8f8ab3e9638bcc68d75",
     "local-packages/firmware-ha/files/90-firmware-ha.sh": "53cf6c1087120e47a24806a265d4af4845cc72e4c57d1c1a6b0194b331c807d6",
     "local-packages/firmware-ha/files/allow-multidial.sh": "076ac88080f82ccb16e76ffdf07dc730393484e2b651d5614290dbd80a7c81ff",
     "local-packages/firmware-ha/files/check.sh": "d8410f5a679694930e40612bb034f2ce920983ab7aba57213337fa89bac5fd11",
@@ -123,7 +124,7 @@
     "local-packages/firmware-ha/files/paths.sh": "5032a3eb5d0a0a8ea10b780768f52aedb4c7f1a6f210e2ab63e6330ebcc45223",
     "local-packages/firmware-ha/files/peer-status.sh": "248bdcede8894d18a6b85717065e3ff9350347b55380cbea655a5b249e38be16",
     "local-packages/firmware-ha/files/preflight.sh": "0d9644d71522abd4a2ba5d66f40100966f5eef2d169cdf30ffc1ab9e23ef6247",
-    "local-packages/firmware-ha/files/render.sh": "26495999b559a24306dadd654903d1e8a72288cfdec6443e3aa9e1b65523bd79",
+    "local-packages/firmware-ha/files/render.sh": "b8f3c2738dd50fcb0e09535efbac1ee459d4a31d6fe23ff1502d902f1c6fd3ba",
     "local-packages/firmware-ha/files/service-guard.sh": "ad4cbacf431ff08181ffba5970ac7152ad588597e8c7051590d58e51e6841e37",
     "local-packages/luci-app-pptp-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
     "local-packages/luci-app-pptp-server/Makefile": "0e064cca6b3762454c978003a1d60c30ab2c81ef57ca9d2aa907984024e27342",
@@ -171,7 +172,7 @@
     "migration/current-plugin-plan.json": "3ccc08b3ccec32ed1634156a9f411e80b01dccfd0547f331eae98d74cd36ddfc",
     "migration/driver-plan.json": "1d3d5870e84cd891dcdf5789200829ff5b1af1c58fb11715be407bacde6ce314",
     "migration/package-map.json": "b2afe32dc1c205d2cccc16f3b05f186ef1b5fc6a794405b0a83971e5ae7be14a",
-    "migration/source-evidence.json": "9efa005ce69242cb9804b41e5a2eba5dffd83d30d0f1e0563ffd7d0d817917f3",
+    "migration/source-evidence.json": "a2bd045353b2595003c165aa81b127e08b48162ad1e5167cca167405756cdb50",
     "packages/base.list": "f698afa87f126452861f97a01fce39449640438ef54adcb18645c79055905290",
     "packages/ha.list": "b00c0a64452d161abc0cb97e18842af6f8116e24b3238f9824a60399010191b3",
     "packages/proxy.list": "c3fdf86298f7b6b6c397d2eb2840dd9ce6cf7dd14ae77e4666b2b8cddbc5816d",
@@ -262,7 +263,7 @@
     "tests/test_builder.py": "1f9458662831a45eaf989ac647700312ebdfb65fd228541995637e6ece4a54d7",
     "tests/test_collection.py": "2520c9327dabbfb509c6b590f181342619dd3760781e6805db83e16f0c5c9dff",
     "tests/test_firstboot.py": "03590c5f7f6d62dca77e0db2fa5916dac77d7e56162957a6d9e60f587f08eb01",
-    "tests/test_ha.py": "24c52def45431dccde1ae0700408f865a6049d1ed6d9bb3ecdf6c7a57568cb38",
+    "tests/test_ha.py": "72cea1deb312669acdd1c789cf0bad2d04fa3359d693b1cbf849a494be3e9d56",
     "tests/test_keepalived_builder.py": "43cb6a2a05b1f02ecffdce66db02cb2e10b3a58f59dcb0d666351412331355e6",
     "tests/test_migration_plan.py": "4d47c9047f5e7c255b99cbecb258097c5d26d3746f065fd7bebe4ecc4d9502a2",
     "tests/test_pptpd.py": "6257aefff22642c520f0ad925b18614c9f156d3874b936559dbe318b19d01c48",
@@ -334,7 +335,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current local CI fixes: full 164-test suite using /tmp and dash; configuration scan, 26 Python AST files and workflow lint passed; initial remote failure recorded separately, fixed remote run pending",
+  "checked_input_scope": "current release-6 HA tracking fix: all 166 local tests passed with /tmp and dash; renderer shell syntax, configuration scan, 26 Python AST files, workflow lint and whitespace checks passed; strict native config-test unchanged and fixed remote execution pending",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -424,5 +425,23 @@
       "log": ".work/ci-fix-targeted-tests.log"
     },
     "remote_rerun_after_fix": "not run"
+  },
+  "ci_interface_tracking_failure": {
+    "evidence": "follow-up native integration log pasted by user; no new Actions run URL supplied",
+    "result": "failed",
+    "stage": "keepalived 2.3.3 --config-test before initial election",
+    "returncode": 5,
+    "message": "(ROUTER) Ignoring track_interface lan0 since own interface",
+    "previous_fix_progress": "build helper now stages the binary and native config-test runs",
+    "source_reference": "https://github.com/acassen/keepalived/blob/v2.3.3/keepalived/vrrp/vrrp.c#L3528",
+    "fix": "exclude the implicitly tracked bound interface; retain all other gateway tracks, deduplicate devices, omit empty blocks; unbound dual-path retains every gateway; strict config-test unchanged",
+    "firmware_ha_release": 6,
+    "targeted_tests": {
+      "count": 6,
+      "result": "passed",
+      "log": ".work/ci-track-targeted-tests.log",
+      "scope": "actual renderer and health shell with mocked UCI/kernel paths; no native keepalived execution"
+    },
+    "native_rerun_after_fix": "not run"
   }
 }

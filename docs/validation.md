@@ -5,7 +5,7 @@
 
 ## 已执行并通过
 
-* 完整164项回归测试全部通过，127.487秒，无跳过项；包含15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
+* 完整166项回归测试全部通过，130.295秒，无跳过项；包含15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
   覆盖构建配置、产物、旧清单分析、采集器、双路径探测、释放确认、单会话限制与可恢复退避事件。
   首次 Ubuntu Actions 的失败及本地修复见下文；本机通过不等同于远程流水线通过。
 * Socat、PPTP、设备流量、V2Ray Server 及 Turbo ACC 五组实际JS表单/视图模拟测试通过。
@@ -50,25 +50,37 @@ OpenVPN 测试原先连续替换 PKI 和 `/tmp/` 前缀，第二次替换会改�
 保留可执行权限，不运行安装服务单元和示例配置的完整安装目标。
 新增4项离线构建助手测试覆盖工作目录产物、权限、编译失败、缺失可执行文件及源校验失败。
 16项相关测试在 `TMPDIR=/tmp` 下通过，随后164项完整测试也在 `/tmp` 和 dash 下通过，127.487秒。
-下载/编译命令在助手测试中被模拟，本机未运行真实Linux编译或namespace测试，远程流水线尚未重跑。
+下载/编译命令在助手测试中被模拟，本机未运行真实Linux编译或namespace测试。
 
-## 已提供但未执行
+## 后续 Actions 配置检查失败与修复
+
+用户提供的后续日志确认，测试用 keepalived 已能启动配置校验；检查因
+`Ignoring track_interface lan0 since own interface` 返回5，选主与故障切换尚未开始。
+锁定的2.3.3源码把重复跟踪已绑定接口报告为配置错误，同时会隐式跟踪该接口。
+生成器现排除已绑定的选举接口，其余网关设备去重后显式跟踪，空列表不输出配置块。
+不绑定接口的双路径模式仍显式跟踪所有网关接口；健康脚本继续检查 LAN、WAN 底层与额外网关。
+`firmware-ha` release 升至6，原生 `--config-test` 的零退出码要求保持不变。
+6项相关回归已通过，覆盖空块、不同绑定接口、额外网关去重、双路径及额外网关断链。
+完整166项测试在 `/tmp` 和 dash 下通过，130.295秒，无失败或跳过项。
+修复后的真实Linux配置校验、选主和故障切换仍待CI重跑；源码依据见 [HA说明](ha.md#多-vlan-与有序事件)。
+
+## 仍待完成的原生验收
 
 Linux集成测试：sudo python3 tests/integration/keepalived_netns.py。
 在临时namespace/veth/bridge和/run目录中运行两个真实keepalived，检查两个网段VIP的唯一主机、
 WAN断开接管、x86恢复抢占、主进程停止接管。新增 --dual-path 覆盖两条独立链路、稳定 /32 路由、
 仅心跳故障及仅 WAN 监测故障时保持原主。CI 从固定SHA256源码编译与固件一致的 keepalived 2.3.3；
 UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 VRRP，不模拟 SSH 或运营商PPPoE。
-本机只完成脚本语法检查；首次CI停在测试用二进制安装步骤，namespace测试尚未运行。
+本机只完成脚本语法检查；后续CI已创建namespace并执行原生配置检查，但停在上述返回5的错误，选主及故障切换尚未完成。
 
 真实 V2Ray 核心配置校验入口为 `tests/integration/v2ray_generated.py --core <V2Ray-5.53.0>`，
 提供12份配置及1份负向配置，临时证书和配置会在测试结束后清理。
 本机Go 1.23.4可用，但 proxy.golang.org 的DNS查询失败，且没有同版本缓存，未构建/运行真实核心。
 后端流程测试使用模拟核心/procd；真实配置解析、认证、传输握手与流量验收仍待执行。
 
-没有执行：make download、完整make、实际固件Manifest与SHA256产物生成、Linux集成、
+仍待验收：make download、完整make、实际固件Manifest与SHA256产物生成、Linux选主/切换集成、
 固件构建工作流、Release、刷机/启动、真实PPPoE切换、内存压力与吞吐测试。
-用户已创建并推送 HoshinoNeko/ImmortalNeko，首次静态检查已运行并失败。
+用户已创建并推送 HoshinoNeko/ImmortalNeko，已运行静态检查及后续原生配置校验。
 当前沙箱禁止写入 .git，且 GitHub SSH/DNS 不可用；本次修复尚未提交或推送，仍需重跑Actions。
 
 ## 完整目标的验收审计

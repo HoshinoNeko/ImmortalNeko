@@ -394,6 +394,19 @@
       "patch_scope": "strict enable flag before procd instance creation, optional HA start guard; Bash printf -v with validated identifiers reads UCI/JSON result values as data instead of evaluating them as shell source; remove seven duplicate Simplified Chinese msgids, retaining the first equivalent translation",
       "unsupported": "built-in per-client traffic monitoring depends on legacy wrtbwmon and is marked BROKEN in the pinned Makefile; not enabled and not replaced by the separate nlbwmon page. It is absent from the eight-field current legacy configuration.",
       "runtime_acceptance": "not run: current target defconfig/build, actual LuCI, provider authentication and delivery, notification timing/thresholds, device probes, firewall/login rules, child-process shutdown and HA behavior; tests never contact providers or send messages"
+    },
+    "ha-interface-tracking": {
+      "keepalived_version": "2.3.3",
+      "backend_reference": "https://github.com/acassen/keepalived/blob/v2.3.3/keepalived/vrrp/vrrp.c#L3528",
+      "firmware_ha_release": 6,
+      "local_files": {
+        "local-packages/firmware-ha/Makefile": "a13cfa11d3e656c1d2b9438e90879451cf9441801c44b8f8ab3e9638bcc68d75",
+        "local-packages/firmware-ha/files/render.sh": "b8f3c2738dd50fcb0e09535efbac1ee459d4a31d6fe23ff1502d902f1c6fd3ba"
+      },
+      "source_behavior": "a bound primary interface is tracked implicitly; an explicit track_interface entry for the same interface reports CONFIG_GENERAL_ERROR and is ignored",
+      "render_policy": "single-path excludes only the bound election device, deduplicates remaining gateway devices and omits an empty block; unbound dual-path retains all gateway-device tracks",
+      "health_policy": "check.sh still checks LAN, WAN L2 and all extra VIP devices; strict native config-test remains unchanged",
+      "verification": "six targeted actual renderer/health tests passed with mock UCI/kernel interfaces; native Linux config-test/election after this change pending"
     }
   },
   "source_commit": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",

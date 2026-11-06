@@ -262,6 +262,18 @@ class HaTests(unittest.TestCase):
         self.assertIn('203.0.113.1/24 dev br-cctv',p.stdout)
         tracks=p.stdout.split('track_interface {',1)[1].split('}',1)[0]
         self.assertIn('br-iot',tracks);self.assertIn('br-cctv',tracks)
+    def test_bound_election_interface_is_not_repeated_in_a_tracking_block(self):
+        result=self.run_script('render.sh');self.assertEqual(result.returncode,0,result.stderr)
+        self.assertIn('    interface br-lan\n',result.stdout)
+        self.assertNotIn('track_interface {',result.stdout)
+
+    def test_explicit_tracking_excludes_only_the_bound_interface(self):
+        self.settings['extra_vip']='198.51.100.1/24@br-iot 203.0.113.1/24@br-iot'
+        for election,expected in [('br-lan',['br-iot']),('br-iot',['br-lan']),('hb0',['br-lan','br-iot'])]:
+            self.settings['election_device']=election
+            result=self.run_script('render.sh');self.assertEqual(result.returncode,0,result.stderr)
+            tracks=result.stdout.split('track_interface {',1)[1].split('}',1)[0].split()
+            self.assertEqual(tracks,expected)
     def test_duplicate_extra_gateway_is_rejected(self):
         self.settings['extra_vip']='192.0.2.1/24@br-iot'
         self.assertNotEqual(self.run_script('render.sh').returncode,0)
@@ -324,12 +336,15 @@ class HaTests(unittest.TestCase):
         self.assertEqual(self.run_script('preflight.sh').returncode,0)
 
     def test_dual_paths_share_one_unbound_vrrp_instance(self):
-        self.dual();result=self.run_script('render.sh')
+        self.dual();self.settings['extra_vip']='198.51.100.1/24@br-iot 203.0.113.1/24@br-iot'
+        result=self.run_script('render.sh')
         self.assertEqual(result.returncode,0,result.stderr)
         self.assertEqual(result.stdout.count('vrrp_instance '),1)
         self.assertNotIn('    interface ',result.stdout)
         self.assertIn('down_timer_adverts 10',result.stdout)
         self.assertIn('check_unicast_src',result.stdout)
+        tracks=result.stdout.split('track_interface {',1)[1].split('}',1)[0].split()
+        self.assertEqual(tracks,['br-lan','br-iot'])
 
     def test_both_paths_probed_and_one_failure_switches_transport(self):
         self.dual()
