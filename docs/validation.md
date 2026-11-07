@@ -1,11 +1,11 @@
 # 验证记录与验收范围
 
-最近更新：2026-11-06。环境：macOS arm64、Python 3.14.5。
+最近更新：2026-11-08。环境：macOS arm64、Python 3.14.5。
 详细机器可读结果见 [test-results.json](test-results.json) 和 [config-validation.json](config-validation.json)。
 
 ## 已执行并通过
 
-* 完整168项回归测试全部通过，133.687秒，无跳过项；包含15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
+* 完整172项回归测试全部通过，139.054秒，无跳过项；包含4项本地包发现检查、15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
   覆盖构建配置、产物、旧清单分析、采集器、双路径探测、释放确认、单会话限制与可恢复退避事件。
   首次 Ubuntu Actions 的失败及本地修复见下文；本机通过不等同于远程流水线通过。
 * Socat、PPTP、设备流量、V2Ray Server 及 Turbo ACC 五组实际JS表单/视图模拟测试通过。
@@ -16,10 +16,10 @@
 * actionlint v1.7.12：工作流通过；二进制经过固定SHA256校验。未运行shellcheck。
 * 固件输入扫描及目录边界校验通过；private/ 不能通过 files/../private 误选为覆盖层。
 * 实际源码和5个Feed的HEAD逐一匹配 source.lock.json。
-* 上一版三个真实 make defconfig 均通过，且所有请求的包/选项与解析结果严格相等：
-  x86-basic、x86-ha、r619ac-ha。已记录各最终配置的SHA256。
-  本次 HA 增加 SSH/timeout、HomeProxy/Sing-box，x86 显式选择56项插件映射、本地页面、V2Ray/Python适配层、BBR/DNSProxy、WeChatPush及27项驱动；已核对官方包名，
-  尚未重新运行 HA Profile 的真实 defconfig；当前沙箱无法挂载原配置验证映像。
+* 当前三个真实 make defconfig 均通过，且所有请求的包/选项与解析结果严格相等：
+  x86-basic 18项、x86-ha 171项、r619ac-ha 33项。已记录各最终配置及构建输入的SHA256。
+  包含新增 SSH/timeout、HomeProxy/Sing-box、x86 插件与中文翻译、本地页面、V2Ray/Python适配层、
+  BBR/DNSProxy、WeChatPush及27项驱动；十个此前缺失的应用/翻译包均已在实际元数据中注册，解析结果为 y。
 * 用户指定的现役 x86 只读采集完成：680个安装包、80个配置文件，11项采集产物校验和通过。
   未修改现网设置、未启停服务或刷写设备。
 
@@ -79,6 +79,23 @@ CI 用 `--disable-lvs` 构建；2.3.3 的 `-P/--vrrp` 只在 VRRP 和 LVS 都启
 连同4项构建助手测试共6项通过；随后完整168项测试在 `/tmp` 和 dash 下通过，133.687秒。
 此夹具不是真实 keepalived，原生参数预检及选主/切换仍待CI重跑。
 
+## x86-ha 本地 LuCI 包配置失败与修复
+
+用户提供的 Build firmware 日志显示五个本地应用及其中文翻译在 defconfig 后均为 n：
+PPTP Server、Socat、Turbo ACC、V2Ray Server、wrtbwmon。
+固定主树的 [include/scan.mk](https://github.com/immortalwrt/immortalwrt/blob/4fc16f2985a358bd43bb522e43f05395fcbd6ed5/include/scan.mk#L65)
+先用 grep 查找含 `call BuildPackage` 等调用标记的 Makefile，再求值其 include。
+这五份文件虽包含 luci.mk，却缺少官方 LuCI 包使用的扫描标记，因此连翻译定义也未进入包索引。
+
+现补齐五份 Makefile 的签名，并在 validate 中检查本地包和主题包是否满足固定扫描规则。
+4项新增测试覆盖无标记拒绝、原生注册/签名接受、下载前门禁及安装后使用真实 grep 规则发现全部8个本地包。
+旧提交的五份 Makefile 在同一规则下全部未匹配，修复后全部匹配。
+随后在大小写敏感的缓存源码中重新核对主树与5个 Feed 的固定 HEAD、应用对应 Profile 补丁，
+运行真实 make defconfig；三个 Profile 的全部请求均通过严格相等检查。
+x86-ha 的五个应用和五个中文包均存在于实际包元数据，且最终配置为 y。
+本次配置解析未使用模拟 Kconfig、FORCE=1 或删除包选择；完整固件编译仍需 Actions 重跑。
+日志与原始配置保存在 .work/package-discovery-audit/，摘要见 config-validation.json。
+
 ## 仍待完成的原生验收
 
 Linux集成测试：sudo python3 tests/integration/keepalived_netns.py。
@@ -86,7 +103,7 @@ Linux集成测试：sudo python3 tests/integration/keepalived_netns.py。
 WAN断开接管、x86恢复抢占、主进程停止接管。新增 --dual-path 覆盖两条独立链路、稳定 /32 路由、
 仅心跳故障及仅 WAN 监测故障时保持原主。CI 从固定SHA256源码编译与固件一致的 keepalived 2.3.3；
 UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 VRRP，不模拟 SSH 或运营商PPPoE。
-本机未运行真实Linux测试；最新CI日志已通过单路径配置检查，但进程在初始选主前因 `-P` 退出，选主及故障切换尚未完成。
+本机未运行真实Linux测试；此前原生日志已通过单路径配置检查，随后进程因 `-P` 退出；修复后的选主及切换详细结果待核对。
 
 真实 V2Ray 核心配置校验入口为 `tests/integration/v2ray_generated.py --core <V2Ray-5.53.0>`，
 提供12份配置及1份负向配置，临时证书和配置会在测试结束后清理。
@@ -96,7 +113,7 @@ UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 V
 仍待验收：make download、完整make、实际固件Manifest与SHA256产物生成、Linux选主/切换集成、
 固件构建工作流、Release、刷机/启动、真实PPPoE切换、内存压力与吞吐测试。
 用户已创建并推送 HoshinoNeko/ImmortalNeko，已运行静态检查及后续原生配置校验。
-当前沙箱禁止写入 .git，且 GitHub SSH/DNS 不可用；本次修复尚未提交或推送，仍需重跑Actions。
+本次环境已可读写 Git、访问远程仓库并挂载配置验证映像；完整构建的修复结果仍需 Actions 验证。
 
 ## 完整目标的验收审计
 
@@ -105,10 +122,10 @@ UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 V
 | 独立模块化工程 | 本地Git、用户已推送远程仓库、首次CI及错误日志 | 修复提交、推送及流水线通过 |
 | 官方稳定分支与固定Commit/Feed | 锁文件、真实HEAD核对、三个defconfig | 全量编译与长期更新验证 |
 | x86 Legacy/UEFI、ext4/SquashFS | 四类镜像选项通过真实解析、产物硬门禁 | 四类镜像实际生成与启动 |
-| R619AC 128M支持 | 用户确认128MiB NAND / 512MiB RAM、上一版配置解析通过 | 真实board/内存信息、启动/功能测试；设备目前不可访问 |
+| R619AC 128M支持 | 用户确认128MiB NAND / 512MiB RAM、当前配置解析通过 | 真实board/内存信息、启动/功能测试；设备目前不可访问 |
 | 保留全部插件 | 当前680包快照、66项LuCI迁移清单 | 10项待确定迁移方案；全部条目的目标编译/运行验收，全部应用的实际编译和功能验证 |
 | 网络/驱动/预配置 | 实时私有快照、多VIP与受管接口入口 | VLAN/端口/驱动映射、管理地址与VIP方案、IPv6及多WAN策略 |
-| PPPoE接管/回落和主机恢复 | 已确认单会话、冷备、双路径释放查询、退避及模拟测试 | 新依赖defconfig、真实Linux事件、运营商及双设备测试 |
+| PPPoE接管/回落和主机恢复 | 已确认单会话、冷备、双路径释放查询、退避、模拟测试及当前defconfig | 真实Linux事件、运营商及双设备测试 |
 | 独立1G心跳 | WAN DHCP + 专用心跳监测、单实例路由切换及分区限制 | 地址/租约/接线、真实双路径测试、断电/断线/分区演练及必要仲裁 |
 | 512MiB RAM基本服务 | 用户硬件确认、明确软件包及角色服务入口 | 实机内存、并发峰值、OOM与吞吐 |
 | 缓存、Manifest、SHA256与Release | 工作流/校验/元数据模块 | 实际缓存命中、产物、校验、下载与发布结果 |
@@ -124,7 +141,7 @@ UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 V
 用户确认旧备份已过期，提供现役x86管理地址并授权只读采集；实时快照已经成为迁移依据。
 R619AC当前不可用。当前网络为多VLAN/多WAN，不能把单网段模板当作现网方案。
 用户已创建远程仓库，确认单会话 PPPoE 和 R619AC 的512MiB内存。双路径方案已落入本地控制包、模板和测试。
-下一步需要可写 Git、可联网的执行环境以提交/推送并运行 Linux 集成与完整构建；
+下一步重跑 Actions 完整构建并核对 Linux 集成结果；
 继续逐项处理剩余10项插件迁移；已落实的11项替代/本地页面仍需实际目标验证。双机运行配置仍需管理地址/VIP、端口接线、两端DHCP保留租约、
 心跳及稳定 /32 控制地址；R619AC可用后做实机验收。
 

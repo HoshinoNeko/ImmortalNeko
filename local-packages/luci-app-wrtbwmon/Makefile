@@ -11,3 +11,5 @@ LUCI_PKGARCH:=all
 
 # The official nlbwmon package owns configuration, init and accounting data.
 include $(TOPDIR)/feeds/luci/luci.mk
+
+# call BuildPackage - OpenWrt buildroot signature

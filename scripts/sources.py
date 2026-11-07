@@ -1,7 +1,22 @@
 """Pinned source checkout and feed installation."""
 import shutil
+import re
 from pathlib import Path
 from scripts.fwlib import ROOT, BuildError, locked_repos, run, safe_path
+
+def local_packages():
+    for parent in ['local-packages', 'themes/packages']:
+        for directory in sorted((ROOT/parent).iterdir()):
+            if directory.is_dir() and (directory/'Makefile').exists():
+                yield directory
+
+def validate_local_packages():
+    # Pinned include/scan.mk greps each Makefile before evaluating its includes.
+    for directory in local_packages():
+        makefile = directory/'Makefile'
+        if not re.search(r'call (Build/DefaultTargets|BuildPackage|KernelPackage)', makefile.read_text()):
+            raise BuildError('Local package is invisible to OpenWrt package discovery: '+str(makefile)+
+                             '; LuCI packages need the "# call BuildPackage - OpenWrt buildroot signature" marker')
 
 def prepare_source(work):
     lock, feeds = locked_repos()
@@ -56,10 +71,8 @@ def install_files(src, p):
         scan_tree(overlay)
         shutil.copytree(overlay, src/'files', dirs_exist_ok=True,
                         ignore=shutil.ignore_patterns('.gitkeep'))
-    for parent in ['local-packages', 'themes/packages']:
-        for directory in sorted((ROOT/parent).iterdir()):
-            if directory.is_dir() and (directory/'Makefile').exists():
-                dest = src/'package/custom'/directory.name
-                if dest.exists():
-                    raise BuildError('Duplicate local package: '+directory.name)
-                shutil.copytree(directory, dest)
+    for directory in local_packages():
+        dest = src/'package/custom'/directory.name
+        if dest.exists():
+            raise BuildError('Duplicate local package: '+directory.name)
+        shutil.copytree(directory, dest)

@@ -7,3 +7,5 @@ LUCI_TITLE:=Acceleration controls using firewall4, BBR and DNSProxy
 LUCI_DEPENDS:=+luci-base +luci-app-firewall +neko-bbr +kmod-nft-offload +kmod-nft-fullcone +dnsproxy
 LUCI_PKGARCH:=all
 include $(TOPDIR)/feeds/luci/luci.mk
+
+# call BuildPackage - OpenWrt buildroot signature

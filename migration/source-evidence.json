@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-06",
+  "date": "2026-11-08",
   "scope": "local inspection of the pinned feed sources; package selection and UI round trips do not prove target compilation or runtime migration",
   "feed_heads": {
     "packages": "84bd86384928955b568988ca0e09e2c78c75173d",
@@ -66,7 +66,7 @@
       ],
       "local_ui": {
         "local-packages/luci-app-socat/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-        "local-packages/luci-app-socat/Makefile": "f51829e15a608a1fad023b49a46798aaef479d73fc136a95ad0bfdf5606c9717",
+        "local-packages/luci-app-socat/Makefile": "a2128884f771ce1a5190d927922fe66ebaa6baec5e2385ba8b95da855d645c6b",
         "local-packages/luci-app-socat/htdocs/luci-static/resources/view/services/socat.js": "fcdb4f1d3cc7c648ab84629cce2eab4d6a2982314d48067b2e7232e043a3014b",
         "local-packages/luci-app-socat/po/zh_Hans/socat.po": "be0719714dd8a35c585515442cd776e7afdadbaa2cf3548501c19e35fbdbf090",
         "local-packages/luci-app-socat/root/usr/share/luci/menu.d/luci-app-socat.json": "f32052c4a818824a7b6de68c48d26aa0f31047173fbd6d9e22ab140d6895eba4",
@@ -116,7 +116,7 @@
       "patch_sha256": "8b02eb3a07dfa34acdc9192080d9228d22b249b56fa52583476f2001aa46841e",
       "local_ui": {
         "local-packages/luci-app-pptp-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-        "local-packages/luci-app-pptp-server/Makefile": "0e064cca6b3762454c978003a1d60c30ab2c81ef57ca9d2aa907984024e27342",
+        "local-packages/luci-app-pptp-server/Makefile": "45d5d02c7460dcd98fbe12f0464b66625b310a4c487b5b6c92214a5120a16131",
         "local-packages/luci-app-pptp-server/htdocs/luci-static/resources/view/services/pptp-server.js": "876eb42aa53af93723eb02640d1bdda1f111e5c2fb21f93660c031924b905e59",
         "local-packages/luci-app-pptp-server/po/zh_Hans/pptp-server.po": "7f131cc25b4c8599dbb2fd2244d2cfa2aed3872ffbee4230b2b0fc59e2d46e19",
         "local-packages/luci-app-pptp-server/root/usr/share/luci/menu.d/luci-app-pptp-server.json": "78028ca69b739a2a3761d73317e39b123bd9be0289ff48893405228ab1cb9471",
@@ -165,7 +165,7 @@
       ],
       "local_ui": {
         "local-packages/luci-app-wrtbwmon/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-        "local-packages/luci-app-wrtbwmon/Makefile": "3954c4e49c614120d12b8e17eb062f7650949ac312860fc2417dd60e4d922698",
+        "local-packages/luci-app-wrtbwmon/Makefile": "13c313308f16850383af06540ec47d6b99f24118a574bbb7b4dab69e6596cc7e",
         "local-packages/luci-app-wrtbwmon/htdocs/luci-static/resources/view/network/traffic-status.js": "da4d9cf842c98f97f56af1c6bc5af0d4592ad300102a6ff72ecc0723f0cd181c",
         "local-packages/luci-app-wrtbwmon/htdocs/luci-static/resources/wrtbwmon.js": "48188d555eb4c29ab1763c164741e12ecfb4f156a85aed8e6942e10cfce054e3",
         "local-packages/luci-app-wrtbwmon/po/zh_Hans/wrtbwmon.po": "6d84107099430daa9622480ffe7434524480c02b9554755783c5d42fce5e124f",
@@ -213,7 +213,7 @@
         "local-packages/neko-v2ray-server/files/v2ray_server.config": "de98d820598756f859483c587afb9669f15f39ffdb1431f08cf6885278245d09",
         "local-packages/neko-v2ray-server/files/v2ray_server.init": "8b2c01a2e9023bb534a3d6e58e84d10dad37f3d548e80af2fa50a2b554141b93",
         "local-packages/luci-app-v2ray-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-        "local-packages/luci-app-v2ray-server/Makefile": "9b85c0b8c4790c6207db9eb8d571723db96b500e665f92cc75a284df871e97b1",
+        "local-packages/luci-app-v2ray-server/Makefile": "b08e969fe1c7c1a3ea8a595127e44ebd1386e55b0fd038edb53b0c77360d8490",
         "local-packages/luci-app-v2ray-server/htdocs/luci-static/resources/view/services/v2ray-server.js": "fb61043c078e8ebc784ca3ee5767edd2c1641bb45f32912821d46839623f161d",
         "local-packages/luci-app-v2ray-server/po/zh_Hans/v2ray-server.po": "c2879b966be275b0225f30a56b9868200fe8a9ab990b55577a48aa23bb6df4ce",
         "local-packages/luci-app-v2ray-server/root/etc/uci-defaults/85-neko-v2ray-server.sh": "0df922e3f1df9715a01a5d602d9d91b97d507304ad7874b7b6dac4146f5e2bec",
@@ -282,7 +282,7 @@
       ],
       "local_files": {
         "local-packages/luci-app-turboacc/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-        "local-packages/luci-app-turboacc/Makefile": "b37cbfc9c0fcfe738c882543fcdd63f52a127e2db9a5cb25ce3f987234714455",
+        "local-packages/luci-app-turboacc/Makefile": "350806debaae147fbb4a58da5f671450e6e2231d2a47803504e8df26ac5140d1",
         "local-packages/luci-app-turboacc/htdocs/luci-static/resources/view/network/turboacc.js": "ca9513de034b23a53de48fa64a2e3556a6ff6d841dbfe8c9b6c1d276f243732e",
         "local-packages/luci-app-turboacc/po/zh_Hans/turboacc.po": "a0744797400ed3723da1aebce984dc13acd84b44e6976d743558389e4af66a7e",
         "local-packages/luci-app-turboacc/root/etc/uci-defaults/85-neko-bbr.sh": "3764665a91e9e82c2ff1e15bb0b86608b319db1faeb9e8bddfb159407ddd91ac",
@@ -328,7 +328,7 @@
         "https://github.com/coolsnowwolf/luci/blob/master/applications/luci-app-turboacc/root/etc/init.d/turboacc"
       ],
       "kernel_reference": "https://www.kernel.org/doc/html/latest/networking/ip-sysctl.html",
-      "runtime_acceptance": "not run: current defconfig/build, real LuCI, kernel BBR, native DNS core/encrypted DNS, NAT behavior, driver offload, SQM/proxy/accounting, throughput and HA data plane"
+      "runtime_acceptance": "not run: target build, real LuCI, kernel BBR, native DNS core/encrypted DNS, NAT behavior, driver offload, SQM/proxy/accounting, throughput and HA data plane"
     },
     "serverchan": {
       "replacement": "official-feed luci-app-wechatpush 3.6.12 and its Chinese translation; x86-ha only",
@@ -393,7 +393,7 @@
       "scope": "IP/IPv6 changes, device online/offline, CPU/temperature and scheduled notification settings are present in the pinned source; actual delivery not tested",
       "patch_scope": "strict enable flag before procd instance creation, optional HA start guard; Bash printf -v with validated identifiers reads UCI/JSON result values as data instead of evaluating them as shell source; remove seven duplicate Simplified Chinese msgids, retaining the first equivalent translation",
       "unsupported": "built-in per-client traffic monitoring depends on legacy wrtbwmon and is marked BROKEN in the pinned Makefile; not enabled and not replaced by the separate nlbwmon page. It is absent from the eight-field current legacy configuration.",
-      "runtime_acceptance": "not run: current target defconfig/build, actual LuCI, provider authentication and delivery, notification timing/thresholds, device probes, firewall/login rules, child-process shutdown and HA behavior; tests never contact providers or send messages"
+      "runtime_acceptance": "not run: target build, actual LuCI, provider authentication and delivery, notification timing/thresholds, device probes, firewall/login rules, child-process shutdown and HA behavior; tests never contact providers or send messages"
     },
     "ha-interface-tracking": {
       "keepalived_version": "2.3.3",
@@ -427,6 +427,26 @@
       },
       "firmware_scope": "firmware-ha init did not use -P and is unchanged",
       "verification": "two subprocess contract-fixture tests passed; native CLI preflight, election and failover after this change pending"
+    },
+    "local-luci-package-discovery": {
+      "scanner_reference": "https://github.com/immortalwrt/immortalwrt/blob/4fc16f2985a358bd43bb522e43f05395fcbd6ed5/include/scan.mk#L65",
+      "scanner_sha256": "56cd5dad45a9947438305db2cb57af0a1b9771bfeb729194153881e134af3bdf",
+      "official_signature_reference": "https://github.com/immortalwrt/luci/blob/d6167ea0645cbd1327708d85f94824f42d0eb872/applications/luci-app-nlbwmon/Makefile#L13",
+      "source_behavior": "include/scan.mk greps each Makefile for call (Build/DefaultTargets|BuildPackage|KernelPackage) before evaluating includes; a luci.mk include alone is invisible",
+      "fix": "standard comment signature on all five local LuCI Makefiles; matching validation for local-packages and themes/packages",
+      "local_files": {
+        "local-packages/luci-app-pptp-server/Makefile": "45d5d02c7460dcd98fbe12f0464b66625b310a4c487b5b6c92214a5120a16131",
+        "local-packages/luci-app-socat/Makefile": "a2128884f771ce1a5190d927922fe66ebaa6baec5e2385ba8b95da855d645c6b",
+        "local-packages/luci-app-turboacc/Makefile": "350806debaae147fbb4a58da5f671450e6e2231d2a47803504e8df26ac5140d1",
+        "local-packages/luci-app-v2ray-server/Makefile": "b08e969fe1c7c1a3ea8a595127e44ebd1386e55b0fd038edb53b0c77360d8490",
+        "local-packages/luci-app-wrtbwmon/Makefile": "13c313308f16850383af06540ec47d6b99f24118a574bbb7b4dab69e6596cc7e",
+        "scripts/sources.py": "0536beb32c7debd20504d3a4c1cb055e35a2ee37db39aa1e229c8afa355c5438",
+        "scripts/build.py": "533d493b9d93bd59c39c09a3516758158b97bee364eb8565b6297eac66b6d196",
+        "tests/test_package_discovery.py": "e1c9ec41ba43ed0cbde5ceed8f07effa2d6336c584565c9b1c427a89c681d9d5"
+      },
+      "verification": "four new regressions, exact scanner before/after reproduction and real pinned make defconfig for all current profiles; all ten affected app/translation package records present and selected y",
+      "configuration_evidence": "docs/config-validation.json",
+      "target_compile_and_runtime": "not verified"
     }
   },
   "source_commit": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",

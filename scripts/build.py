@@ -8,12 +8,13 @@ import subprocess
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.fwlib import ROOT, BuildError, assert_config, config_values, locked_repos, profile, requested_config, run, scan_tree
-from scripts.sources import apply_patches, install_files, prepare_source
+from scripts.sources import apply_patches, install_files, prepare_source, validate_local_packages
 from scripts.configure import configure
 from scripts.artifacts import collect
 
 def validate():
     locked_repos()
+    validate_local_packages()
     for f in sorted((ROOT/'profiles').glob('*.json')):
         p = profile(f.stem)
         requested_config(p)

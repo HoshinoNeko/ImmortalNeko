@@ -7,3 +7,5 @@ LUCI_TITLE:=V2Ray Server configuration using the official core
 LUCI_DEPENDS:=+luci-base +neko-v2ray-server
 LUCI_PKGARCH:=all
 include $(TOPDIR)/feeds/luci/luci.mk
+
+# call BuildPackage - OpenWrt buildroot signature

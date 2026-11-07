@@ -1,16 +1,16 @@
 {
-  "date": "2026-11-06",
+  "date": "2026-11-08",
   "environment": "macOS arm64 / Python 3.14.5",
   "unit_tests": {
-    "count": 168,
-    "seconds": 133.687,
+    "count": 172,
+    "seconds": 139.054,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "result": "passed",
-    "log": ".work/ci-cli-full-tests.log",
-    "scope": "all discovered tests on macOS with /tmp and dash; CLI tests use a VRRP-only subprocess contract fixture; native CLI preflight, election and failover after the fix remain pending",
-    "environment": "macOS arm64, Python 3.14.5; TMPDIR=/tmp; PATH sh uses /bin/dash"
+    "log": ".work/package-discovery-audit/full-tests.log",
+    "scope": "all discovered tests on macOS with /tmp and dash, including four new package-discovery regressions; not a Linux firmware compile or native HA run",
+    "environment": "macOS arm64 / Python 3.14.5; TMPDIR=/tmp; sh=/bin/dash"
   },
   "static": {
     "configuration": "passed",
@@ -51,14 +51,19 @@
   },
   "real_defconfig": {
     "profiles": [
+      "r619ac-ha",
       "x86-basic",
-      "x86-ha",
-      "r619ac-ha"
+      "x86-ha"
     ],
     "result": "passed",
     "evidence": "config-validation.json",
-    "scope": "previous controller revision; see recorded Makefile hash in config-validation.json",
-    "current_ha_profiles": "pending rerun after HA/proxy dependencies, all 56 mapped x86 plugin requests, translations, local Socat/PPTP/traffic/V2Ray UI and V2Ray/Python adapter, BBR/DNSProxy and acceleration profile patches, official WeChatPush with retention/translation patch, 27 x86 module requests and x86-ha 2048MiB root partition; target compilation unverified"
+    "scope": "current HA dependencies, retained apps/translations, acceleration patches and x86 drivers; actual metadata and all requested option equality",
+    "requested_options": {
+      "r619ac-ha": 33,
+      "x86-basic": 18,
+      "x86-ha": 171
+    },
+    "target_compilation": "not verified"
   },
   "live_read_only_snapshot": {
     "installed_packages": 680,
@@ -69,7 +74,7 @@
   "not_run": [
     "full firmware compilation",
     "Linux namespace election/failover scenarios",
-    "full firmware GitHub Actions workflow",
+    "full firmware GitHub Actions workflow completion",
     "device boot",
     "real PPPoE failover",
     "memory/load verification",
@@ -85,13 +90,10 @@
     "name": "HoshinoNeko/ImmortalNeko",
     "user_created": true,
     "pushed": true,
-    "limitations": [
-      "Current sandbox makes .git metadata read-only; the user made the recorded commit/push outside it",
-      "GitHub SSH hostname lookup unavailable in the agent execution environment"
-    ],
-    "current_ci_fixes_pushed": false,
-    "latest_observed_local_commit": "b52e2226b9e13daa2f24ce2b532da64b3fae0681",
-    "initial_confirmed_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04"
+    "limitations": [],
+    "initial_confirmed_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04",
+    "observed_remote_commit_before_package_discovery_fix": "e2ad0ee14f102954382bf8b88163127fb3ceee07",
+    "package_discovery_fix_validation": "passed locally; remote build after this fix pending"
   },
   "checked_input_sha256": {
     ".github/workflows/build.yml": "9d8bccfb942dc1cfff6a324eb3b54d08402178b6a64ee4a2a304b81c3f0d6d4d",
@@ -127,33 +129,33 @@
     "local-packages/firmware-ha/files/render.sh": "b8f3c2738dd50fcb0e09535efbac1ee459d4a31d6fe23ff1502d902f1c6fd3ba",
     "local-packages/firmware-ha/files/service-guard.sh": "ad4cbacf431ff08181ffba5970ac7152ad588597e8c7051590d58e51e6841e37",
     "local-packages/luci-app-pptp-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-    "local-packages/luci-app-pptp-server/Makefile": "0e064cca6b3762454c978003a1d60c30ab2c81ef57ca9d2aa907984024e27342",
+    "local-packages/luci-app-pptp-server/Makefile": "45d5d02c7460dcd98fbe12f0464b66625b310a4c487b5b6c92214a5120a16131",
     "local-packages/luci-app-pptp-server/htdocs/luci-static/resources/view/services/pptp-server.js": "876eb42aa53af93723eb02640d1bdda1f111e5c2fb21f93660c031924b905e59",
     "local-packages/luci-app-pptp-server/po/zh_Hans/pptp-server.po": "7f131cc25b4c8599dbb2fd2244d2cfa2aed3872ffbee4230b2b0fc59e2d46e19",
     "local-packages/luci-app-pptp-server/root/usr/share/luci/menu.d/luci-app-pptp-server.json": "78028ca69b739a2a3761d73317e39b123bd9be0289ff48893405228ab1cb9471",
     "local-packages/luci-app-pptp-server/root/usr/share/rpcd/acl.d/luci-app-pptp-server.json": "abc5998d92a9b26e69732175647b01333ec9ad036d5dd17e0cbe724cd9c16f8e",
     "local-packages/luci-app-socat/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-    "local-packages/luci-app-socat/Makefile": "f51829e15a608a1fad023b49a46798aaef479d73fc136a95ad0bfdf5606c9717",
+    "local-packages/luci-app-socat/Makefile": "a2128884f771ce1a5190d927922fe66ebaa6baec5e2385ba8b95da855d645c6b",
     "local-packages/luci-app-socat/htdocs/luci-static/resources/view/services/socat.js": "fcdb4f1d3cc7c648ab84629cce2eab4d6a2982314d48067b2e7232e043a3014b",
     "local-packages/luci-app-socat/po/zh_Hans/socat.po": "be0719714dd8a35c585515442cd776e7afdadbaa2cf3548501c19e35fbdbf090",
     "local-packages/luci-app-socat/root/usr/share/luci/menu.d/luci-app-socat.json": "f32052c4a818824a7b6de68c48d26aa0f31047173fbd6d9e22ab140d6895eba4",
     "local-packages/luci-app-socat/root/usr/share/rpcd/acl.d/luci-app-socat.json": "e658734f798a0e7fa1c7c5e311a4dd93da182b722d2b41a3d13bcec54b5219cb",
     "local-packages/luci-app-turboacc/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-    "local-packages/luci-app-turboacc/Makefile": "b37cbfc9c0fcfe738c882543fcdd63f52a127e2db9a5cb25ce3f987234714455",
+    "local-packages/luci-app-turboacc/Makefile": "350806debaae147fbb4a58da5f671450e6e2231d2a47803504e8df26ac5140d1",
     "local-packages/luci-app-turboacc/htdocs/luci-static/resources/view/network/turboacc.js": "ca9513de034b23a53de48fa64a2e3556a6ff6d841dbfe8c9b6c1d276f243732e",
     "local-packages/luci-app-turboacc/po/zh_Hans/turboacc.po": "a0744797400ed3723da1aebce984dc13acd84b44e6976d743558389e4af66a7e",
     "local-packages/luci-app-turboacc/root/etc/uci-defaults/85-neko-bbr.sh": "3764665a91e9e82c2ff1e15bb0b86608b319db1faeb9e8bddfb159407ddd91ac",
     "local-packages/luci-app-turboacc/root/usr/share/luci/menu.d/luci-app-turboacc.json": "ec7a605436c447feb1686a924eb14fd879c4d0d753d62bbd4ac727f3f6552314",
     "local-packages/luci-app-turboacc/root/usr/share/rpcd/acl.d/luci-app-turboacc.json": "776f6ada0160464a93c430b1ccf22e7bef3984d68aa1a7b95e27a3530fc68501",
     "local-packages/luci-app-v2ray-server/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-    "local-packages/luci-app-v2ray-server/Makefile": "9b85c0b8c4790c6207db9eb8d571723db96b500e665f92cc75a284df871e97b1",
+    "local-packages/luci-app-v2ray-server/Makefile": "b08e969fe1c7c1a3ea8a595127e44ebd1386e55b0fd038edb53b0c77360d8490",
     "local-packages/luci-app-v2ray-server/htdocs/luci-static/resources/view/services/v2ray-server.js": "fb61043c078e8ebc784ca3ee5767edd2c1641bb45f32912821d46839623f161d",
     "local-packages/luci-app-v2ray-server/po/zh_Hans/v2ray-server.po": "c2879b966be275b0225f30a56b9868200fe8a9ab990b55577a48aa23bb6df4ce",
     "local-packages/luci-app-v2ray-server/root/etc/uci-defaults/85-neko-v2ray-server.sh": "0df922e3f1df9715a01a5d602d9d91b97d507304ad7874b7b6dac4146f5e2bec",
     "local-packages/luci-app-v2ray-server/root/usr/share/luci/menu.d/luci-app-v2ray-server.json": "249bf3ce6d505db9bba7054f3154d2195126efdbbc2152dede72bb0c6cd8ec43",
     "local-packages/luci-app-v2ray-server/root/usr/share/rpcd/acl.d/luci-app-v2ray-server.json": "5bbe31f807d4d822328cee1014ce79d5f91e1860336af57c41897c1d41bf804e",
     "local-packages/luci-app-wrtbwmon/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
-    "local-packages/luci-app-wrtbwmon/Makefile": "3954c4e49c614120d12b8e17eb062f7650949ac312860fc2417dd60e4d922698",
+    "local-packages/luci-app-wrtbwmon/Makefile": "13c313308f16850383af06540ec47d6b99f24118a574bbb7b4dab69e6596cc7e",
     "local-packages/luci-app-wrtbwmon/htdocs/luci-static/resources/view/network/traffic-status.js": "da4d9cf842c98f97f56af1c6bc5af0d4592ad300102a6ff72ecc0723f0cd181c",
     "local-packages/luci-app-wrtbwmon/htdocs/luci-static/resources/wrtbwmon.js": "48188d555eb4c29ab1763c164741e12ecfb4f156a85aed8e6942e10cfce054e3",
     "local-packages/luci-app-wrtbwmon/po/zh_Hans/wrtbwmon.po": "6d84107099430daa9622480ffe7434524480c02b9554755783c5d42fce5e124f",
@@ -172,7 +174,7 @@
     "migration/current-plugin-plan.json": "3ccc08b3ccec32ed1634156a9f411e80b01dccfd0547f331eae98d74cd36ddfc",
     "migration/driver-plan.json": "1d3d5870e84cd891dcdf5789200829ff5b1af1c58fb11715be407bacde6ce314",
     "migration/package-map.json": "b2afe32dc1c205d2cccc16f3b05f186ef1b5fc6a794405b0a83971e5ae7be14a",
-    "migration/source-evidence.json": "5e2cd9841d42df9cbe0211fd3af75152f106a85c3dd9703e85f57717699c5c59",
+    "migration/source-evidence.json": "72b32c879cff9097e41f1e69f273b3e54ab2fb05be5fa2f6a1ff65ede4bae091",
     "packages/base.list": "f698afa87f126452861f97a01fce39449640438ef54adcb18645c79055905290",
     "packages/ha.list": "b00c0a64452d161abc0cb97e18842af6f8116e24b3238f9824a60399010191b3",
     "packages/proxy.list": "c3fdf86298f7b6b6c397d2eb2840dd9ce6cf7dd14ae77e4666b2b8cddbc5816d",
@@ -197,7 +199,7 @@
     "profiles/x86-ha.json": "97b51cd844399272035daa86d32d82859cc3c0df2d7066722e65f2c1baa2fadb",
     "scripts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "scripts/artifacts.py": "f2fb2043d73c764573e3780f774c27d7835a33f5bb54ebd9aa40f579311857fb",
-    "scripts/build.py": "108f766e4ce31180481a0ced81aecc24ad95057a0eec719c6accc248316317ba",
+    "scripts/build.py": "533d493b9d93bd59c39c09a3516758158b97bee364eb8565b6297eac66b6d196",
     "scripts/build_test_keepalived.py": "9aa88e455f5c974e97c5a463b7862c75fa73ef31827af3572c420717b8b83aa5",
     "scripts/check_workflows.py": "36d73d604954a5d2c6915b1b0cf3405235785edf1affa7bb92a00288831f0a77",
     "scripts/collect-legacy.sh": "fde211e755fbf00788f2be7c04a8d798817d1307f12bc751c477d1e37fb70549",
@@ -206,7 +208,7 @@
     "scripts/fwlib.py": "f9d7560045ede67836f657ffc7a12081807b1d5e43914945027b84e87a990c7e",
     "scripts/import_legacy.py": "95d08d5805f2ef6bb426ab5e38029d0dfb89e67bd4ccb6d74c52e5bec7002ef8",
     "scripts/migration_plan.py": "89f9baed3a7854ea2f2be1c07cebf3dd5f8e4b5676c2787de8d9759e675ffbe3",
-    "scripts/sources.py": "2ad62ee849d65e498f3633f4e9db807aa4c93d9dc0b57cdca64575b7bfc6ff50",
+    "scripts/sources.py": "0536beb32c7debd20504d3a4c1cb055e35a2ee37db39aa1e229c8afa355c5438",
     "templates/ha-topology.json": "475d4435072e159e9447db5c2f5274a08991b568de4e634da58b9d1ac6cdbb4d",
     "templates/network.uci.example": "658d23e9d71d6c5c590a63a61f2e0308f9e3b1ac2f237c420ad23daf6f7eef27",
     "tests/fixtures/acceleration/COPYING": "4a4d5c03ac503d809243f9d8de5517601e345990a85b6a59666c3f1caca02474",
@@ -273,7 +275,8 @@
     "tests/test_v2ray_server.py": "38e5daa3187b743644810226fdb623f3261b70a9d7c99300f8df5f18364cbc53",
     "tests/test_wechatpush.py": "816dc9510641bd967ecf39a4757b1ba0b22d8cba214e5c0ca00b39350b880743",
     "themes/luci-overrides/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/test_package_discovery.py": "e1c9ec41ba43ed0cbde5ceed8f07effa2d6336c584565c9b1c427a89c681d9d5"
   },
   "vendor_patch_audit": {
     "result": "passed",
@@ -336,7 +339,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current integration CLI fix: all 168 local tests passed using /tmp and dash, including two new argv/preflight contract tests; configuration scan, 27 Python AST files, workflow lint and whitespace checks passed; native remote execution pending",
+  "checked_input_scope": "current package-discovery fix: all 172 local tests passed, exact scanner before/after reproduction, real pinned defconfig for all three current profiles, input validation, 27 Python AST checks, workflow lint and whitespace checks; full firmware compile pending",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -462,5 +465,32 @@
       "scope": "two subprocess CLI contract-fixture tests and four mocked build/staging tests; no real daemon/network"
     },
     "native_rerun_after_fix": "not run"
+  },
+  "ci_package_discovery_failure": {
+    "evidence": "Build firmware x86-ha prepare failure log supplied by user; no run URL supplied",
+    "stage": "make defconfig / strict requested package validation",
+    "result": "failed before fix",
+    "affected_packages": [
+      "luci-app-pptp-server",
+      "luci-app-socat",
+      "luci-app-turboacc",
+      "luci-app-v2ray-server",
+      "luci-app-wrtbwmon",
+      "luci-i18n-pptp-server-zh-cn",
+      "luci-i18n-socat-zh-cn",
+      "luci-i18n-turboacc-zh-cn",
+      "luci-i18n-v2ray-server-zh-cn",
+      "luci-i18n-wrtbwmon-zh-cn"
+    ],
+    "root_cause": "five local LuCI Makefiles omitted the buildroot scan signature; includes are evaluated only after matching the discovery grep",
+    "fix": "add standard discovery signature to five local LuCI Makefiles; validate local packages and theme packages before downloading upstream sources; retain all requested apps/translations and strict defconfig equality",
+    "targeted_tests": {
+      "count": 4,
+      "result": "passed",
+      "scope": "actual installed package Makefiles passed through pinned grep ERE; missing-signature checks for local apps and themes, native registrations and validation entrypoint"
+    },
+    "real_defconfig": "passed for x86-basic (18 requested options), x86-ha (171) and r619ac-ha (33); all ten affected package symbols resolved y",
+    "configuration_evidence": "config-validation.json",
+    "remote_rerun_after_fix": "pending"
   }
 }

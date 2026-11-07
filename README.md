@@ -13,7 +13,7 @@ SSH：`git@HoshinoNeko.github:HoshinoNeko/ImmortalNeko.git`。
 已有方案的56项均已显式加入 x86-ha（包含原有主题及可用中文翻译），仍有10项待确定迁移方案，见 [迁移清单](migration/current-plugin-plan.json)。
 代理已识别为 SSR Plus 及其后端；两种 HA Profile 选择官方 HomeProxy/Sing-box 作为基础代理候选，
 旧节点、订阅、分流与服务端功能的完整迁移仍待验证。现有三个 Profile 不能视为全部旧插件迁移版。
-没有更改默认主题或指定 LAN/WAN 地址。上一版三个 Profile 已通过真实 `make defconfig`；本次 HA 新增依赖、移植页面与驱动选择仍待重跑配置解析，未完成固件编译。
+没有更改默认主题或指定 LAN/WAN 地址。当前三个 Profile 均已通过真实 `make defconfig`，包含新增 HA 依赖、移植页面与驱动；完整固件编译仍待通过。
 
 ## 目录
 
@@ -82,6 +82,8 @@ Server酱由固定 Feed 中的 WeChatPush 及中文界面替代，默认关闭�
 安装本地包、叠加系统文件、执行 `make defconfig`。任何请求的包或 Kconfig 选项被静默移除，
 都会直接失败并输出差异。随后 `make download`、完整 `make`、验证镜像与 Manifest，最后打包。
 失败不会降级为成功；没有使用 `make ... || true` 掩盖错误。
+本地 LuCI 包须保留 `# call BuildPackage - OpenWrt buildroot signature` 扫描标记；
+`validate` 会在下载源码前检查，防止应用及翻译包被扫描器一起跳过。
 
 缓存只有下载目录与 ccache；不共享 build_dir/staging_dir，避免 ABI 混用。
 缓存键包含目标与配置/软件包内容，实际源码和 Feed Commit 总在使用前核对。
@@ -147,8 +149,9 @@ WAN DHCP（192.168.1.0/24）与专用心跳口，通过同一个 VRRP 实例选�
 `warm` 只允许显式声明 multiple 会话的独立上联环境。双路径同时隔离仍需外部仲裁才能保证不双主。
 
 现网交付仍需解决旧插件兼容、确认端口/VLAN/地址、完成编译与双机演练。R619AC 当前无法访问。
-后续 CI 已通过单路径配置检查，进程启动因不支持的 `-P` 参数退出。
-集成脚本已修复并加入启动参数预检，原生选主及切换仍待重跑。当前执行环境仍限制 .git 写入及 GitHub SSH/DNS。
+此前 CI 的 `-P` 启动参数错误已修复。最新 x86-ha 构建在配置阶段发现五个本地 LuCI 包及翻译缺失，
+已补齐扫描标记；本地172项测试及三个 Profile 的真实配置解析通过，完整构建待重跑。
+集成脚本含启动参数预检；原生选主及切换的详细结果仍待核对。
 
 ## 安装、升级与产物
 

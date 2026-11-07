@@ -11,3 +11,5 @@ LUCI_PKGARCH:=all
 
 # Use the locked official backend. This package owns no socat config/init files.
 include $(TOPDIR)/feeds/luci/luci.mk
+
+# call BuildPackage - OpenWrt buildroot signature
