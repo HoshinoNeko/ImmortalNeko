@@ -38,6 +38,21 @@ def run(args,**kwargs):
 def net(ns,*args,**kwargs):
     return run(['ip','netns','exec',ns,*map(str,args)],**kwargs)
 
+def daemon_command(state):
+    # -P/--vrrp only exists when both VRRP and LVS are compiled in. The CI
+    # binary disables LVS, so let its enabled VRRP subsystem start normally.
+    return ['keepalived','-n','-l','-p',str(state/'parent.pid'),
+            '-r',str(state/'vrrp.pid'),'-f',str(state/'keepalived.conf')]
+
+def check_daemon_cli(state,env=None):
+    # Parse the exact runtime options before creating namespaces. --help exits
+    # before reading config or opening pidfiles; place it after all other flags.
+    try:
+        run([*daemon_command(state),'--help'],env=env,capture_output=True)
+    except subprocess.CalledProcessError as exc:
+        details=(exc.stderr or exc.stdout or '').strip()
+        raise RuntimeError(f'keepalived rejected integration arguments (exit {exc.returncode}): {details}') from exc
+
 def wait_for(predicate,reason,processes,timeout=35):
     deadline=time.monotonic()+timeout
     while time.monotonic()<deadline:
@@ -62,6 +77,8 @@ def main():
     created_ns=[];created_br=[];processes=[];monitors=[];logs=[]
     with tempfile.TemporaryDirectory(prefix='firmware-ha-integration-',dir='/run') as tmp:
         base=Path(tmp);base.chmod(0o755)
+        check_daemon_cli(base)
+        print('PASS: compiled keepalived accepts integration arguments',flush=True)
         lib=base/'lib';shutil.copytree(ROOT/'local-packages/firmware-ha/files',lib)
         bins=base/'bin';bins.mkdir()
         for name in ('uci','ubus','jsonfilter','dnsmasq','logger'):
@@ -115,8 +132,7 @@ def main():
                     net(namespaces[i],'sh',lib/'paths.sh','once',env=env)
                     monitors.append(subprocess.Popen(['ip','netns','exec',namespaces[i],'sh',str(lib/'paths.sh')],env=env))
                 log=(state/'keepalived.log').open('w');logs.append(log)
-                command=['ip','netns','exec',namespaces[i],'keepalived','-n','-P','-l',
-                    '-p',str(state/'parent.pid'),'-r',str(state/'vrrp.pid'),'-f',str(cfg)]
+                command=['ip','netns','exec',namespaces[i],*daemon_command(state)]
                 processes.append(subprocess.Popen(command,env=env,stdout=log,stderr=subprocess.STDOUT))
             def has_vip(index,device,address):
                 result=run(['ip','-n',namespaces[index],'-j','-4','addr','show','dev',device],capture_output=True)

@@ -407,6 +407,26 @@
       "render_policy": "single-path excludes only the bound election device, deduplicates remaining gateway devices and omits an empty block; unbound dual-path retains all gateway-device tracks",
       "health_policy": "check.sh still checks LAN, WAN L2 and all extra VIP devices; strict native config-test remains unchanged",
       "verification": "six targeted actual renderer/health tests passed with mock UCI/kernel interfaces; native Linux config-test/election after this change pending"
+    },
+    "ha-integration-cli": {
+      "keepalived_version": "2.3.3",
+      "backend_reference": "https://github.com/acassen/keepalived/blob/v2.3.3/keepalived/core/main.c#L1883",
+      "source_behavior": "-P/--vrrp and -C/--check are registered only when both _WITH_VRRP_ and _WITH_LVS_ are defined; help exits zero after parsing preceding options",
+      "ci_build": "--disable-lvs --disable-bfd; VRRP remains enabled",
+      "runtime_arguments": [
+        "-n",
+        "-l",
+        "-p",
+        "-r",
+        "-f"
+      ],
+      "preflight": "parse the shared runtime argv with --help appended, before creating namespaces; report nonzero status and captured diagnostic",
+      "local_files": {
+        "scripts/build_test_keepalived.py": "9aa88e455f5c974e97c5a463b7862c75fa73ef31827af3572c420717b8b83aa5",
+        "tests/integration/keepalived_netns.py": "d82a15161e66adba822430dcc2b1701e873d7240e21ceb42ba89ad73126c73ad"
+      },
+      "firmware_scope": "firmware-ha init did not use -P and is unchanged",
+      "verification": "two subprocess contract-fixture tests passed; native CLI preflight, election and failover after this change pending"
     }
   },
   "source_commit": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",

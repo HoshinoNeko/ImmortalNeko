@@ -2,19 +2,19 @@
   "date": "2026-11-06",
   "environment": "macOS arm64 / Python 3.14.5",
   "unit_tests": {
-    "count": 166,
-    "seconds": 130.295,
+    "count": 168,
+    "seconds": 133.687,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "result": "passed",
-    "log": ".work/ci-track-full-tests.log",
-    "scope": "all discovered tests on macOS with TMPDIR=/tmp and sh resolved to /bin/dash; native Linux config-test and failover after renderer fix remain pending",
+    "log": ".work/ci-cli-full-tests.log",
+    "scope": "all discovered tests on macOS with /tmp and dash; CLI tests use a VRRP-only subprocess contract fixture; native CLI preflight, election and failover after the fix remain pending",
     "environment": "macOS arm64, Python 3.14.5; TMPDIR=/tmp; PATH sh uses /bin/dash"
   },
   "static": {
     "configuration": "passed",
-    "python_ast_files": 26,
+    "python_ast_files": 27,
     "shell_syntax_files": 20,
     "actionlint": "1.7.12 passed (SHA256 verified)",
     "shellcheck": "not run",
@@ -77,7 +77,7 @@
   ],
   "dual_path": {
     "unit_regressions": "passed",
-    "native_linux": "attempted: namespaces created and native config-test executed; single-path check failed with exit 5 for repeated primary-interface tracking; election/failover and dual-path scenarios not completed",
+    "native_linux": "single-path native config-test passed (inferred from completing both-node launch loop before wait_for in the supplied traceback); process then failed Unknown option -P before election; dual-path/failover not completed",
     "pppoe_operator_test": "not run",
     "hardware": "R619AC user-confirmed 128MiB NAND / 512MiB RAM; runtime unverified"
   },
@@ -90,7 +90,7 @@
       "GitHub SSH hostname lookup unavailable in the agent execution environment"
     ],
     "current_ci_fixes_pushed": false,
-    "latest_observed_local_commit": "95f165551efe651d3836175d0e77782f1ad415d4",
+    "latest_observed_local_commit": "b52e2226b9e13daa2f24ce2b532da64b3fae0681",
     "initial_confirmed_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04"
   },
   "checked_input_sha256": {
@@ -172,7 +172,7 @@
     "migration/current-plugin-plan.json": "3ccc08b3ccec32ed1634156a9f411e80b01dccfd0547f331eae98d74cd36ddfc",
     "migration/driver-plan.json": "1d3d5870e84cd891dcdf5789200829ff5b1af1c58fb11715be407bacde6ce314",
     "migration/package-map.json": "b2afe32dc1c205d2cccc16f3b05f186ef1b5fc6a794405b0a83971e5ae7be14a",
-    "migration/source-evidence.json": "a2bd045353b2595003c165aa81b127e08b48162ad1e5167cca167405756cdb50",
+    "migration/source-evidence.json": "5e2cd9841d42df9cbe0211fd3af75152f106a85c3dd9703e85f57717699c5c59",
     "packages/base.list": "f698afa87f126452861f97a01fce39449640438ef54adcb18645c79055905290",
     "packages/ha.list": "b00c0a64452d161abc0cb97e18842af6f8116e24b3238f9824a60399010191b3",
     "packages/proxy.list": "c3fdf86298f7b6b6c397d2eb2840dd9ce6cf7dd14ae77e4666b2b8cddbc5816d",
@@ -252,7 +252,7 @@
     "tests/fixtures/wechatpush/applications/luci-app-wechatpush/root/etc/init.d/wechatpush": "801036d376465aad7ff149aead49b541a9d51563eb5ca1d2d5efacaeae17646f",
     "tests/fixtures/wechatpush/applications/luci-app-wechatpush/root/usr/share/wechatpush/wechatpush": "6ef3b3a706a2859042a0dc49574a61c9acea1fbb3847f593a7cfa4a925bbd762",
     "tests/fixtures/wechatpush/manifest.json": "37277a0b7309d59cddc4aacdba9f600efae1f320f36abccb5e075e3be0cb93ef",
-    "tests/integration/keepalived_netns.py": "9eb66c073973bfb9fa65319adff1e18d8d57f813abcaf5a5b1c055adbe816633",
+    "tests/integration/keepalived_netns.py": "d82a15161e66adba822430dcc2b1701e873d7240e21ceb42ba89ad73126c73ad",
     "tests/integration/v2ray_generated.py": "a95a9bfb1469a488a1bb53c585264298dc25a4d4c8ff28bf22db5057e69fa7eb",
     "tests/js/pptp_form.cjs": "c406869fe54ad898d7a7d659b1d1f2c44d1b59dfd10a4aa543ed1ef4351ccfa5",
     "tests/js/socat_form.cjs": "cebaaf30d0cfeda2f7695610785b0175c4f5da65ac995364ca0973e4202c03e5",
@@ -265,6 +265,7 @@
     "tests/test_firstboot.py": "03590c5f7f6d62dca77e0db2fa5916dac77d7e56162957a6d9e60f587f08eb01",
     "tests/test_ha.py": "72cea1deb312669acdd1c789cf0bad2d04fa3359d693b1cbf849a494be3e9d56",
     "tests/test_keepalived_builder.py": "43cb6a2a05b1f02ecffdce66db02cb2e10b3a58f59dcb0d666351412331355e6",
+    "tests/test_keepalived_cli.py": "23cc601cdfac3a6a439f76c411f2f8e1d5d69ba07ffe2c74a540888f2865efde",
     "tests/test_migration_plan.py": "4d47c9047f5e7c255b99cbecb258097c5d26d3746f065fd7bebe4ecc4d9502a2",
     "tests/test_pptpd.py": "6257aefff22642c520f0ad925b18614c9f156d3874b936559dbe318b19d01c48",
     "tests/test_retained_defaults.py": "1aeefcbcfad1230810a2072336b2d1b732ec1b291db53cf27261c110b0173fbb",
@@ -335,7 +336,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current release-6 HA tracking fix: all 166 local tests passed with /tmp and dash; renderer shell syntax, configuration scan, 26 Python AST files, workflow lint and whitespace checks passed; strict native config-test unchanged and fixed remote execution pending",
+  "checked_input_scope": "current integration CLI fix: all 168 local tests passed using /tmp and dash, including two new argv/preflight contract tests; configuration scan, 27 Python AST files, workflow lint and whitespace checks passed; native remote execution pending",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -441,6 +442,24 @@
       "result": "passed",
       "log": ".work/ci-track-targeted-tests.log",
       "scope": "actual renderer and health shell with mocked UCI/kernel paths; no native keepalived execution"
+    },
+    "native_rerun_after_fix": "single-path config-test passed in follow-up (inferred from reaching wait_for after both-node config/launch loop); process startup then failed for unsupported -P"
+  },
+  "ci_cli_failure": {
+    "evidence": "follow-up integration log pasted by user; no new run URL provided",
+    "result": "failed",
+    "stage": "daemon startup, before initial election",
+    "message": "Unknown option -P",
+    "process_returncode": 1,
+    "source_reference": "https://github.com/acassen/keepalived/blob/v2.3.3/keepalived/core/main.c#L1883",
+    "root_cause": "CI disables LVS; -P is only compiled when VRRP and LVS are both enabled",
+    "fix": "remove selector, use shared argv for startup and early native --help parsing; retain strict config-test/election/failover checks",
+    "firmware_scope": "HA init startup command did not use -P and is unchanged",
+    "targeted_tests": {
+      "count": 6,
+      "result": "passed",
+      "log": ".work/ci-cli-targeted-tests.log",
+      "scope": "two subprocess CLI contract-fixture tests and four mocked build/staging tests; no real daemon/network"
     },
     "native_rerun_after_fix": "not run"
   }

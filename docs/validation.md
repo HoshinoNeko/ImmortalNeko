@@ -5,12 +5,12 @@
 
 ## 已执行并通过
 
-* 完整166项回归测试全部通过，130.295秒，无跳过项；包含15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
+* 完整168项回归测试全部通过，133.687秒，无跳过项；包含15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
   覆盖构建配置、产物、旧清单分析、采集器、双路径探测、释放确认、单会话限制与可恢复退避事件。
   首次 Ubuntu Actions 的失败及本地修复见下文；本机通过不等同于远程流水线通过。
 * Socat、PPTP、设备流量、V2Ray Server 及 Turbo ACC 五组实际JS表单/视图模拟测试通过。
   流量页覆盖IPv4/IPv6、计数基线、筛选/排序及只读ACL；V2Ray 页面覆盖隐藏字段保留、凭据遮蔽、UUID及协议参数校验。
-* 26个Python文件 AST、20个 .sh/.init Shell语法检查通过；6个本地JS语法、5份中文PO的 msgfmt 检查通过，Turbo ACC 的47条及V2Ray的51条消息覆盖通过。
+* 27个Python文件 AST、20个 .sh/.init Shell语法检查通过；6个本地JS语法、5份中文PO的 msgfmt 检查通过，Turbo ACC 的47条及V2Ray的51条消息覆盖通过。
 * 固定源插件补丁测试12项、首次安装/保留配置升级测试4项通过；实际LuCI Lua文件通过本机Lua 5.5语法解析，首次Actions的Lua 5.1解析及SyncDial入口检查也通过。
 * Shell语法门禁负向验证：临时错误脚本在旧写法中返回0，修正后返回1；实际工程脚本返回0。
 * actionlint v1.7.12：工作流通过；二进制经过固定SHA256校验。未运行shellcheck。
@@ -62,7 +62,22 @@ OpenVPN 测试原先连续替换 PKI 和 `/tmp/` 前缀，第二次替换会改�
 `firmware-ha` release 升至6，原生 `--config-test` 的零退出码要求保持不变。
 6项相关回归已通过，覆盖空块、不同绑定接口、额外网关去重、双路径及额外网关断链。
 完整166项测试在 `/tmp` 和 dash 下通过，130.295秒，无失败或跳过项。
-修复后的真实Linux配置校验、选主和故障切换仍待CI重跑；源码依据见 [HA说明](ha.md#多-vlan-与有序事件)。
+后续日志已走到两端启动后的选主等待，说明这轮单路径配置检查已通过；启动阶段的新错误见下文。
+源码依据见 [HA说明](ha.md#多-vlan-与有序事件)。
+
+## 后续 Actions 启动参数失败与修复
+
+用户提供的新日志显示主进程报 `Unknown option -P`，初始选主等待因进程退出而失败。
+CI 用 `--disable-lvs` 构建；2.3.3 的 `-P/--vrrp` 只在 VRRP 和 LVS 都启用时注册，
+参见 [固定版本参数表](https://github.com/acassen/keepalived/blob/v2.3.3/keepalived/core/main.c#L1883)。
+集成命令现使用 `-n -l -p -r -f`，由已编译的 VRRP 子系统正常启动。
+控制包自身未使用 `-P`，本次没有改动其运行命令。
+
+参数列表由同一函数生成，创建 namespace 前先将 `--help` 追加在该列表末尾交给实际二进制解析，
+不支持的参数会立即失败并显示返回码与诊断。按固定源码的帮助处理，该预检不读取测试配置或打开 pidfile。
+新增2项离线测试用 VRRP-only 参数契约夹具验证两实例的路径、完整参数解析、未知选项失败及诊断；
+连同4项构建助手测试共6项通过；随后完整168项测试在 `/tmp` 和 dash 下通过，133.687秒。
+此夹具不是真实 keepalived，原生参数预检及选主/切换仍待CI重跑。
 
 ## 仍待完成的原生验收
 
@@ -71,7 +86,7 @@ Linux集成测试：sudo python3 tests/integration/keepalived_netns.py。
 WAN断开接管、x86恢复抢占、主进程停止接管。新增 --dual-path 覆盖两条独立链路、稳定 /32 路由、
 仅心跳故障及仅 WAN 监测故障时保持原主。CI 从固定SHA256源码编译与固件一致的 keepalived 2.3.3；
 UCI/netifd与应用服务是模拟接口，warm 模式用于隔离验证真实 VRRP，不模拟 SSH 或运营商PPPoE。
-本机只完成脚本语法检查；后续CI已创建namespace并执行原生配置检查，但停在上述返回5的错误，选主及故障切换尚未完成。
+本机未运行真实Linux测试；最新CI日志已通过单路径配置检查，但进程在初始选主前因 `-P` 退出，选主及故障切换尚未完成。
 
 真实 V2Ray 核心配置校验入口为 `tests/integration/v2ray_generated.py --core <V2Ray-5.53.0>`，
 提供12份配置及1份负向配置，临时证书和配置会在测试结束后清理。
