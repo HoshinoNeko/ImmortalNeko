@@ -115,7 +115,7 @@ def main():
                     result[str(i)] = row
                 return json.dumps(result, separators=(',', ':'))
 
-            def check_ping(ipv6=False, large=False, recovery=False):
+            def check_ping(ipv6=False, large=False, recovery=''):
                 deadline = time.monotonic()+15
                 while time.monotonic() < deadline:
                     if any(p.poll() is not None for p in processes):
@@ -127,7 +127,37 @@ def main():
                         return
                     except subprocess.CalledProcessError: time.sleep(0.1)
                 probe = 'IPv6' if ipv6 else ('MTU' if large else 'IPv4')
-                raise RuntimeError(transport+'/'+mode+'/'+probe+('/recovery' if recovery else '/initial')+' connectivity failed; '+counters())
+                raise RuntimeError(transport+'/'+mode+'/'+probe+('/'+recovery if recovery else '/initial')+' connectivity failed; '+counters())
+
+            def create_l2(i, mode):
+                ns, peer = routers[i], 1-i
+                if mode == 'l2tp':
+                    net(ns, sys.executable, SOURCE, 'l2tp-up', '--name', 'test', '--underlay', 'wg0',
+                        '--local', f'192.0.2.{i+1}', '--peer', f'192.0.2.{peer+1}',
+                        '--tunnel-id', str(101+i), '--peer-tunnel-id', str(101+peer),
+                        '--session-id', str(201+i), '--peer-session-id', str(201+peer),
+                        '--local-port', '1701', '--peer-port', '1701', '--mtu', '1360',
+                        env={**os.environ, 'L2VPN_LINK_RUN': str(root/f'state{i}')})
+                    name = 'nl2-test'
+                else:
+                    name = 'vxlan0'
+                    net(ns, 'ip', 'link', 'add', name, 'type', 'vxlan', 'id', '42',
+                        'local', f'192.0.2.{i+1}', 'remote', f'192.0.2.{peer+1}', 'dev', 'wg0', 'dstport', '4789')
+                net(ns, 'ip', 'link', 'set', name, 'mtu', '1360', 'master', 'brvpn', 'up')
+
+            def delete_l2(i, mode):
+                if mode == 'l2tp':
+                    net(routers[i], sys.executable, SOURCE, 'l2tp-down', '--name', 'test',
+                        env={**os.environ, 'L2VPN_LINK_RUN': str(root/f'state{i}')})
+                    if net(routers[i], 'ip', 'l2tp', 'show', 'tunnel').stdout.strip():
+                        raise RuntimeError('Owned L2TP tunnel was not removed')
+                else:
+                    net(routers[i], 'ip', 'link', 'del', 'vxlan0')
+
+            def assert_blocked():
+                blocked = subprocess.run(['ip', 'netns', 'exec', hosts[0], 'ping', '-4', '-n', '-c', '1', '-W', '1', '198.51.100.12'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                if not blocked.returncode:
+                    raise RuntimeError('L2 traffic escaped a stopped transport')
 
             for transport in ('direct', 'vless'):
                 if transport == 'vless':
@@ -161,34 +191,21 @@ def main():
                             raise RuntimeError('WireGuard/'+transport+' underlay failed; '+counters())
                         time.sleep(0.1)
                 for mode in ('l2tp', 'vxlan'):
-                    for i, ns in enumerate(routers):
-                        peer = 1-i
-                        if mode == 'l2tp':
-                            env = {**os.environ, 'L2VPN_LINK_RUN': str(root/f'state{i}')}
-                            net(ns, sys.executable, SOURCE, 'l2tp-up', '--name', 'test', '--underlay', 'wg0',
-                                '--local', f'192.0.2.{i+1}', '--peer', f'192.0.2.{peer+1}',
-                                '--tunnel-id', str(101+i), '--peer-tunnel-id', str(101+peer),
-                                '--session-id', str(201+i), '--peer-session-id', str(201+peer),
-                                '--local-port', '1701', '--peer-port', '1701', '--mtu', '1360', env=env)
-                            name = 'nl2-test'
-                        else:
-                            name = 'vxlan0'
-                            net(ns, 'ip', 'link', 'add', name, 'type', 'vxlan', 'id', '42',
-                                'local', f'192.0.2.{i+1}', 'remote', f'192.0.2.{peer+1}', 'dev', 'wg0', 'dstport', '4789')
-                        net(ns, 'ip', 'link', 'set', name, 'mtu', '1360', 'master', 'brvpn', 'up')
+                    for i in range(2): create_l2(i, mode)
                     for host in hosts: net(host, 'ip', 'neigh', 'flush', 'dev', 'eth0')
                     check_ping(); check_ping(ipv6=True); check_ping(large=True)
                     print('PASS: '+mode+' over WireGuard/'+transport+' bridges IPv4, IPv6, ARP/NDP and 1360-byte IPv4 packets', flush=True)
                     print('::notice title=L2 VPN scenario::'+transport+'/'+mode+' initial IPv4/IPv6/MTU passed', flush=True)
-                    net(routers[0], 'ip', 'link', 'set', 'wg0', 'down')
-                    blocked = subprocess.run(['ip', 'netns', 'exec', hosts[0], 'ping', '-4', '-n', '-c', '1', '-W', '1', '198.51.100.12'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    if not blocked.returncode: raise RuntimeError('L2 traffic escaped a down WireGuard underlay')
-                    net(routers[0], 'ip', 'link', 'set', 'wg0', 'up'); check_ping(recovery=True)
-                    for i, ns in enumerate(routers):
-                        if mode == 'l2tp':
-                            net(ns, sys.executable, SOURCE, 'l2tp-down', '--name', 'test', env={**os.environ, 'L2VPN_LINK_RUN': str(root/f'state{i}')})
-                            if net(ns, 'ip', 'l2tp', 'show', 'tunnel').stdout.strip(): raise RuntimeError('Owned L2TP tunnel was not removed')
-                        else: net(ns, 'ip', 'link', 'del', 'vxlan0')
+                    net(routers[0], 'ip', 'link', 'set', 'wan0', 'down'); assert_blocked()
+                    net(routers[0], 'ip', 'link', 'set', 'wan0', 'up'); check_ping(recovery='wan-recovery')
+                    # A managed WireGuard restart executes the netifd dependency lifecycle.
+                    # Recreate the owned L2 device, rather than retaining a stale UDP socket.
+                    delete_l2(0, mode)
+                    net(routers[0], 'ip', 'link', 'set', 'wg0', 'down'); assert_blocked()
+                    net(routers[0], 'ip', 'link', 'set', 'wg0', 'up')
+                    create_l2(0, mode); check_ping(recovery='managed-wg-recovery')
+                    print('::notice title=L2 VPN scenario::'+transport+'/'+mode+' WAN loss and managed WireGuard restart passed', flush=True)
+                    for i in range(2): delete_l2(i, mode)
                 for ns in routers: net(ns, 'ip', 'link', 'del', 'wg0')
                 stop_cores()
         finally:

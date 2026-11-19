@@ -201,4 +201,10 @@ def main():
                 print('--- '+str(file)+' ---\n'+file.read_text()[-12000:])
             for ns in reversed(created_ns):subprocess.run(['ip','netns','del',ns],check=False)
             for bridge in reversed(created_br):subprocess.run(['ip','link','del',bridge],check=False)
-if __name__=='__main__':main()
+if __name__=='__main__':
+    try:
+        main()
+    except Exception as exc:
+        message = str(exc)[-2000:].replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+        print('::error file=tests/integration/keepalived_netns.py,title=Native HA integration::'+message,flush=True)
+        raise

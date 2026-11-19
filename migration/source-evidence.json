@@ -423,7 +423,7 @@
       "preflight": "parse the shared runtime argv with --help appended, before creating namespaces; report nonzero status and captured diagnostic",
       "local_files": {
         "scripts/build_test_keepalived.py": "9aa88e455f5c974e97c5a463b7862c75fa73ef31827af3572c420717b8b83aa5",
-        "tests/integration/keepalived_netns.py": "d82a15161e66adba822430dcc2b1701e873d7240e21ceb42ba89ad73126c73ad"
+        "tests/integration/keepalived_netns.py": "5075f82e23539630d95b8018ab2a3f18f0a083cbad76abfa8b4495b1345ef39e"
       },
       "firmware_scope": "firmware-ha init did not use -P and is unchanged",
       "verification": "prior Build firmware run 42396818827 at abd4f32 passed the native HA job, including both single-path and dual-path steps"
