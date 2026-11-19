@@ -59,7 +59,7 @@ ZeroTier、FRP 客户端、HomeProxy/Sing-box、keepalived。WireGuard 由 netif
 `r619ac-basic`、`r619ac-ha` 和 `x86-ha` 共用二层 VPN 功能：L2TPv3 Ethernet / VXLAN → WireGuard，
 可选经独立 Xray/VLESS＋TLS/REALITY 转发。LuCI“网络 → 接口”可配置隧道，“网络 → 二层 VPN”配置 VLESS。
 默认不创建隧道或桥接现有 LAN，VLESS 转发关闭；两端模板、DHCP/RA、MTU 与 HA 接入见 [二层 VPN 部署](docs/l2-vpn.md)。
-宿舍 basic 版只选择基础和二层 VPN 软件包，保留自己的 WAN 与管理网络；R619AC 目标仍须匹配宿舍设备实际 NAND 规格。
+宿舍 basic 版包含基础、网络首页和二层 VPN 软件包，保留自己的 WAN 与管理网络；用户已确认宿舍 R619AC 也是128MiB NAND／512MiB RAM，使用 `p2w_r619ac-128m` 目标。
 首次安装会关闭额外服务的自动启动，配置完成后再在设备本地启用；已初始化的保留配置升级不重复关闭。
 Argon/Material 只注册可选主题，不切换当前外观；OpenVPN/IPsec 页面不自动改写网络、防火墙或生成 PKI。
 SyncDial 保留页面，但单会话策略下阻止其多拨脚本和重拨按钮，HA 启动前也会拒绝已启用的 SyncDial。
@@ -99,8 +99,9 @@ HA 集成测试会验证临时目录是否允许执行。若 runner 的 `/run` �
 本地 LuCI 包须保留 `# call BuildPackage - OpenWrt buildroot signature` 扫描标记；
 `validate` 会在下载源码前检查，防止应用及翻译包被扫描器一起跳过。
 
-缓存只有下载目录与 ccache；不共享 build_dir/staging_dir，避免 ABI 混用。
-缓存键包含目标与配置/软件包内容，实际源码和 Feed Commit 总在使用前核对。
+缓存分为下载、C/C++ 和 Go 三层，支持失败编译后保存已完成的缓存；普通页面改动不再清掉整组缓存。
+`compile_jobs=auto` 按 CPU 和内存选择并发；`use_cache` 可关闭缓存做对照。统计写入构建 Summary 和日志。
+不整体共享 build_dir/staging_dir；实际源码和 Feed Commit 总在使用前核对。隔离规则与容量说明见 [构建提速](docs/build-acceleration.md)。
 GitHub Actions 自身同样固定完整 Commit；更新时需核对上游发布记录。
 只读任务仅有 contents:read；草稿发布任务才获得 contents:write。
 CI 不执行来自 PR 的固件发布；工作流不接收设备密码或其他固件凭据。

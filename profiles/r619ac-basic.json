@@ -2,7 +2,7 @@
   "name": "r619ac-basic",
   "target": "ipq40xx",
   "subtarget": "generic",
-  "hardware_status": "128m-nand-512m-ram-profile-verify-dorm-unit-before-flashing",
+  "hardware_status": "user-confirmed-128m-nand-512m-ram-dorm-device-runtime-unverified",
   "flash_mib": 128,
   "ram_mib": 512,
   "fragments": ["config/r619ac-128m.config"],

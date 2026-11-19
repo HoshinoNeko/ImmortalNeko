@@ -242,13 +242,14 @@
     "patches/feeds/vantage/series": "194cc1a9b46ea1c0d8384055460331d2fcacac02801c56826c85c5117d86d817",
     "patches/x86-ha/010-bbr-preserve-default.patch": "d890f0972a87c3a1541b540c3e8c0d6bd76629161f7c7590e340cfa20d11fd51",
     "patches/x86-ha/series": "ccdd34d990a6ab1595aba2a7535e8b67590d7aac5eec9be67e02ce02b4258ec7",
-    "profiles/r619ac-basic.json": "6ac9335342709b99949a8ede8dd7ee4dcd5295c6ab40936ae9c655072ce1f40f",
+    "profiles/r619ac-basic.json": "d61bf566652982383744a1dfdfd40917aaa6207e656822e7fa2f72b310ed7cda",
     "profiles/r619ac-ha.json": "7f75a12ea8438796d8f9c1d8e95204f1da1747fca8340b8a463a2f1ef6b649cf",
     "profiles/x86-basic.json": "206c2a6cec4c2a70a32ad850bb8a246290f3eb056359512533c17a2d00f45201",
     "profiles/x86-ha.json": "1a8d0ef73d955aa876bcf2b236e25b2f370222067d26eadfa7de74f1b116f283",
     "scripts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "scripts/artifacts.py": "f2fb2043d73c764573e3780f774c27d7835a33f5bb54ebd9aa40f579311857fb",
-    "scripts/build.py": "533d493b9d93bd59c39c09a3516758158b97bee364eb8565b6297eac66b6d196",
+    "scripts/build.py": "e7b6ca3f0afbf0a15daf4bbfd51be5870ad321595d1a6cadc01295b647400036",
+    "scripts/build_accel.py": "ac46a4acbc3d5740cfb3a80e1ea52df7a32547a9f55e8ae1bbeeb37c7c37817a",
     "scripts/build_test_keepalived.py": "9aa88e455f5c974e97c5a463b7862c75fa73ef31827af3572c420717b8b83aa5",
     "scripts/check_workflows.py": "36d73d604954a5d2c6915b1b0cf3405235785edf1affa7bb92a00288831f0a77",
     "scripts/collect-legacy.sh": "fde211e755fbf00788f2be7c04a8d798817d1307f12bc751c477d1e37fb70549",
@@ -258,7 +259,7 @@
     "scripts/fwlib.py": "f9d7560045ede67836f657ffc7a12081807b1d5e43914945027b84e87a990c7e",
     "scripts/import_legacy.py": "95d08d5805f2ef6bb426ab5e38029d0dfb89e67bd4ccb6d74c52e5bec7002ef8",
     "scripts/migration_plan.py": "89f9baed3a7854ea2f2be1c07cebf3dd5f8e4b5676c2787de8d9759e675ffbe3",
-    "scripts/sources.py": "0536beb32c7debd20504d3a4c1cb055e35a2ee37db39aa1e229c8afa355c5438",
+    "scripts/sources.py": "dbc061a0b968db0bdb9a8a3a8d4775c046701e857b7bd30e871d55a2410cae27",
     "themes/luci-overrides/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
@@ -270,7 +271,7 @@
     ],
     "xray_version": "26.3.27",
     "scope": "all explicitly requested shared L2 VPN packages and local Chinese translation selected y; no automatic network/firewall/DHCP configuration",
-    "dorm_hardware": "existing p2w_r619ac-128m target retained; verify dorm NAND variant before flashing"
+    "dorm_hardware": "user confirmed dorm device also has 128MiB NAND / 512MiB RAM; p2w_r619ac-128m; runtime boot unverified"
   },
   "dashboard": {
     "theme_commit": "faade36bb629f84b1e233edcad9e37abc500ae52",
@@ -284,5 +285,11 @@
     "all_profiles": "passed",
     "source_patch": "patches/feeds/vantage/010-preserve-selected-theme.patch",
     "theme_selection": "registered; existing selection retained"
+  },
+  "build_acceleration": {
+    "checked_at_utc": "2026-11-19T13:49:52.382017+00:00",
+    "scope": "all four requested Kconfig maps exactly match previously validated inputs; no new defconfig run was needed for external caches, timing or parallelism",
+    "go_cache_binding": "source/tmp/go-build -> work/go-build; no Go Kconfig override",
+    "hardware_metadata": "user confirmed dorm R619AC 128MiB NAND / 512MiB RAM; target and requested options unchanged"
   }
 }

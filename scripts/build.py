@@ -11,6 +11,7 @@ from scripts.fwlib import ROOT, BuildError, assert_config, config_values, locked
 from scripts.sources import apply_patches, install_files, prepare_source, validate_local_packages
 from scripts.configure import configure
 from scripts.artifacts import collect
+from scripts.build_accel import timed_run
 
 def validate():
     locked_repos()
@@ -55,10 +56,10 @@ def main():
     elif args.step=='config-check':
         assert_config(requested_config(p, work),config_values((src/'.config').read_text()))
     elif args.step=='download':
-        run(['make','download','-j'+str(args.jobs),'V=s'],src)
+        timed_run(work,'download',['make','download','-j'+str(args.jobs),'V=s'],src)
     elif args.step=='compile':
         assert_config(requested_config(p, work),config_values((src/'.config').read_text()))
-        run(['make','-j'+str(args.jobs),'V=s'],src)
+        timed_run(work,'compile',['make','-j'+str(args.jobs),'V=s'],src)
     elif args.step=='collect':
         assert_config(requested_config(p, work),config_values((src/'.config').read_text()))
         collect(src,p,args.out.resolve(),work)

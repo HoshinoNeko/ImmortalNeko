@@ -2,19 +2,19 @@
   "date": "2026-11-19",
   "environment": "macOS arm64 / Python 3.14.5",
   "unit_tests": {
-    "count": 217,
-    "seconds": 142.813,
+    "count": 229,
+    "seconds": 139.946,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "result": "passed",
-    "log": ".work/ha-render-fix/unit-tests.log",
+    "log": ".work/build-speed/unit-tests-final.log",
     "environment": "macOS arm64 / Python 3.14.5; TMPDIR=/tmp; sh=/bin/dash",
-    "scope": "complete suite, including seven keepalived CLI/render/executable-workspace regressions and all dashboard/L2 VPN/HA tests"
+    "scope": "complete suite including 12 build acceleration regressions; final conservative native-dependency suffix extension also passed all 12 targeted tests"
   },
   "static": {
     "configuration": "passed",
-    "python_ast_files": 36,
+    "python_ast_files": 38,
     "shell_syntax_files": 24,
     "actionlint": "1.7.12 passed (SHA256 verified)",
     "shellcheck": "not run",
@@ -106,9 +106,9 @@
     "l2_vpn_fix_validation": "passed locally and in the real Linux L2 VPN job; current firmware compilation and device tests remain pending"
   },
   "checked_input_sha256": {
-    ".github/workflows/build.yml": "472f4de9e74d774ab0b42fed4ebdf5a1ff26f8d589d332a604b27f3a48cc816b",
+    ".github/workflows/build.yml": "cace7bad509a1595f231bd309ed1732c3f930141d635ac0f8ab006b4c11b768e",
     ".github/workflows/ci.yml": "58db72c044860ded3a890e779c32f1201f237b51e8bcc65c9911bc2b9ce0dae5",
-    "README.md": "2b78d3358e27b6f94b491e0cbdad6d21d7cfd5721694b6a0a128c18ba9e591db",
+    "README.md": "58de08998501d57cee0ae1c045a546be70ffb973cc07a7569227b35b1c9f4a14",
     "config/common.config": "841cc820d65a03a841b384807f6008f5f7ad3c4392e8f6b1b6399659716faac0",
     "config/feeds.extra.lock.json": "043bd2747cacee8adc5a44b599f89b9693a13a90223cce30f9f3b36adab7e744",
     "config/kernel.config": "f823a6356faa6b3e27dec57c96cb8d6c1b115e1efc8154b162b8c40d54d2971c",
@@ -118,7 +118,10 @@
     "config/source.lock.json": "a2884d87ec99b199d162b4b140004a09c1f46dad06585be16dfda3081f02ea70",
     "config/x86-retained.config": "36ee93e236a5700cde26d942f9c1c81f402e77c1adb35d2a7d149272a83786f1",
     "config/x86.config": "9cb0da6bf326035ea890876cc7ca98202744c77c28e487225f265e9f2041b8e0",
+    "docs/build-acceleration.md": "e56d4eedd82a1064379c0a7cc2783df58fc6c1897640ee51a3f6e2f2e57061fe",
     "docs/dashboard.md": "fff8b265b3065ff2cce8e556ba6552f5da44e0e60863128d052f7291d1fff78d",
+    "docs/l2-vpn.md": "1e70687aeb3055271c31e6364e9d7741f956c91a34f294e850f8f8069bceeb44",
+    "docs/validation.md": "12c74889081976a1a64adcb14e8d2d14040c02be173fe42e4f67611ff3d7dba2",
     "files/common/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "files/r619ac-basic/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "files/r619ac-ha/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -240,13 +243,14 @@
     "patches/feeds/vantage/series": "194cc1a9b46ea1c0d8384055460331d2fcacac02801c56826c85c5117d86d817",
     "patches/x86-ha/010-bbr-preserve-default.patch": "d890f0972a87c3a1541b540c3e8c0d6bd76629161f7c7590e340cfa20d11fd51",
     "patches/x86-ha/series": "ccdd34d990a6ab1595aba2a7535e8b67590d7aac5eec9be67e02ce02b4258ec7",
-    "profiles/r619ac-basic.json": "6ac9335342709b99949a8ede8dd7ee4dcd5295c6ab40936ae9c655072ce1f40f",
+    "profiles/r619ac-basic.json": "d61bf566652982383744a1dfdfd40917aaa6207e656822e7fa2f72b310ed7cda",
     "profiles/r619ac-ha.json": "7f75a12ea8438796d8f9c1d8e95204f1da1747fca8340b8a463a2f1ef6b649cf",
     "profiles/x86-basic.json": "206c2a6cec4c2a70a32ad850bb8a246290f3eb056359512533c17a2d00f45201",
     "profiles/x86-ha.json": "1a8d0ef73d955aa876bcf2b236e25b2f370222067d26eadfa7de74f1b116f283",
     "scripts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "scripts/artifacts.py": "f2fb2043d73c764573e3780f774c27d7835a33f5bb54ebd9aa40f579311857fb",
-    "scripts/build.py": "533d493b9d93bd59c39c09a3516758158b97bee364eb8565b6297eac66b6d196",
+    "scripts/build.py": "e7b6ca3f0afbf0a15daf4bbfd51be5870ad321595d1a6cadc01295b647400036",
+    "scripts/build_accel.py": "ac46a4acbc3d5740cfb3a80e1ea52df7a32547a9f55e8ae1bbeeb37c7c37817a",
     "scripts/build_test_keepalived.py": "9aa88e455f5c974e97c5a463b7862c75fa73ef31827af3572c420717b8b83aa5",
     "scripts/check_workflows.py": "36d73d604954a5d2c6915b1b0cf3405235785edf1affa7bb92a00288831f0a77",
     "scripts/collect-legacy.sh": "fde211e755fbf00788f2be7c04a8d798817d1307f12bc751c477d1e37fb70549",
@@ -256,7 +260,7 @@
     "scripts/fwlib.py": "f9d7560045ede67836f657ffc7a12081807b1d5e43914945027b84e87a990c7e",
     "scripts/import_legacy.py": "95d08d5805f2ef6bb426ab5e38029d0dfb89e67bd4ccb6d74c52e5bec7002ef8",
     "scripts/migration_plan.py": "89f9baed3a7854ea2f2be1c07cebf3dd5f8e4b5676c2787de8d9759e675ffbe3",
-    "scripts/sources.py": "0536beb32c7debd20504d3a4c1cb055e35a2ee37db39aa1e229c8afa355c5438",
+    "scripts/sources.py": "dbc061a0b968db0bdb9a8a3a8d4775c046701e857b7bd30e871d55a2410cae27",
     "templates/ha-topology.json": "475d4435072e159e9447db5c2f5274a08991b568de4e634da58b9d1ac6cdbb4d",
     "templates/l2vpn/network-dorm.uci.example": "25b580a448656abec3a82b57cd3c9f5a17a03c9afe4ed95c463d9b7af782e707",
     "templates/l2vpn/network-home.uci.example": "9818b8ac1382d0276d0d1f79bbde92c54ce5890f1e839e83e4f63d0233ecbd32",
@@ -321,6 +325,7 @@
     "tests/js/turboacc_form.cjs": "b17f637835a611d28b1c254308ae4e2e8634f6cb175eb38bf82472a96e62d237",
     "tests/js/v2ray_form.cjs": "e8859851c2da51487b2a7a9a03f0195fc414c236f9d332e771f0ffa44c1eb2e9",
     "tests/test_acceleration.py": "47c9a9afff5f779a19d3877890779662b0c079b57a673fd2a83bb9e4166843fc",
+    "tests/test_build_accel.py": "59a3cb6afb2dcb3fbaae4f4982e1be10c55a435f76c168a50ff34723c78e1835",
     "tests/test_builder.py": "408aaa49577fe8b3f9334229950b75ce0b9870ce6ba539b9557a99c8a210a0ed",
     "tests/test_collection.py": "2520c9327dabbfb509c6b590f181342619dd3760781e6805db83e16f0c5c9dff",
     "tests/test_firstboot.py": "03590c5f7f6d62dca77e0db2fa5916dac77d7e56162957a6d9e60f587f08eb01",
@@ -338,8 +343,7 @@
     "tests/test_wechatpush.py": "816dc9510641bd967ecf39a4757b1ba0b22d8cba214e5c0ca00b39350b880743",
     "tests/test_xray_test_tool.py": "6cdb19c9e58a8ee199c7f3900331357852699c79d851fdc67baa4a4e12bb2fd4",
     "themes/luci-overrides/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "docs/validation.md": "986b81cc1d18bf8e8332bb345fa49def6498afe103e5fe8855ab85b715a0efe2"
+    "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
   "vendor_patch_audit": {
     "result": "passed",
@@ -402,7 +406,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current Vantage/dashboard + existing L2 VPN/HA: 217 local tests; 7 actual LuCI form/DOM scripts; 11 JS syntax checks; 94 Chinese messages; synthetic desktop/mobile Chrome component checks; live AC read-only queries; four real pinned defconfigs. Full firmware and installed router UI not tested. HA fixtures additionally exercise /run noexec fallback in real Linux mount/network namespaces.",
+  "checked_input_scope": "current cache/workflow changes: 229 local tests, 12 targeted follow-up tests, real local Go cold/recreated-source cache reuse, actionlint and configuration validation; hardware metadata confirmed; prior unchanged Kconfig selections compared below. Warm firmware wall-clock improvement not measured.",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -690,5 +694,37 @@
     "real_router_changes": "none",
     "full_firmware_build": "not rerun; start Build firmware against updated main",
     "native_ci_result": "passed: check, ha-integration and l2vpn-integration"
+  },
+  "build_acceleration": {
+    "checked_at_utc": "2026-11-19T13:49:52.382017+00:00",
+    "result": "passed within stated scope",
+    "cache_regressions": 12,
+    "workflow_validation": "actionlint 1.7.12, SHA256 verified, passed",
+    "cache_layers": [
+      "shared downloads with legacy import",
+      "C/C++ by host/target/source pins; content compiler check",
+      "Go by host/target/source pins/configuration/native inputs"
+    ],
+    "failure_handling": "verified downloads saved before compilation; successful object caches saved after successful or failed compilation; cache service failures do not mask compile failures",
+    "native_go_reuse": {
+      "result": "passed",
+      "scope": "real local Go compilation; recreate source at same absolute path while retaining only external build cache; second build invokes no Go compiler",
+      "version": "go version go1.23.4 darwin/arm64",
+      "runs": [
+        {
+          "seconds": 1.532,
+          "compiler_commands": 18
+        },
+        {
+          "seconds": 0.235,
+          "compiler_commands": 0
+        }
+      ]
+    },
+    "native_go_scope": "local Go 1.23.4 cache semantics and source recreation; not the pinned OpenWrt Go compiler or full firmware",
+    "baseline_run": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/42396818827",
+    "prior_x86_ha_compile_minutes": 217.0,
+    "actual_cold_warm_firmware_comparison": "pending future manual builds",
+    "full_firmware_with_new_workflow": "not run"
   }
 }

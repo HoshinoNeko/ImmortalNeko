@@ -30,6 +30,8 @@ def prepare_source(work):
     run(['git', 'checkout', '--detach', 'FETCH_HEAD'], src)
     (work/'downloads').mkdir(exist_ok=True)
     (src/'dl').symlink_to(work/'downloads', target_is_directory=True)
+    from scripts.build_accel import bind_go_cache
+    bind_go_cache(src, work)
     if run(['git', 'rev-parse', 'HEAD'], src, True) != lock['commit']:
         raise BuildError('Source commit mismatch')
     (src/'feeds.conf').write_text(''.join('src-git {name} {url}^{commit}\n'.format(**f) for f in feeds))

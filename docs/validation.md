@@ -104,7 +104,7 @@ x86-ha 的五个应用和五个中文包均存在于实际包元数据，且最�
 新增 r619ac-basic，现有两种 HA Profile 同时选择共享二层 VPN 清单。
 包含 L2TPv3 Ethernet netifd 协议、官方 WireGuard/VXLAN、独立的 Xray/VLESS UDP 转发和中文 LuCI 页面。
 默认不创建网络接口、网桥或修改防火墙/DHCP；具体拓扑在设备本地配置，模板见 [二层 VPN 部署](l2-vpn.md)。
-新增 Profile 沿用128MiB NAND目标，宿舍设备的具体闪存规格尚需核实。
+新增 Profile 使用128MiB NAND目标；用户后续已确认宿舍设备也是128MiB NAND／512MiB RAM，实机启动尚未验证。
 
 控制器测试覆盖 WireGuard 设备/源地址/对端路由/MTU 校验、外部隧道 ID 冲突不误删、
 部分失败回滚、运行时 ID 快照清理和 netifd 依赖；服务测试覆盖关闭、无效配置、核心拒绝、HA 保护及私有输出。
