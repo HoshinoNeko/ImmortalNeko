@@ -1,0 +1,14 @@
+{
+  "admin/dashboard": {
+    "title": "Network dashboard",
+    "order": 1,
+    "action": {"type": "view", "path": "neko/dashboard"},
+    "depends": {"acl": ["luci-app-neko-dashboard"]}
+  },
+  "admin/services/neko-observatory": {
+    "title": "Dashboard collection",
+    "order": 80,
+    "action": {"type": "view", "path": "services/neko-observatory"},
+    "depends": {"acl": ["luci-app-neko-dashboard-config"]}
+  }
+}

@@ -5,6 +5,7 @@ SSH：`git@HoshinoNeko.github:HoshinoNeko/ImmortalNeko.git`。
 独立配置仓库，不 Fork 或提交完整 ImmortalWrt 源码。源码使用官方稳定分支
 `openwrt-25.12` 的发布版 **v25.12.2**，固定 Commit
 `4fc16f2985a358bd43bb522e43f05395fcbd6ed5`；5 个官方 Feed 同样固定完整 Commit。
+Vantage 主题通过额外 Feed 固定在 `faade36bb629f84b1e233edcad9e37abc500ae52`。
 25.12 使用 apk，旧 LEDE 18.06 的 opkg 软件包与 UCI 配置必须经过迁移。
 
 当前交付包括源码构建流水线、四个 Profile、配置验证、缓存、产物与发布、
@@ -14,6 +15,10 @@ SSH：`git@HoshinoNeko.github:HoshinoNeko/ImmortalNeko.git`。
 代理已识别为 SSR Plus 及其后端；两种 HA Profile 选择官方 HomeProxy/Sing-box 作为基础代理候选，
 旧节点、订阅、分流与服务端功能的完整迁移仍待验证。现有 Profile 不能视为全部旧插件迁移版。
 没有更改默认主题或指定 LAN/WAN 地址。当前四个 Profile 均已通过真实 `make defconfig`，包含新增二层 VPN 依赖；新功能的固件编译与实机互通仍待验证。
+
+四个 Profile 也均包含 **Vantage 可选主题与中文网络首页**：按内网 VLAN 查看速率、采样累计流量及图表，
+并从集客 AC 展示 SSID、AP 和终端，替代首页的本机无线展示。AC 默认地址为用户指定的 `172.16.10.89`，
+凭据仅在设备本地配置。主题切换、统计口径和配置方法见 [首页与 AC 采集](docs/dashboard.md)。
 
 ## 目录
 
@@ -39,9 +44,9 @@ artifacts/          被 Git 忽略的固件与构建记录
 
 | Profile | 硬件与镜像 | 预装范围 |
 | --- | --- | --- |
-| `x86-basic` | x86/64；Legacy/UEFI × ext4/SquashFS 四种镜像 | 上游默认 + LuCI 中文、CA |
+| `x86-basic` | x86/64；Legacy/UEFI × ext4/SquashFS 四种镜像 | 上游默认 + LuCI 中文、CA、Vantage 与网络首页 |
 | `x86-ha` | 同上 | 基础 + HA 服务与代理 + 已核对的部分现有 x86 组件 |
-| `r619ac-basic` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 上游默认 + LuCI 中文 + 二层 VPN / Xray |
+| `r619ac-basic` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 上游默认 + LuCI 中文 + 二层 VPN / Xray + Vantage 与网络首页 |
 | `r619ac-ha` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 同 HA 服务集，保留上游目标驱动默认值 |
 
 HA 服务集：DHCP/DNS（上游 dnsmasq/odhcpd）、OpenVPN、WireGuard、ddns-go、

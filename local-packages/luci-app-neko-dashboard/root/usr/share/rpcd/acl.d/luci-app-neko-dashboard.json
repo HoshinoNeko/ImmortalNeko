@@ -1,0 +1,11 @@
+{
+  "luci-app-neko-dashboard": {
+    "description": "Read sanitized VLAN history and external AC status",
+    "read": {"ubus": {"neko.observatory": ["status"]}}
+  },
+  "luci-app-neko-dashboard-config": {
+    "description": "Configure dashboard collection without reading AC credentials",
+    "read": {"uci": ["neko-observatory"], "ubus": {"uci": ["get"]}},
+    "write": {"uci": ["neko-observatory"], "ubus": {"uci": ["set", "add", "delete", "order", "apply", "confirm"]}}
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/anothaDev/luci-theme-vantage",
+  "commit": "faade36bb629f84b1e233edcad9e37abc500ae52",
+  "path": "luci-theme-vantage/root/etc/uci-defaults/30_luci-theme-vantage",
+  "sha256": "f1d9ba88ecec93004526a4a090dd5214bf2d8a94c7bc3cf56134dad413cbc66e"
+}

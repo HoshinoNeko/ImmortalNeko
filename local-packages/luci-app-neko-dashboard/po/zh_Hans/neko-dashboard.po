@@ -1,0 +1,293 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ImmortalNeko dashboard 1.0.0\n"
+"PO-Revision-Date: 2026-11-19 17:00+0800\n"
+"Last-Translator: ImmortalNeko contributors\n"
+"Language-Team: Simplified Chinese\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "30 minutes"
+msgstr "30 分钟"
+
+msgid "5 minutes"
+msgstr "5 分钟"
+
+msgid "60 minutes"
+msgstr "60 分钟"
+
+msgid "AC address"
+msgstr "AC 管理地址"
+
+msgid "AC authentication failed"
+msgstr "AC 认证失败"
+
+msgid "AC collection disabled"
+msgstr "AC 采集已关闭"
+
+msgid "AC collection failed"
+msgstr "AC 采集失败"
+
+msgid "AC credential file"
+msgstr "AC 凭据文件"
+
+msgid "AC credential file is invalid"
+msgstr "AC 凭据文件无效"
+
+msgid "AC credential file is missing"
+msgstr "尚未配置 AC 凭据文件"
+
+msgid "AC credential file must be root-owned with mode 600"
+msgstr "AC 凭据文件须由 root 所有且权限为 600"
+
+msgid "AC interval (seconds)"
+msgstr "AC 采集间隔（秒）"
+
+msgid "AC rejected the request"
+msgstr "AC 拒绝了查询"
+
+msgid "AC request failed"
+msgstr "AC 查询失败"
+
+msgid "AC stale threshold (seconds)"
+msgstr "AC 数据过期阈值（秒）"
+
+msgid "AP"
+msgstr "AP"
+
+msgid "AP report stale threshold (seconds)"
+msgstr "AP 上报过期阈值（秒）"
+
+msgid "APs"
+msgstr "AP 数量"
+
+msgid "Absolute path to a root-owned file with mode 600 containing the AC login password. Provision it locally; keep credentials out of UCI or the firmware."
+msgstr "填写 AC 登录密码文件的绝对路径，所有者须为 root 且权限为 600。请在设备本地创建；不要把凭据写入 UCI 或固件。"
+
+msgid "Access points"
+msgstr "接入点 AP"
+
+msgid "Association"
+msgstr "关联状态"
+
+msgid "Association rows"
+msgstr "关联记录数"
+
+msgid "Available memory"
+msgstr "可用内存"
+
+msgid "Band"
+msgstr "频段"
+
+msgid "Bands"
+msgstr "频段"
+
+msgid "Broadcast SSID / VLAN pairs"
+msgstr "广播 SSID / VLAN 组合"
+
+msgid "Chart period"
+msgstr "图表时间范围"
+
+msgid "Collect GECOOS AC"
+msgstr "采集集客 AC"
+
+msgid "Collection settings"
+msgstr "采集设置"
+
+msgid "Collector unavailable"
+msgstr "采集器不可用"
+
+msgid "Collector unavailable or stale; showing the last sample."
+msgstr "采集器不可用或数据过期，当前显示最后一次采样。"
+
+msgid "Connected"
+msgstr "连接正常"
+
+msgid "Counter interval (seconds)"
+msgstr "流量采样间隔（秒）"
+
+msgid "Dashboard collection"
+msgstr "首页数据采集"
+
+msgid "Data may be stale; retained records are not live status."
+msgstr "数据可能已过期；保留的记录不代表当前在线状态。"
+
+msgid "Detect VLAN interfaces in firewall zones without masquerading. WAN and tunnel interfaces are excluded. Add explicit interfaces below when needed."
+msgstr "识别不启用地址伪装的防火墙区域内的 VLAN 接口，排除 WAN 和隧道接口。必要时可在下方手动添加。"
+
+msgid "Discover internal VLANs"
+msgstr "自动识别内网 VLAN"
+
+msgid "Display name"
+msgstr "显示名称"
+
+msgid "Download"
+msgstr "下载"
+
+msgid "Enable collection"
+msgstr "启用采集"
+
+msgid "Enter an HTTP or HTTPS origin without credentials or a path."
+msgstr "请输入 HTTP 或 HTTPS 管理地址，不要包含用户名、密码或路径。"
+
+msgid "Explicit VLAN interfaces"
+msgstr "手动指定 VLAN 接口"
+
+msgid "GECOOS AC wireless network"
+msgstr "集客 AC 无线网络"
+
+msgid "History points per VLAN"
+msgstr "每个 VLAN 的历史采样点数"
+
+msgid "IP address"
+msgstr "IP 地址"
+
+msgid "Internal VLANs"
+msgstr "内网 VLAN 数"
+
+msgid "Invalid AC address"
+msgstr "AC 管理地址无效"
+
+msgid "Last AP report"
+msgstr "AP 最后上报"
+
+msgid "Last router sample:"
+msgstr "路由器最后采样："
+
+msgid "Last successful collection:"
+msgstr "最近成功采集："
+
+msgid "Load average (1 / 5 / 15 min)"
+msgstr "平均负载（1 / 5 / 15 分钟）"
+
+msgid "Logical interface"
+msgstr "逻辑接口"
+
+msgid "MAC address"
+msgstr "MAC 地址"
+
+msgid "Model"
+msgstr "型号"
+
+msgid "Move over the chart for values."
+msgstr "移到图表上查看采样时间和速率。"
+
+msgid "Multiple associations"
+msgstr "多条关联（可能正在漫游）"
+
+msgid "Network dashboard"
+msgstr "网络首页"
+
+msgid "No internal VLANs found. Check firewall zones or add logical interfaces in collection settings."
+msgstr "未发现内网 VLAN，请检查防火墙区域，或在采集设置中添加逻辑接口。"
+
+msgid "No records reported."
+msgstr "暂无上报记录。"
+
+msgid "Offline"
+msgstr "离线"
+
+msgid "Online"
+msgstr "在线"
+
+msgid "Online APs (AC reported)"
+msgstr "在线 AP（AC 上报）"
+
+msgid "Only interface counters and read-only AC queries are collected. Credentials stay in a root-only file; the browser never receives them."
+msgstr "仅采集接口计数器并只读查询 AC。凭据保存在仅 root 可读的文件中，不会传给浏览器。"
+
+msgid "Router system"
+msgstr "路由器系统"
+
+msgid "SSID"
+msgstr "SSID"
+
+msgid "SSIDs"
+msgstr "无线网络 SSID"
+
+msgid "Sampled traffic:"
+msgstr "已采样流量："
+
+msgid "Search terminals, SSIDs, VLANs or APs"
+msgstr "搜索终端、SSID、VLAN 或 AP"
+
+msgid "Showing the first 200 matches; narrow the search to see other terminals."
+msgstr "显示前 200 条匹配记录，请缩小搜索范围查看其他终端。"
+
+msgid "Signal"
+msgstr "信号"
+
+msgid "Since:"
+msgstr "统计开始："
+
+msgid "Stale / unverified"
+msgstr "过期 / 未核实"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "Stored in RAM only. At 5 seconds, 360 points cover 30 minutes. Totals and history restart with the collector."
+msgstr "仅存于内存。每 5 秒采样一次时，360 个点覆盖 30 分钟。采集器重启后累计流量和历史清零。"
+
+msgid "Terminal"
+msgstr "终端名称"
+
+msgid "Terminals (AC reported)"
+msgstr "终端数（AC 上报）"
+
+msgid "Total memory"
+msgstr "总内存"
+
+msgid "Traffic totals cover valid samples since the collector started. Counter resets and missing samples leave chart gaps. History is held in RAM and clears on restart."
+msgstr "累计流量覆盖采集器启动后的有效采样。计数器重置或采样缺失时图表留空；历史仅存于内存，重启后清除。"
+
+msgid "Unavailable"
+msgstr "不可用"
+
+msgid "Unique terminals"
+msgstr "唯一终端数"
+
+msgid "Unique wireless terminals"
+msgstr "无线唯一终端数"
+
+msgid "Upload"
+msgstr "上传"
+
+msgid "Upload = clients → router; download = router → clients. Counters include routed internal traffic, not only Internet traffic. Hardware-switched traffic may bypass these counters."
+msgstr "上传为终端→路由器，下载为路由器→终端。统计包含经过路由的内网流量，并非仅互联网流量。硬件交换的流量可能绕过这些计数器。"
+
+msgid "Upload and download throughput"
+msgstr "上传与下载速率"
+
+msgid "Uptime (hours)"
+msgstr "运行时间（小时）"
+
+msgid "Use the interface name from Network → Interfaces. Interfaces sharing a netdevice are counted once."
+msgstr "使用“网络→接口”中的逻辑接口名称。共用同一网络设备的接口只统计一次。"
+
+msgid "VLAN"
+msgstr "VLAN"
+
+msgid "VLAN chart"
+msgstr "VLAN 图表"
+
+msgid "VLAN discovery failed; interface list may be stale."
+msgstr "VLAN 识别失败，接口列表可能已过期。"
+
+msgid "VLAN throughput and traffic"
+msgstr "VLAN 实时速率与流量"
+
+msgid "Waiting for AC"
+msgstr "等待 AC 数据"
+
+msgid "Waiting for interface samples."
+msgstr "等待接口采样。"
+
+msgid "Wireless data comes from the external AC. Association rows may exceed unique terminals during roaming; AC link rates are not treated as traffic throughput."
+msgstr "无线数据来自外部 AC。漫游期间关联记录数可能多于唯一终端数；AC 返回的链路速率不作为实际流量速率。"
+
+msgid "Wireless terminals"
+msgstr "无线终端"

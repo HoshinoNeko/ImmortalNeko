@@ -1,0 +1,12 @@
+#!/bin/sh
+case "$1" in
+    list) printf '%s\n' '{"status":{}}' ;;
+    call)
+        [ "$2" = status ] || exit 1
+        if [ -f /var/run/neko-observatory/snapshot.json ]; then
+            cat /var/run/neko-observatory/snapshot.json
+        else
+            printf '%s\n' '{"state":"unavailable","vlans":[],"ac":{"state":"unavailable"}}'
+        fi ;;
+    *) exit 1 ;;
+esac

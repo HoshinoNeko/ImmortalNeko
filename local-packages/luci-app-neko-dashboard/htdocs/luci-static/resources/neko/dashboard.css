@@ -1,0 +1,30 @@
+.nk-dashboard { color: var(--v-text, #18202d); --nk-line: var(--v-line, #dce2ec); --nk-surface: var(--v-surface, #fff); --nk-muted: var(--v-text-2, #526177); --nk-accent: var(--v-accent, #3563e9); }
+.nk-dashboard .nk-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.nk-dashboard h2 { margin-bottom: .25rem; }
+.nk-dashboard h3 { margin: 0 0 .85rem; font-size: 1.15rem; }
+.nk-dashboard h4 { margin: 1.4rem 0 .75rem; }
+.nk-dashboard .nk-card { border: 1px solid var(--nk-line); border-radius: 16px; background: var(--nk-surface); padding: 1.25rem; margin: 1rem 0; box-shadow: 0 3px 16px #15254208; }
+.nk-dashboard .nk-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .8rem; margin: 1rem 0; }
+.nk-dashboard .nk-metric { border: 1px solid var(--nk-line); background: var(--nk-surface); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: .5rem; }
+.nk-dashboard .nk-metric > span, .nk-dashboard .nk-note, .nk-dashboard small { color: var(--nk-muted); }
+.nk-dashboard .nk-metric strong { font-size: 1.45rem; font-variant-numeric: tabular-nums; }
+.nk-dashboard .nk-note, .nk-dashboard .nk-warning { font-size: .88rem; line-height: 1.6; }
+.nk-dashboard .nk-warning { color: var(--v-warn, #985300); border-left: 3px solid currentColor; padding-left: .75rem; }
+.nk-dashboard .nk-vlans { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .75rem; margin: 1rem 0; }
+.nk-dashboard .nk-vlan { font: inherit; color: inherit; background: var(--v-surface-2, #f5f7fc); border: 1px solid var(--nk-line); border-radius: 12px; padding: 1rem; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: .45rem; }
+.nk-dashboard .nk-vlan.nk-selected { border-color: var(--nk-accent); box-shadow: inset 0 0 0 1px var(--nk-accent); }
+.nk-dashboard .nk-controls { display: flex; gap: .75rem; flex-wrap: wrap; margin: 1rem 0; }
+.nk-dashboard .nk-controls select, .nk-dashboard input[type=search] { font: inherit; color: inherit; background: var(--nk-surface); border: 1px solid var(--nk-line); border-radius: 8px; min-height: 36px; padding: .4rem .65rem; }
+.nk-dashboard .nk-controls select:focus-visible, .nk-dashboard input[type=search]:focus-visible { outline: 2px solid var(--nk-accent); outline-offset: 2px; }
+.nk-dashboard .nk-chart svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
+.nk-dashboard .nk-chart polyline { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.nk-dashboard .nk-up { stroke: #b276dd; }
+.nk-dashboard .nk-down { stroke: #249f8d; }
+.nk-dashboard .nk-axis { stroke: var(--nk-line); fill: none; vector-effect: non-scaling-stroke; }
+.nk-dashboard .nk-chart-labels { display: flex; justify-content: space-between; gap: 1rem; color: var(--nk-muted); font-size: .8rem; }
+.nk-dashboard .nk-chart-tip { min-height: 1.5em; display: block; margin-top: .5rem; font-size: .85rem; }
+.nk-dashboard .nk-scroll { overflow-x: auto; }
+.nk-dashboard .nk-table { width: 100%; font-size: .88rem; border-collapse: collapse; }
+.nk-dashboard .nk-table th, .nk-dashboard .nk-table td { text-align: left; padding: .65rem .7rem; border-bottom: 1px solid var(--nk-line); white-space: nowrap; }
+.nk-dashboard input[type=search] { width: min(100%, 440px); margin-bottom: .75rem; }
+@media (max-width: 600px) { .nk-dashboard .nk-heading { align-items: flex-start; flex-direction: column; } .nk-dashboard .nk-card { padding: .85rem; } }

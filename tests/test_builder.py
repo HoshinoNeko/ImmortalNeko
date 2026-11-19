@@ -9,7 +9,8 @@ class BuilderTests(unittest.TestCase):
     def test_source_and_all_feeds_are_pinned(self):
         s,feeds=locked_repos()
         self.assertEqual(s['release'],'v25.12.2')
-        self.assertEqual(len(feeds),5)
+        self.assertEqual(len(s['feeds']),5)
+        self.assertEqual({f['name'] for f in feeds}, {'packages','luci','routing','telephony','video','vantage'})
     def test_profiles_request_all_four_x86_outputs(self):
         for name in ('x86-basic','x86-ha'):
             p=profile(name); c=requested_config(p)
@@ -72,6 +73,7 @@ class BuilderTests(unittest.TestCase):
             t=Path(d);(t/'image.bin').write_bytes(b'firmware')
             (t/'image.manifest').write_text('luci - 1\n')
             p=profile('x86-basic');p['required_artifacts']=['image.bin','*.manifest']
+            p['packages']=['packages/base.list']
             with self.assertRaisesRegex(BuildError,'ca-bundle'):
                 verify_outputs(t,p)
             (t/'image.manifest').write_text('luci - 1\nca-bundle - 1\nluci-i18n-base-zh-cn - 1\n')

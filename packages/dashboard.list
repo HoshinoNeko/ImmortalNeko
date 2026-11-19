@@ -1,0 +1,6 @@
+# Pinned Vantage appearance and the VLAN / external AC landing page.
+luci-theme-vantage
+luci-i18n-vantage-theme-zh-cn
+luci-app-neko-dashboard
+luci-i18n-neko-dashboard-zh-cn
+neko-observatory

@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "name": "vantage",
+    "url": "https://github.com/anothaDev/luci-theme-vantage.git",
+    "commit": "faade36bb629f84b1e233edcad9e37abc500ae52"
+  }
+]
