@@ -2,15 +2,15 @@
   "date": "2026-11-19",
   "environment": "macOS arm64 / Python 3.14.5",
   "unit_tests": {
-    "count": 212,
-    "seconds": 133.699,
+    "count": 217,
+    "seconds": 142.813,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "result": "passed",
-    "log": ".work/vantage-audit/unit-tests-final.log",
+    "log": ".work/ha-render-fix/unit-tests.log",
     "environment": "macOS arm64 / Python 3.14.5; TMPDIR=/tmp; sh=/bin/dash",
-    "scope": "all discovered tests including 21 dashboard/AC/theme regressions and all existing L2 VPN/HA tests"
+    "scope": "complete suite, including seven keepalived CLI/render/executable-workspace regressions and all dashboard/L2 VPN/HA tests"
   },
   "static": {
     "configuration": "passed",
@@ -107,8 +107,8 @@
   },
   "checked_input_sha256": {
     ".github/workflows/build.yml": "472f4de9e74d774ab0b42fed4ebdf5a1ff26f8d589d332a604b27f3a48cc816b",
-    ".github/workflows/ci.yml": "b1dd241d5e33ab140c0b8e930137b4faea9435e85959dc9abed63ad9797c5fb1",
-    "README.md": "dda852a7f280053cb8296963bcd67e7a8187c952f692da430bc29d87d4f71b84",
+    ".github/workflows/ci.yml": "58db72c044860ded3a890e779c32f1201f237b51e8bcc65c9911bc2b9ce0dae5",
+    "README.md": "2b78d3358e27b6f94b491e0cbdad6d21d7cfd5721694b6a0a128c18ba9e591db",
     "config/common.config": "841cc820d65a03a841b384807f6008f5f7ad3c4392e8f6b1b6399659716faac0",
     "config/feeds.extra.lock.json": "043bd2747cacee8adc5a44b599f89b9693a13a90223cce30f9f3b36adab7e744",
     "config/kernel.config": "f823a6356faa6b3e27dec57c96cb8d6c1b115e1efc8154b162b8c40d54d2971c",
@@ -309,7 +309,7 @@
     "tests/fixtures/wechatpush/applications/luci-app-wechatpush/root/etc/init.d/wechatpush": "801036d376465aad7ff149aead49b541a9d51563eb5ca1d2d5efacaeae17646f",
     "tests/fixtures/wechatpush/applications/luci-app-wechatpush/root/usr/share/wechatpush/wechatpush": "6ef3b3a706a2859042a0dc49574a61c9acea1fbb3847f593a7cfa4a925bbd762",
     "tests/fixtures/wechatpush/manifest.json": "37277a0b7309d59cddc4aacdba9f600efae1f320f36abccb5e075e3be0cb93ef",
-    "tests/integration/keepalived_netns.py": "5075f82e23539630d95b8018ab2a3f18f0a083cbad76abfa8b4495b1345ef39e",
+    "tests/integration/keepalived_netns.py": "59072eaf70db5318512404998519f69f9ca7aaa306586567ff22a44289ccbf22",
     "tests/integration/l2vpn_netns.py": "5c07f340b0c8d3c2922ff684152705c90afa21df90d9f59adf989cce39f6b99e",
     "tests/integration/l2vpn_transport.py": "de94d97c91035467e303b89a46920394d55b63707774ad1cdff851fef1b45c63",
     "tests/integration/v2ray_generated.py": "a95a9bfb1469a488a1bb53c585264298dc25a4d4c8ff28bf22db5057e69fa7eb",
@@ -326,7 +326,7 @@
     "tests/test_firstboot.py": "03590c5f7f6d62dca77e0db2fa5916dac77d7e56162957a6d9e60f587f08eb01",
     "tests/test_ha.py": "72cea1deb312669acdd1c789cf0bad2d04fa3359d693b1cbf849a494be3e9d56",
     "tests/test_keepalived_builder.py": "43cb6a2a05b1f02ecffdce66db02cb2e10b3a58f59dcb0d666351412331355e6",
-    "tests/test_keepalived_cli.py": "23cc601cdfac3a6a439f76c411f2f8e1d5d69ba07ffe2c74a540888f2865efde",
+    "tests/test_keepalived_cli.py": "c18dfbc38d2b72354c5f72884fe64b039bc3e52f60f350ef54ab320f8f4cc9c8",
     "tests/test_l2vpn.py": "bc3bd570665172f196bac7e56f99b347d4301e17daa8587296f6f3d2438e6598",
     "tests/test_migration_plan.py": "4d47c9047f5e7c255b99cbecb258097c5d26d3746f065fd7bebe4ecc4d9502a2",
     "tests/test_observatory.py": "295088e861e3315dd514abe824354613c480fae1e54eb5a30c0cf66555630410",
@@ -338,7 +338,8 @@
     "tests/test_wechatpush.py": "816dc9510641bd967ecf39a4757b1ba0b22d8cba214e5c0ca00b39350b880743",
     "tests/test_xray_test_tool.py": "6cdb19c9e58a8ee199c7f3900331357852699c79d851fdc67baa4a4e12bb2fd4",
     "themes/luci-overrides/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/validation.md": "986b81cc1d18bf8e8332bb345fa49def6498afe103e5fe8855ab85b715a0efe2"
   },
   "vendor_patch_audit": {
     "result": "passed",
@@ -401,7 +402,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current Vantage/dashboard + existing L2 VPN/HA: 212 local tests; 7 actual LuCI form/DOM scripts; 11 JS syntax checks; 94 Chinese messages; synthetic desktop/mobile Chrome component checks; live AC read-only queries; four real pinned defconfigs. Full firmware and installed router UI not tested.",
+  "checked_input_scope": "current Vantage/dashboard + existing L2 VPN/HA: 217 local tests; 7 actual LuCI form/DOM scripts; 11 JS syntax checks; 94 Chinese messages; synthetic desktop/mobile Chrome component checks; live AC read-only queries; four real pinned defconfigs. Full firmware and installed router UI not tested. HA fixtures additionally exercise /run noexec fallback in real Linux mount/network namespaces.",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -674,5 +675,20 @@
       "exit_code": 2
     },
     "full_firmware_compilation": "pending"
+  },
+  "ha_renderer_execution": {
+    "reported_failure_run": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44501377539",
+    "diagnostic_run": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44505713414",
+    "diagnostic_commit": "98bfb7630a",
+    "observed_error": "/run/.../lib/render.sh: 17: uci: Permission denied",
+    "root_cause": "the runner could read the renderer but could not execute the UCI fixture under /run",
+    "fix_commit": "f89a5c2be0ef9d834bc1870910b18fa361d06c5d",
+    "fix": "probe execution before using a temporary directory; fall back to a private root-owned directory under /usr/local/lib; keep bounded fixture-only stderr diagnostics",
+    "targeted_tests": 7,
+    "native_ci_run": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44506328230",
+    "native_ha_result": "passed: forced /run noexec election/WAN failure/recovery plus normal dual-path failover",
+    "real_router_changes": "none",
+    "full_firmware_build": "not rerun; start Build firmware against updated main",
+    "native_ci_result": "passed: check, ha-integration and l2vpn-integration"
   }
 }

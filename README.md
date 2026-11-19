@@ -87,6 +87,10 @@ Server酱由固定 Feed 中的 WeChatPush 及中文界面替代，默认关闭�
 默认只上传 Actions Artifacts；勾选 `publish` 才生成一个包含所选 Profile 的**草稿 Release**。
 发布任务仅在全部构建成功后运行，自动校验 SHA256，再打包每个 Profile，避免同名产物覆盖。
 首次全量构建可能需要数小时；日志在失败后也会上传。修改配置或扩展包无需改主工作流。
+更新修复后，选择 `main` 重新发起 Run workflow；旧任务的 Re-run jobs 仍使用原来的提交。
+
+HA 集成测试会验证临时目录是否允许执行。若 runner 的 `/run` 禁止执行，改用
+`/usr/local/lib` 下 root 所有的临时目录；CI 在私有 mount namespace 中强制 `/run` 为 `noexec` 验证此路径。
 
 流水线使用 Ubuntu 24.04，先安装构建依赖，再拉取锁定源码、安装锁定 Feed、应用补丁、
 安装本地包、叠加系统文件、执行 `make defconfig`。任何请求的包或 Kconfig 选项被静默移除，
