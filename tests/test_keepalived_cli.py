@@ -75,3 +75,32 @@ class KeepalivedCliTests(unittest.TestCase):
         with patch.object(integration,'net',side_effect=failure):
             with self.assertRaisesRegex(RuntimeError,'fixture.*exit 1.*\nfirmware-ha: missing service executable'):
                 integration.render_config('fixture',self.base,self.env)
+
+    def test_workspace_executes_probe_before_accepting_a_directory(self):
+        with integration.fixture_workspace([self.base]) as work:
+            self.assertEqual(work.parent,self.base)
+            self.assertEqual(work.stat().st_mode & 0o777,0o755)
+            self.assertEqual(list(work.iterdir()),[])
+            accepted=work
+        self.assertFalse(accepted.exists())
+
+    def test_noexec_workspace_falls_back_and_cleans_rejected_directory(self):
+        blocked=self.base/'blocked';blocked.mkdir()
+        allowed=self.base/'allowed';allowed.mkdir()
+        execute=integration.run
+        def probe(args,**kwargs):
+            if Path(args[0]).is_relative_to(blocked):
+                raise PermissionError(13,'Permission denied',args[0])
+            return execute(args,**kwargs)
+        with patch.object(integration,'run',side_effect=probe):
+            with integration.fixture_workspace([blocked,allowed]) as work:
+                self.assertEqual(work.parent,allowed)
+                self.assertEqual(list(blocked.iterdir()),[])
+        self.assertEqual(list(allowed.iterdir()),[])
+
+    def test_workspace_reports_when_no_location_permits_execution(self):
+        with patch.object(integration,'run',side_effect=PermissionError(13,'Permission denied')):
+            with self.assertRaisesRegex(RuntimeError,'No executable HA fixture workspace.*execution denied'):
+                with integration.fixture_workspace([self.base]):
+                    self.fail('Non-executable workspace must never be used')
+        self.assertEqual(list(self.base.glob('firmware-ha-integration-*')),[])

@@ -5,6 +5,7 @@ Netifd/UCI and application service operations are mocked; no PPPoE emulator.
 """
 import json
 import argparse
+from contextlib import contextmanager
 import os
 from pathlib import Path
 import shutil
@@ -76,6 +77,33 @@ def render_config(namespace,lib,env):
         details=(exc.stderr or 'renderer produced no stderr').strip()[-1800:]
         raise RuntimeError(f'HA fixture renderer failed in {namespace} (exit {exc.returncode}):\n{details}') from exc
 
+@contextmanager
+def fixture_workspace(candidates=('/run','/usr/local/lib')):
+    # Some Ubuntu runners mount /run noexec. The UCI fixtures and keepalived
+    # callbacks must execute, and their directory must remain root-owned.
+    failures=[]
+    for parent in candidates:
+        try:
+            temporary=tempfile.TemporaryDirectory(prefix='firmware-ha-integration-',dir=parent)
+        except OSError as exc:
+            failures.append(f'{parent}: {exc.strerror}')
+            continue
+        with temporary as tmp:
+            base=Path(tmp);base.chmod(0o755)
+            probe=base/'.exec-probe'
+            probe.write_text('#!/bin/sh\nexit 0\n');probe.chmod(0o755)
+            try:
+                run([str(probe)],capture_output=True)
+            except PermissionError:
+                failures.append(f'{parent}: execution denied (possible noexec mount)')
+                continue
+            probe.unlink()
+            if failures:
+                print('INFO: '+ '; '.join(failures)+f'; using executable workspace under {parent}',flush=True)
+            yield base
+            return
+    raise RuntimeError('No executable HA fixture workspace: '+'; '.join(failures))
+
 def wait_for(predicate,reason,processes,timeout=35):
     deadline=time.monotonic()+timeout
     while time.monotonic()<deadline:
@@ -98,8 +126,7 @@ def main():
     bridges=[prefix+'l',prefix+'w',prefix+'i']+([prefix+'h'] if dual else [])
     namespaces=[prefix+'p',prefix+'b',prefix+'u']
     created_ns=[];created_br=[];processes=[];monitors=[];logs=[]
-    with tempfile.TemporaryDirectory(prefix='firmware-ha-integration-',dir='/run') as tmp:
-        base=Path(tmp);base.chmod(0o755)
+    with fixture_workspace() as base:
         check_daemon_cli(base)
         print('PASS: compiled keepalived accepts integration arguments',flush=True)
         lib=base/'lib';shutil.copytree(ROOT/'local-packages/firmware-ha/files',lib)

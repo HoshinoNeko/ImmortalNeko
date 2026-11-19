@@ -30,8 +30,14 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev libnl-3-dev libnl-genl-3-dev iproute2 iputils-ping curl
       - name: Build the firmware feed's keepalived 2.3.3 (verified SHA256)
         run: python3 scripts/build_test_keepalived.py
-      - name: Real VRRP election, WAN failure and primary recovery
-        run: sudo env "PATH=$GITHUB_WORKSPACE/.work/tools/keepalived-2.3.3/sbin:$PATH" python3 tests/integration/keepalived_netns.py
+      - name: Real VRRP election, WAN failure and primary recovery with noexec run directory
+        run: |
+          sudo env "PATH=$GITHUB_WORKSPACE/.work/tools/keepalived-2.3.3/sbin:$PATH" \
+            unshare --mount --propagation private sh -eu -c '
+              mount --bind /run /run
+              mount -o remount,bind,noexec /run
+              exec python3 tests/integration/keepalived_netns.py
+            '
       - name: Dual-path VRRP, individual link loss and WAN failover
         run: sudo env "PATH=$GITHUB_WORKSPACE/.work/tools/keepalived-2.3.3/sbin:$PATH" python3 tests/integration/keepalived_netns.py --dual-path
 
