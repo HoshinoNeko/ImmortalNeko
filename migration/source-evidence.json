@@ -490,7 +490,12 @@
         "local-packages/luci-app-neko-l2vpn/root/usr/share/rpcd/acl.d/luci-app-neko-l2vpn.json": "d31bd890d913361671a55b20c75021e98f8191a77e6228d51b8db6b3863cd8b4"
       },
       "verification": "17 targeted L2 tests and two test-tool checksum tests passed; all four current real defconfigs passed; real matching Xray parser accepted TLS/REALITY on both ends; actual VLESS/TLS UDP round trip and destination rejection passed on macOS",
-      "linux_kernel_integration": "added to CI; pending first remote run",
+      "linux_kernel_integration": {
+        "result": "passed",
+        "job_url": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44494075694/job/135456698270",
+        "commit": "32d3568",
+        "scope": "all four L2TPv3/VXLAN x direct/VLESS combinations: real WireGuard, IPv4/IPv6, ARP/NDP, MTU, physical WAN loss and netifd-style route/device restoration during managed WireGuard restart"
+      },
       "runtime_acceptance": "R619AC boot/performance, chosen home/dorm WAN/firewall/DHCP/RA, REALITY external handshake and HA/device failover not verified"
     }
   },

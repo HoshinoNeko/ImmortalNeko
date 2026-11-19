@@ -114,7 +114,11 @@ x86-ha 的五个应用和五个中文包均存在于实际包元数据，且最�
 真实 Xray 测试使用同版本官方二进制、临时证书和随机 REALITY 密钥，不访问家庭或宿舍设备。
 已验证 TLS/REALITY 原生解析和 TLS 的真实双向 UDP 转发/目标限制；REALITY 对外握手仍需用户指定目标后验收。
 Linux 测试入口 l2vpn_netns.py 在独立 namespace 内分别验证 L2TPv3、VXLAN 经 WireGuard 直连与 VLESS/TLS，
-包括 IPv4/IPv6、ARP/NDP、1360字节大包、下层断开及恢复。它已加入 CI，首次远程结果尚待核对。
+包括 IPv4/IPv6、ARP/NDP、1360字节大包、下层断开及恢复。
+[提交32d3568的二层集成任务](https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44494075694/job/135456698270)已全部通过。
+恢复测试分别覆盖物理 WAN 断线，以及按 netifd 生命周期恢复 peer route 和二层设备的 WireGuard 重建。
+早期夹具仅切换 WireGuard 的 up/down 标志，没有恢复 route_allowed_ips 对端路由；
+适配器因缺少正确路由而拒绝启动。现补齐测试中的路由/设备生命周期，保留所有连通性与故障断流检查。
 本机原始结果位于 .work/l2vpn-audit/。
 
 已通过 GitHub API 核对旧提交 abd4f32 的 [Build firmware](https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/42396818827)：

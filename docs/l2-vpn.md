@@ -106,5 +106,6 @@ L2TPv3 通过 netifd 依赖 WireGuard。跨地域二层 VPN 不作为家庭 VRRP
 排查入口：`wg show`、`ip l2tp show tunnel`、`ip l2tp show session`、
 `ip -d link show`、`bridge link`、`logread -e neko-l2vpn`。
 端到端验收包含 ARP/NDP、DHCP/RA、IPv4/IPv6、大包 MTU、UDP与TCP吞吐、断线恢复，以及家庭 HA 切换。
-已有 Linux namespace 集成入口会检查真实 WireGuard、L2TPv3/VXLAN、VLESS/TLS 及链路断开，
-但不能替代 R619AC 实机性能、家庭公网和宿舍网络测试。
+Linux namespace 集成已通过真实 WireGuard、L2TPv3/VXLAN、VLESS/TLS、IPv4/IPv6、MTU、物理 WAN 断开恢复，
+以及按 netifd 生命周期恢复路由和二层设备的 WireGuard 重建测试。
+这些结果不能替代 R619AC 实机性能、家庭公网和宿舍网络测试。

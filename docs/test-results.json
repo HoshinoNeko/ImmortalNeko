@@ -77,7 +77,6 @@
   },
   "not_run": [
     "full firmware compilation with current L2 VPN inputs",
-    "new Linux L2 VPN namespace scenarios",
     "R619AC basic device boot",
     "actual home/dorm interoperability and MTU/DHCP/RA behavior",
     "real PPPoE failover",
@@ -99,7 +98,7 @@
     "initial_confirmed_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04",
     "observed_remote_commit_before_package_discovery_fix": "e2ad0ee14f102954382bf8b88163127fb3ceee07",
     "package_discovery_fix_validation": "passed locally; remote build after this fix pending",
-    "l2_vpn_fix_validation": "passed locally; remote L2 VPN CI and current firmware builds pending"
+    "l2_vpn_fix_validation": "passed locally and in the real Linux L2 VPN job; current firmware compilation and device tests remain pending"
   },
   "checked_input_sha256": {
     ".github/workflows/build.yml": "472f4de9e74d774ab0b42fed4ebdf5a1ff26f8d589d332a604b27f3a48cc816b",
@@ -180,7 +179,7 @@
     "migration/current-plugin-plan.json": "3ccc08b3ccec32ed1634156a9f411e80b01dccfd0547f331eae98d74cd36ddfc",
     "migration/driver-plan.json": "1d3d5870e84cd891dcdf5789200829ff5b1af1c58fb11715be407bacde6ce314",
     "migration/package-map.json": "b2afe32dc1c205d2cccc16f3b05f186ef1b5fc6a794405b0a83971e5ae7be14a",
-    "migration/source-evidence.json": "c4c98f5818477bf22e6098da142db0f412c00a7e81159da8555275e39dacd384",
+    "migration/source-evidence.json": "076c017a59f413955e9dc42e6a26848c4e9c5fb5e47f978f149605f778d89eef",
     "packages/base.list": "f698afa87f126452861f97a01fce39449640438ef54adcb18645c79055905290",
     "packages/ha.list": "7b1f94d2cdb0bf54430c22200cbff6690f3bce029c7924d19522063163e2d429",
     "packages/proxy.list": "c3fdf86298f7b6b6c397d2eb2840dd9ce6cf7dd14ae77e4666b2b8cddbc5816d",
@@ -370,7 +369,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current L2 VPN inputs: 191 local tests and final 17-test follow-up, six actual LuCI form tests, 44 translated messages, native Xray TLS/REALITY parser and VLESS/TLS UDP data path, all four current real defconfigs; new native Linux kernel test pending CI",
+  "checked_input_scope": "current L2 VPN: 191 local tests, final 17-test follow-up and two HA CLI tests, six actual LuCI form tests, 44 translated messages, native Xray TLS/REALITY parser and VLESS/TLS UDP data path, all four current real defconfigs; full native Linux L2 VPN/transport/recovery job passed at 32d3568",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -563,7 +562,7 @@
       "scope": "real official macOS arm64 binary, temporary local certificates/keys and loopback sockets; no device changes"
     },
     "linux_kernel": {
-      "result": "pending CI",
+      "result": "passed",
       "entrypoint": "tests/integration/l2vpn_netns.py",
       "cases": [
         "L2TPv3 over native WireGuard direct",
@@ -573,14 +572,19 @@
         "ARP/NDP and IPv4/IPv6",
         "1360-byte IPv4 packet",
         "underlay loss and recovery",
-        "owned tunnel cleanup"
+        "owned tunnel cleanup",
+        "physical WAN loss/recovery for every combination",
+        "managed WireGuard restart with netifd peer route and L2 device restoration for every combination"
       ],
       "first_ci_attempt": {
         "run": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44490077454",
         "commit": "c44fff6977c759e9a8756c263fd5cce603acdf92",
         "result": "kernel step failed; native Xray parser/UDP step passed; diagnostics being improved"
       },
-      "first_root_cause": "Initial direct L2TPv3 IPv4/IPv6/MTU and physical WAN recovery passed. The fixture manually restarted WireGuard without restoring the route_allowed_ips peer route normally rebuilt by netifd, so the adapter correctly refused the missing route. The managed restart fixture now restores both the peer route and the owned L2 device."
+      "first_root_cause": "Initial direct L2TPv3 IPv4/IPv6/MTU and physical WAN recovery passed. The fixture manually restarted WireGuard without restoring the route_allowed_ips peer route normally rebuilt by netifd, so the adapter correctly refused the missing route. The managed restart fixture now restores both the peer route and the owned L2 device.",
+      "job_url": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44494075694/job/135456698270",
+      "commit": "32d3568",
+      "evidence": "GitHub public job conclusion success and eight scenario notices (initial IPv4/IPv6/MTU plus WAN/managed-WireGuard recovery for each combination)"
     }
   }
 }
