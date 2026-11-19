@@ -103,7 +103,7 @@
   },
   "checked_input_sha256": {
     ".github/workflows/build.yml": "472f4de9e74d774ab0b42fed4ebdf5a1ff26f8d589d332a604b27f3a48cc816b",
-    ".github/workflows/ci.yml": "f5f075ae7913006872cf349c13d355accf4a2cd64d8179cf41e15975c93d6fb7",
+    ".github/workflows/ci.yml": "b1dd241d5e33ab140c0b8e930137b4faea9435e85959dc9abed63ad9797c5fb1",
     "config/common.config": "841cc820d65a03a841b384807f6008f5f7ad3c4392e8f6b1b6399659716faac0",
     "config/feeds.extra.lock.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "config/kernel.config": "f823a6356faa6b3e27dec57c96cb8d6c1b115e1efc8154b162b8c40d54d2971c",
@@ -305,7 +305,7 @@
     "scripts/fetch_test_xray.py": "c7f1d07cf37aed5dda54a946c776804a7b6b1a2855412834c4ce0823297dd1b0",
     "tests/test_l2vpn.py": "bc3bd570665172f196bac7e56f99b347d4301e17daa8587296f6f3d2438e6598",
     "tests/test_xray_test_tool.py": "6cdb19c9e58a8ee199c7f3900331357852699c79d851fdc67baa4a4e12bb2fd4",
-    "tests/integration/l2vpn_netns.py": "34475ba7841c57aeaf738167785cb58a636507331735e5e492fd2618268683c4",
+    "tests/integration/l2vpn_netns.py": "22b9c53f72069d152d87e22c058ed6d207e373c174bf7ee8fdfd47912f0acc68",
     "tests/integration/l2vpn_transport.py": "de94d97c91035467e303b89a46920394d55b63707774ad1cdff851fef1b45c63",
     "tests/js/l2vpn_form.cjs": "865a8e4b021d036977ec17b059f03a84767d639a1741f772ba2fced61d43ba5e"
   },
@@ -574,7 +574,12 @@
         "1360-byte IPv4 packet",
         "underlay loss and recovery",
         "owned tunnel cleanup"
-      ]
+      ],
+      "first_ci_attempt": {
+        "run": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/44490077454",
+        "commit": "c44fff6977c759e9a8756c263fd5cce603acdf92",
+        "result": "kernel step failed; native Xray parser/UDP step passed; diagnostics being improved"
+      }
     }
   }
 }

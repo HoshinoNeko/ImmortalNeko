@@ -47,7 +47,10 @@ jobs:
         run: sudo python3 tests/integration/l2vpn_transport.py --core .work/tools/xray-26.3.27/xray
       - name: Kernel L2TPv3 and VXLAN over WireGuard, direct and over VLESS
         run: |
-          sudo modprobe wireguard
-          sudo modprobe l2tp_eth
-          sudo modprobe vxlan
+          for module in wireguard l2tp_eth vxlan; do
+            if ! sudo modprobe "$module"; then
+              echo "::error title=L2 VPN kernel module::Cannot load required module $module"
+              exit 1
+            fi
+          done
           sudo python3 tests/integration/l2vpn_netns.py --core .work/tools/xray-26.3.27/xray

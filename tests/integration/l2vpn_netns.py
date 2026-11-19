@@ -170,4 +170,12 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as exc:
+        # Public Actions annotations provide a bounded diagnostic without dumping keys/configs.
+        details = (exc.stderr or '').strip() if isinstance(exc, subprocess.CalledProcessError) else str(exc)
+        details = (details or 'Native kernel integration failed')[-3000:]
+        details = details.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+        print('::error file=tests/integration/l2vpn_netns.py,title=L2 VPN kernel integration::'+details, flush=True)
+        raise
