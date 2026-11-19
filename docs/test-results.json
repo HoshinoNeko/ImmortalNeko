@@ -1,21 +1,21 @@
 {
-  "date": "2026-11-08",
+  "date": "2026-11-19",
   "environment": "macOS arm64 / Python 3.14.5",
   "unit_tests": {
-    "count": 172,
-    "seconds": 139.054,
+    "count": 191,
+    "seconds": 137.451,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "result": "passed",
-    "log": ".work/package-discovery-audit/full-tests.log",
-    "scope": "all discovered tests on macOS with /tmp and dash, including four new package-discovery regressions; not a Linux firmware compile or native HA run",
-    "environment": "macOS arm64 / Python 3.14.5; TMPDIR=/tmp; sh=/bin/dash"
+    "log": ".work/l2vpn-audit/full-tests.log",
+    "environment": "macOS arm64 / Python 3.14.5; TMPDIR=/tmp; sh=/bin/dash",
+    "scope": "all discovered tests including 17 L2 VPN and two test-tool regressions; final WAN detail adjustment additionally passed the 17 targeted tests"
   },
   "static": {
     "configuration": "passed",
-    "python_ast_files": 27,
-    "shell_syntax_files": 20,
+    "python_ast_files": 34,
+    "shell_syntax_files": 22,
     "actionlint": "1.7.12 passed (SHA256 verified)",
     "shellcheck": "not run",
     "shell_gate_negative_test": {
@@ -32,7 +32,8 @@
         "PPTP form legacy DNS/MPPE, retained disabled values and control characters",
         "Traffic view: per-MAC IPv4/IPv6 aggregation, rates/reset baselines, filtering/sorting, error state and exact read-only CGI command ACL",
         "V2Ray Server form: choices, inactive UCI values, masked controls, listener requirements, UUID and Shadowsocks byte-level validation",
-        "Turbo ACC form: explicit firewall policies, keep/remove no-ops, legacy mode 2 preservation, read-only proc state and DNS upstream validation; feature-unavailable controls hidden"
+        "Turbo ACC form: explicit firewall policies, keep/remove no-ops, legacy mode 2 preservation, read-only proc state and DNS upstream validation; feature-unavailable controls hidden",
+        "L2 VPN actual LuCI form/protocol options, TLS/REALITY role visibility/retention and UUID/short-ID validation"
       ],
       "runtime_browser": "not run"
     },
@@ -47,23 +48,26 @@
       "syntax": "passed on pinned upstream JS",
       "translation": "passed after duplicate-message patch",
       "runtime_browser": "not run"
-    }
+    },
+    "l2vpn_translation": "44 messages, complete UI coverage and msgfmt --check passed"
   },
   "real_defconfig": {
     "profiles": [
+      "r619ac-basic",
       "r619ac-ha",
       "x86-basic",
       "x86-ha"
     ],
     "result": "passed",
     "evidence": "config-validation.json",
-    "scope": "current HA dependencies, retained apps/translations, acceleration patches and x86 drivers; actual metadata and all requested option equality",
+    "scope": "current L2 VPN shared packages, local UI/Chinese translation and new dorm basic profile; actual pinned source metadata and strict option equality",
     "requested_options": {
-      "r619ac-ha": 33,
+      "r619ac-basic": 26,
+      "r619ac-ha": 43,
       "x86-basic": 18,
-      "x86-ha": 171
+      "x86-ha": 181
     },
-    "target_compilation": "not verified"
+    "current_target_compilation": "pending"
   },
   "live_read_only_snapshot": {
     "installed_packages": 680,
@@ -72,17 +76,18 @@
     "result": "collected; no device changes"
   },
   "not_run": [
-    "full firmware compilation",
-    "Linux namespace election/failover scenarios",
-    "full firmware GitHub Actions workflow completion",
-    "device boot",
+    "full firmware compilation with current L2 VPN inputs",
+    "new Linux L2 VPN namespace scenarios",
+    "R619AC basic device boot",
+    "actual home/dorm interoperability and MTU/DHCP/RA behavior",
     "real PPPoE failover",
     "memory/load verification",
-    "native V2Ray core parser"
+    "native V2Ray core parser",
+    "external REALITY handshake with user-selected target"
   ],
   "dual_path": {
     "unit_regressions": "passed",
-    "native_linux": "single-path native config-test passed (inferred from completing both-node launch loop before wait_for in the supplied traceback); process then failed Unknown option -P before election; dual-path/failover not completed",
+    "native_linux": "passed in prior Build firmware run 42396818827 at abd4f32; not a test of the new L2 VPN",
     "pppoe_operator_test": "not run",
     "hardware": "R619AC user-confirmed 128MiB NAND / 512MiB RAM; runtime unverified"
   },
@@ -93,11 +98,12 @@
     "limitations": [],
     "initial_confirmed_pushed_commit": "4806fc4c511c014491403486c77fee2466905f04",
     "observed_remote_commit_before_package_discovery_fix": "e2ad0ee14f102954382bf8b88163127fb3ceee07",
-    "package_discovery_fix_validation": "passed locally; remote build after this fix pending"
+    "package_discovery_fix_validation": "passed locally; remote build after this fix pending",
+    "l2_vpn_fix_validation": "passed locally; remote L2 VPN CI and current firmware builds pending"
   },
   "checked_input_sha256": {
-    ".github/workflows/build.yml": "9d8bccfb942dc1cfff6a324eb3b54d08402178b6a64ee4a2a304b81c3f0d6d4d",
-    ".github/workflows/ci.yml": "34f553145c3e67cacf7e15c222840fe0fcf72c83a57101de3721243bbd35bf42",
+    ".github/workflows/build.yml": "472f4de9e74d774ab0b42fed4ebdf5a1ff26f8d589d332a604b27f3a48cc816b",
+    ".github/workflows/ci.yml": "f5f075ae7913006872cf349c13d355accf4a2cd64d8179cf41e15975c93d6fb7",
     "config/common.config": "841cc820d65a03a841b384807f6008f5f7ad3c4392e8f6b1b6399659716faac0",
     "config/feeds.extra.lock.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
     "config/kernel.config": "f823a6356faa6b3e27dec57c96cb8d6c1b115e1efc8154b162b8c40d54d2971c",
@@ -174,9 +180,9 @@
     "migration/current-plugin-plan.json": "3ccc08b3ccec32ed1634156a9f411e80b01dccfd0547f331eae98d74cd36ddfc",
     "migration/driver-plan.json": "1d3d5870e84cd891dcdf5789200829ff5b1af1c58fb11715be407bacde6ce314",
     "migration/package-map.json": "b2afe32dc1c205d2cccc16f3b05f186ef1b5fc6a794405b0a83971e5ae7be14a",
-    "migration/source-evidence.json": "72b32c879cff9097e41f1e69f273b3e54ab2fb05be5fa2f6a1ff65ede4bae091",
+    "migration/source-evidence.json": "f61888acae860a8de9fcd0582b9a25d97aee3cc0cd8ed31faaa98deda156ca07",
     "packages/base.list": "f698afa87f126452861f97a01fce39449640438ef54adcb18645c79055905290",
-    "packages/ha.list": "b00c0a64452d161abc0cb97e18842af6f8116e24b3238f9824a60399010191b3",
+    "packages/ha.list": "7b1f94d2cdb0bf54430c22200cbff6690f3bce029c7924d19522063163e2d429",
     "packages/proxy.list": "c3fdf86298f7b6b6c397d2eb2840dd9ce6cf7dd14ae77e4666b2b8cddbc5816d",
     "packages/x86-drivers.list": "a735c2e573f620ef9695a51c878a212e37a073efd6e461a60dc27184210db59d",
     "packages/x86-retained.list": "5bda364655a00e263ee335edf7f970547d8e8e9aab32a8103631088670553f92",
@@ -194,9 +200,9 @@
     "patches/feeds/packages/x86-ha/series": "0530195b8602c3957214ba9d38d61406c5c36b62ff1aeed44ee1c88189b1affb",
     "patches/x86-ha/010-bbr-preserve-default.patch": "d890f0972a87c3a1541b540c3e8c0d6bd76629161f7c7590e340cfa20d11fd51",
     "patches/x86-ha/series": "ccdd34d990a6ab1595aba2a7535e8b67590d7aac5eec9be67e02ce02b4258ec7",
-    "profiles/r619ac-ha.json": "ae7323b690322ecf0258f411e69c19e3f702d4a25eba9a6a568f40ac367105ad",
+    "profiles/r619ac-ha.json": "995adcdb3856b297ad870617e730ff63da3c4ec5763f5b7c5591296c686f183a",
     "profiles/x86-basic.json": "5f265bf26acca048e722cbbdf469fde15b39f537ebe21ec7d6bd73f0b9efc523",
-    "profiles/x86-ha.json": "97b51cd844399272035daa86d32d82859cc3c0df2d7066722e65f2c1baa2fadb",
+    "profiles/x86-ha.json": "9f1b5eebfe333b2a8c1c87df95589cabc85941bdb7dc2e1fa63e3fb983665f95",
     "scripts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "scripts/artifacts.py": "f2fb2043d73c764573e3780f774c27d7835a33f5bb54ebd9aa40f579311857fb",
     "scripts/build.py": "533d493b9d93bd59c39c09a3516758158b97bee364eb8565b6297eac66b6d196",
@@ -276,7 +282,32 @@
     "tests/test_wechatpush.py": "816dc9510641bd967ecf39a4757b1ba0b22d8cba214e5c0ca00b39350b880743",
     "themes/luci-overrides/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "themes/packages/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "tests/test_package_discovery.py": "e1c9ec41ba43ed0cbde5ceed8f07effa2d6336c584565c9b1c427a89c681d9d5"
+    "tests/test_package_discovery.py": "e1c9ec41ba43ed0cbde5ceed8f07effa2d6336c584565c9b1c427a89c681d9d5",
+    "local-packages/neko-l2vpn/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+    "local-packages/neko-l2vpn/Makefile": "91053d0d0246423bbd04ff7d5811195b526e455e877ee2e4b115986d1e5e5790",
+    "local-packages/neko-l2vpn/files/neko-l2vpn.init": "6fdf6f5dc91abda99011097708450097c7b18c03f5ae8e0dab508bc1cd8c03e7",
+    "local-packages/neko-l2vpn/files/neko-l2vpn.config": "dd8cfb9b88cfeb849d627feec7d58e58604999dbddd8ffe39191d3d5e529cb48",
+    "local-packages/neko-l2vpn/files/l2vpn.py": "753dbe4e115170366a5b27984258c920d32dd92551c6543c2a0906317dfff4d6",
+    "local-packages/neko-l2vpn/files/neko_l2tp.sh": "259ac1e16d54a874b206b52e7d741e8b8fa2544d334341d0b7c7f2b24c836fff",
+    "local-packages/luci-app-neko-l2vpn/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+    "local-packages/luci-app-neko-l2vpn/Makefile": "2c3c3c6d1602195b7947a186b61ea016dc6e9e87ae681c27a490f0bfbb185a2a",
+    "local-packages/luci-app-neko-l2vpn/root/usr/share/rpcd/acl.d/luci-app-neko-l2vpn.json": "d31bd890d913361671a55b20c75021e98f8191a77e6228d51b8db6b3863cd8b4",
+    "local-packages/luci-app-neko-l2vpn/root/usr/share/luci/menu.d/luci-app-neko-l2vpn.json": "76ac8f571b807d781f050702a007ec5f6eb69fd24ff8f5eaf7f20c04a20a7180",
+    "local-packages/luci-app-neko-l2vpn/htdocs/luci-static/resources/protocol/neko_l2tp.js": "56a464ba098486fc5766d9a41f25dc9279e64d03f7bbc008c19ae87d3d9c9993",
+    "local-packages/luci-app-neko-l2vpn/htdocs/luci-static/resources/view/network/neko-l2vpn.js": "14e3a82a7b72d20771de2f28b9e67d977c72f1aaadf7cb88ce093f14a2caf005",
+    "local-packages/luci-app-neko-l2vpn/po/zh_Hans/neko-l2vpn.po": "7b4bac43b0084401c078789f5a3e09cdb81f834bf80afc93a4be656140f3a13d",
+    "templates/l2vpn/vless-home.uci.example": "86a2304c84059049baf3077676a002e080d72c8ac5add1ca28eb158b9ceba9c4",
+    "templates/l2vpn/network-dorm.uci.example": "25b580a448656abec3a82b57cd3c9f5a17a03c9afe4ed95c463d9b7af782e707",
+    "templates/l2vpn/network-home.uci.example": "9818b8ac1382d0276d0d1f79bbde92c54ce5890f1e839e83e4f63d0233ecbd32",
+    "templates/l2vpn/vless-dorm.uci.example": "2b190b1c2429fa42e06cf71ea518b85746dfc3bfa71f3cd87ce973c4fb63715e",
+    "packages/l2-vpn.list": "d07f82134c2ac090c396dd9a918b88c7bc3e9513ad15748b6c664931987c8fcd",
+    "profiles/r619ac-basic.json": "fb12261b0d0254d9c07b6c1360579be862b0f92ed4adf31fa0b0a8df5d2cc1f9",
+    "scripts/fetch_test_xray.py": "c7f1d07cf37aed5dda54a946c776804a7b6b1a2855412834c4ce0823297dd1b0",
+    "tests/test_l2vpn.py": "bc3bd570665172f196bac7e56f99b347d4301e17daa8587296f6f3d2438e6598",
+    "tests/test_xray_test_tool.py": "6cdb19c9e58a8ee199c7f3900331357852699c79d851fdc67baa4a4e12bb2fd4",
+    "tests/integration/l2vpn_netns.py": "34475ba7841c57aeaf738167785cb58a636507331735e5e492fd2618268683c4",
+    "tests/integration/l2vpn_transport.py": "de94d97c91035467e303b89a46920394d55b63707774ad1cdff851fef1b45c63",
+    "tests/js/l2vpn_form.cjs": "865a8e4b021d036977ec17b059f03a84767d639a1741f772ba2fced61d43ba5e"
   },
   "vendor_patch_audit": {
     "result": "passed",
@@ -339,7 +370,7 @@
       "proxy/offload or HA accounting"
     ]
   },
-  "checked_input_scope": "current package-discovery fix: all 172 local tests passed, exact scanner before/after reproduction, real pinned defconfig for all three current profiles, input validation, 27 Python AST checks, workflow lint and whitespace checks; full firmware compile pending",
+  "checked_input_scope": "current L2 VPN inputs: 191 local tests and final 17-test follow-up, six actual LuCI form tests, 44 translated messages, native Xray TLS/REALITY parser and VLESS/TLS UDP data path, all four current real defconfigs; new native Linux kernel test pending CI",
   "v2ray_server": {
     "unit_tests": 14,
     "result": "passed",
@@ -464,7 +495,7 @@
       "log": ".work/ci-cli-targeted-tests.log",
       "scope": "two subprocess CLI contract-fixture tests and four mocked build/staging tests; no real daemon/network"
     },
-    "native_rerun_after_fix": "not run"
+    "native_rerun_after_fix": "passed in prior Build firmware run 42396818827 at abd4f32"
   },
   "ci_package_discovery_failure": {
     "evidence": "Build firmware x86-ha prepare failure log supplied by user; no run URL supplied",
@@ -491,6 +522,59 @@
     },
     "real_defconfig": "passed for x86-basic (18 requested options), x86-ha (171) and r619ac-ha (33); all ten affected package symbols resolved y",
     "configuration_evidence": "config-validation.json",
-    "remote_rerun_after_fix": "pending"
+    "remote_rerun_after_fix": "passed: all prior three profiles compiled in Build firmware run 42396818827 at abd4f32"
+  },
+  "prior_full_build": {
+    "commit": "abd4f329a655cce60de06fc95ec6aa33f3c28db8",
+    "url": "https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/42396818827",
+    "result": "success",
+    "profiles": [
+      "r619ac-ha",
+      "x86-basic",
+      "x86-ha"
+    ],
+    "ha_integration": "success",
+    "evidence": "GitHub public API run/job conclusions checked in this session",
+    "scope": "before L2 VPN and r619ac-basic additions"
+  },
+  "l2_vpn": {
+    "targeted_tests": {
+      "count": 17,
+      "result": "passed",
+      "log": ".work/l2vpn-audit/final-targeted.log"
+    },
+    "test_tool_tests": {
+      "count": 2,
+      "result": "passed"
+    },
+    "native_xray": {
+      "version": "26.3.27",
+      "archive_sha256": "2e93a67e8aa1936ecefb307e120830fcbd4c643ab9b1c46a2d0838d5f8409eaf",
+      "result": "passed",
+      "cases": [
+        "client TLS parser",
+        "server TLS parser",
+        "client REALITY parser",
+        "server REALITY parser",
+        "actual 1280-byte bidirectional UDP via VLESS/TLS",
+        "server rejects a different destination UDP port"
+      ],
+      "log": ".work/l2vpn-audit/native-xray.log",
+      "scope": "real official macOS arm64 binary, temporary local certificates/keys and loopback sockets; no device changes"
+    },
+    "linux_kernel": {
+      "result": "pending CI",
+      "entrypoint": "tests/integration/l2vpn_netns.py",
+      "cases": [
+        "L2TPv3 over native WireGuard direct",
+        "VXLAN over native WireGuard direct",
+        "L2TPv3 over WireGuard over VLESS/TLS",
+        "VXLAN over WireGuard over VLESS/TLS",
+        "ARP/NDP and IPv4/IPv6",
+        "1360-byte IPv4 packet",
+        "underlay loss and recovery",
+        "owned tunnel cleanup"
+      ]
+    }
   }
 }

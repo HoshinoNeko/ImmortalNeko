@@ -1,0 +1,12 @@
+{
+  "name": "r619ac-basic",
+  "target": "ipq40xx",
+  "subtarget": "generic",
+  "hardware_status": "128m-nand-512m-ram-profile-verify-dorm-unit-before-flashing",
+  "flash_mib": 128,
+  "ram_mib": 512,
+  "fragments": ["config/r619ac-128m.config"],
+  "packages": ["packages/base.list", "packages/l2-vpn.list"],
+  "overlays": ["files/common", "files/r619ac-basic"],
+  "required_artifacts": ["*p2w_r619ac-128m*squashfs-sysupgrade.bin", "*.manifest"]
+}

@@ -34,3 +34,20 @@ jobs:
         run: sudo env "PATH=$GITHUB_WORKSPACE/.work/tools/keepalived-2.3.3/sbin:$PATH" python3 tests/integration/keepalived_netns.py
       - name: Dual-path VRRP, individual link loss and WAN failover
         run: sudo env "PATH=$GITHUB_WORKSPACE/.work/tools/keepalived-2.3.3/sbin:$PATH" python3 tests/integration/keepalived_netns.py --dual-path
+
+  l2vpn-integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - run: sudo apt-get update && sudo apt-get install -y curl openssl iproute2 iputils-ping wireguard-tools kmod
+      - name: Stage official Xray 26.3.27 (verified SHA256)
+        run: python3 scripts/fetch_test_xray.py
+      - name: Native TLS/REALITY parser and VLESS UDP round trip
+        run: sudo python3 tests/integration/l2vpn_transport.py --core .work/tools/xray-26.3.27/xray
+      - name: Kernel L2TPv3 and VXLAN over WireGuard, direct and over VLESS
+        run: |
+          sudo modprobe wireguard
+          sudo modprobe l2tp_eth
+          sudo modprobe vxlan
+          sudo python3 tests/integration/l2vpn_netns.py --core .work/tools/xray-26.3.27/xray

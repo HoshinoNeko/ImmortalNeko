@@ -11,6 +11,7 @@
   ],
   "packages": [
     "packages/base.list",
+    "packages/l2-vpn.list",
     "packages/ha.list",
     "packages/proxy.list"
   ],

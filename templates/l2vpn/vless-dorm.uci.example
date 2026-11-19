@@ -1,0 +1,16 @@
+# The destination IP/UDP port describes the home WireGuard listener, not this dorm router.
+config transport 'main'
+	option enabled '0'
+	option role 'client'
+	option security 'tls'
+	option server '<HOME_PUBLIC_IP_OR_DDNS>'
+	option server_port '443'
+	option server_name '<YOUR_VPN_TLS_NAME>'
+	option uuid '<SAME_VLESS_UUID_AS_HOME>'
+	option flow ''
+	option egress_device '<ACTUAL_DORM_WAN_LINUX_DEVICE>'
+	option proxy_port '51821'
+	option target_address '127.0.0.1'
+	option target_port '51820'
+	# Optional for a private CA; omit when the server certificate uses a trusted public CA.
+	option ca_certificate_file ''

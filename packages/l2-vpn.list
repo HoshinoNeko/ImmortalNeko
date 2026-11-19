@@ -1,0 +1,15 @@
+# Shared home/dorm L2 transport; all tunnels remain unconfigured until provisioned locally.
+neko-l2vpn
+luci-app-neko-l2vpn
+luci-i18n-neko-l2vpn-zh-cn
+ip-full
+ip-bridge
+kmod-wireguard
+wireguard-tools
+luci-proto-wireguard
+kmod-l2tp
+kmod-l2tp-eth
+kmod-vxlan
+vxlan
+luci-proto-vxlan
+xray-core

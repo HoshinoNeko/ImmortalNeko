@@ -1,25 +1,28 @@
 # 验证记录与验收范围
 
-最近更新：2026-11-08。环境：macOS arm64、Python 3.14.5。
+最近更新：2026-11-19。环境：macOS arm64、Python 3.14.5。
 详细机器可读结果见 [test-results.json](test-results.json) 和 [config-validation.json](config-validation.json)。
 
 ## 已执行并通过
 
-* 完整172项回归测试全部通过，139.054秒，无跳过项；包含4项本地包发现检查、15项加速配置、7项 WeChatPush 及14项 V2Ray Server 配置与启动流程测试。
+* 完整191项回归测试全部通过，137.451秒，无跳过项；新增17项二层 VPN 配置、生命周期、netifd/服务测试和2项固定 Xray 工具校验测试。
   覆盖构建配置、产物、旧清单分析、采集器、双路径探测、释放确认、单会话限制与可恢复退避事件。
   首次 Ubuntu Actions 的失败及本地修复见下文；本机通过不等同于远程流水线通过。
-* Socat、PPTP、设备流量、V2Ray Server 及 Turbo ACC 五组实际JS表单/视图模拟测试通过。
+* 二层 VPN、Socat、PPTP、设备流量、V2Ray Server 及 Turbo ACC 六组实际JS表单/视图模拟测试通过。
   流量页覆盖IPv4/IPv6、计数基线、筛选/排序及只读ACL；V2Ray 页面覆盖隐藏字段保留、凭据遮蔽、UUID及协议参数校验。
-* 27个Python文件 AST、20个 .sh/.init Shell语法检查通过；6个本地JS语法、5份中文PO的 msgfmt 检查通过，Turbo ACC 的47条及V2Ray的51条消息覆盖通过。
+* scripts/tests/local-packages 共34个Python文件 AST、22个 .sh/.init Shell语法检查通过；全部本地JS语法及中文PO检查通过，新增二层 VPN 的44条中文消息覆盖通过。
 * 固定源插件补丁测试12项、首次安装/保留配置升级测试4项通过；实际LuCI Lua文件通过本机Lua 5.5语法解析，首次Actions的Lua 5.1解析及SyncDial入口检查也通过。
 * Shell语法门禁负向验证：临时错误脚本在旧写法中返回0，修正后返回1；实际工程脚本返回0。
 * actionlint v1.7.12：工作流通过；二进制经过固定SHA256校验。未运行shellcheck。
 * 固件输入扫描及目录边界校验通过；private/ 不能通过 files/../private 误选为覆盖层。
 * 实际源码和5个Feed的HEAD逐一匹配 source.lock.json。
-* 当前三个真实 make defconfig 均通过，且所有请求的包/选项与解析结果严格相等：
-  x86-basic 18项、x86-ha 171项、r619ac-ha 33项。已记录各最终配置及构建输入的SHA256。
+* 当前四个真实 make defconfig 均通过，且所有请求的包/选项与解析结果严格相等：
+  x86-basic 18项、x86-ha 181项、r619ac-basic 26项、r619ac-ha 43项。已记录各最终配置及构建输入的SHA256。
   包含新增 SSH/timeout、HomeProxy/Sing-box、x86 插件与中文翻译、本地页面、V2Ray/Python适配层、
   BBR/DNSProxy、WeChatPush及27项驱动；十个此前缺失的应用/翻译包均已在实际元数据中注册，解析结果为 y。
+* 与固定 Feed 相同版本的官方 Xray 26.3.27 macOS arm64 归档经过 SHA256 校验。
+  真实核心接受客户端/服务端的 TLS 和 REALITY 四种配置；实际 VLESS/TLS 双向 UDP 转发及禁止其他目标测试通过。
+  Linux 内核二层隧道测试已接入 CI，本机不运行 Linux namespace 或模拟成真实内核通过。
 * 用户指定的现役 x86 只读采集完成：680个安装包、80个配置文件，11项采集产物校验和通过。
   未修改现网设置、未启停服务或刷写设备。
 
@@ -95,6 +98,28 @@ PPTP Server、Socat、Turbo ACC、V2Ray Server、wrtbwmon。
 x86-ha 的五个应用和五个中文包均存在于实际包元数据，且最终配置为 y。
 本次配置解析未使用模拟 Kconfig、FORCE=1 或删除包选择；完整固件编译仍需 Actions 重跑。
 日志与原始配置保存在 .work/package-discovery-audit/，摘要见 config-validation.json。
+
+## 二层 VPN 与宿舍 basic 版
+
+新增 r619ac-basic，现有两种 HA Profile 同时选择共享二层 VPN 清单。
+包含 L2TPv3 Ethernet netifd 协议、官方 WireGuard/VXLAN、独立的 Xray/VLESS UDP 转发和中文 LuCI 页面。
+默认不创建网络接口、网桥或修改防火墙/DHCP；具体拓扑在设备本地配置，模板见 [二层 VPN 部署](l2-vpn.md)。
+新增 Profile 沿用128MiB NAND目标，宿舍设备的具体闪存规格尚需核实。
+
+控制器测试覆盖 WireGuard 设备/源地址/对端路由/MTU 校验、外部隧道 ID 冲突不误删、
+部分失败回滚、运行时 ID 快照清理和 netifd 依赖；服务测试覆盖关闭、无效配置、核心拒绝、HA 保护及私有输出。
+最终 WAN 设备详情校验调整后，17项二层测试再次通过。
+191项完整测试使用 /tmp 与 dash；全部6组实际JS测试、语法、翻译、工作流与固件输入检查通过。
+
+真实 Xray 测试使用同版本官方二进制、临时证书和随机 REALITY 密钥，不访问家庭或宿舍设备。
+已验证 TLS/REALITY 原生解析和 TLS 的真实双向 UDP 转发/目标限制；REALITY 对外握手仍需用户指定目标后验收。
+Linux 测试入口 l2vpn_netns.py 在独立 namespace 内分别验证 L2TPv3、VXLAN 经 WireGuard 直连与 VLESS/TLS，
+包括 IPv4/IPv6、ARP/NDP、1360字节大包、下层断开及恢复。它已加入 CI，首次远程结果尚待核对。
+本机原始结果位于 .work/l2vpn-audit/。
+
+已通过 GitHub API 核对旧提交 abd4f32 的 [Build firmware](https://github.com/HoshinoNeko/ImmortalNeko/actions/runs/42396818827)：
+原有三个 Profile 的完整构建及前置 HA 集成均成功。该运行不包含这次新增的二层 VPN 代码和 r619ac-basic，
+不能作为新功能的目标编译或实机验收证据。
 
 ## 仍待完成的原生验收
 

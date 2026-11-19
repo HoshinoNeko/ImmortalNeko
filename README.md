@@ -7,13 +7,13 @@ SSH：`git@HoshinoNeko.github:HoshinoNeko/ImmortalNeko.git`。
 `4fc16f2985a358bd43bb522e43f05395fcbd6ed5`；5 个官方 Feed 同样固定完整 Commit。
 25.12 使用 apk，旧 LEDE 18.06 的 opkg 软件包与 UCI 配置必须经过迁移。
 
-当前交付包括源码构建流水线、三个 Profile、配置验证、缓存、产物与发布、
+当前交付包括源码构建流水线、四个 Profile、配置验证、缓存、产物与发布、
 旧配置清单分析工具、只读设备采集器和本地 keepalived 控制包。**完整固件编译及实机切换仍待验证**。
 已对现役 x86 完成只读采集：680个已安装包、80个配置文件。当前66个 LuCI 应用/协议/主题条目中，
 已有方案的56项均已显式加入 x86-ha（包含原有主题及可用中文翻译），仍有10项待确定迁移方案，见 [迁移清单](migration/current-plugin-plan.json)。
 代理已识别为 SSR Plus 及其后端；两种 HA Profile 选择官方 HomeProxy/Sing-box 作为基础代理候选，
-旧节点、订阅、分流与服务端功能的完整迁移仍待验证。现有三个 Profile 不能视为全部旧插件迁移版。
-没有更改默认主题或指定 LAN/WAN 地址。当前三个 Profile 均已通过真实 `make defconfig`，包含新增 HA 依赖、移植页面与驱动；完整固件编译仍待通过。
+旧节点、订阅、分流与服务端功能的完整迁移仍待验证。现有 Profile 不能视为全部旧插件迁移版。
+没有更改默认主题或指定 LAN/WAN 地址。当前四个 Profile 均已通过真实 `make defconfig`，包含新增二层 VPN 依赖；新功能的固件编译与实机互通仍待验证。
 
 ## 目录
 
@@ -21,7 +21,7 @@ SSH：`git@HoshinoNeko.github:HoshinoNeko/ImmortalNeko.git`。
 .github/workflows/   静态检查、手动完整构建与草稿 Release
 config/             源码/Feed 锁、通用/目标/内核 Kconfig 片段
 profiles/           目标、包清单、覆盖层、必需产物声明
-packages/           base.list、用户已要求的 ha.list
+packages/           基础、HA、二层 VPN 与现有插件/驱动清单
 local-packages/     本仓库维护的软件包；firmware-ha 含 HA 控制逻辑
 files/              common 与各 Profile 的根文件系统覆盖层
 patches/            common 与各 Profile 的 series 补丁序列
@@ -41,6 +41,7 @@ artifacts/          被 Git 忽略的固件与构建记录
 | --- | --- | --- |
 | `x86-basic` | x86/64；Legacy/UEFI × ext4/SquashFS 四种镜像 | 上游默认 + LuCI 中文、CA |
 | `x86-ha` | 同上 | 基础 + HA 服务与代理 + 已核对的部分现有 x86 组件 |
+| `r619ac-basic` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 上游默认 + LuCI 中文 + 二层 VPN / Xray |
 | `r619ac-ha` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 同 HA 服务集，保留上游目标驱动默认值 |
 
 HA 服务集：DHCP/DNS（上游 dnsmasq/odhcpd）、OpenVPN、WireGuard、ddns-go、
@@ -50,6 +51,10 @@ ZeroTier、FRP 客户端、HomeProxy/Sing-box、keepalived。WireGuard 由 netif
 `x86-ha` 另通过 `packages/x86-retained.list` 显式选择已有方案的旧插件与翻译，包括 Socat/PPTP 页面、
 文件管理器、下载/存储/打印服务、多 WAN 管理、原有主题、bonding、系统 NTP 和 Tailscale。
 根分区设为2048MiB，x86-basic 仍为512MiB；R619AC 保持基本服务范围。
+`r619ac-basic`、`r619ac-ha` 和 `x86-ha` 共用二层 VPN 功能：L2TPv3 Ethernet / VXLAN → WireGuard，
+可选经独立 Xray/VLESS＋TLS/REALITY 转发。LuCI“网络 → 接口”可配置隧道，“网络 → 二层 VPN”配置 VLESS。
+默认不创建隧道或桥接现有 LAN，VLESS 转发关闭；两端模板、DHCP/RA、MTU 与 HA 接入见 [二层 VPN 部署](docs/l2-vpn.md)。
+宿舍 basic 版只选择基础和二层 VPN 软件包，保留自己的 WAN 与管理网络；R619AC 目标仍须匹配宿舍设备实际 NAND 规格。
 首次安装会关闭额外服务的自动启动，配置完成后再在设备本地启用；已初始化的保留配置升级不重复关闭。
 Argon/Material 只注册可选主题，不切换当前外观；OpenVPN/IPsec 页面不自动改写网络、防火墙或生成 PKI。
 SyncDial 保留页面，但单会话策略下阻止其多拨脚本和重拨按钮，HA 启动前也会拒绝已启用的 SyncDial。
@@ -149,9 +154,9 @@ WAN DHCP（192.168.1.0/24）与专用心跳口，通过同一个 VRRP 实例选�
 `warm` 只允许显式声明 multiple 会话的独立上联环境。双路径同时隔离仍需外部仲裁才能保证不双主。
 
 现网交付仍需解决旧插件兼容、确认端口/VLAN/地址、完成编译与双机演练。R619AC 当前无法访问。
-此前 CI 的 `-P` 启动参数错误已修复。最新 x86-ha 构建在配置阶段发现五个本地 LuCI 包及翻译缺失，
-已补齐扫描标记；本地172项测试及三个 Profile 的真实配置解析通过，完整构建待重跑。
-集成脚本含启动参数预检；原生选主及切换的详细结果仍待核对。
+此前 CI 的启动参数和本地 LuCI 包扫描问题已修复。新增宿舍 basic 版及二层 VPN 后，
+四个 Profile 的真实配置解析均通过，Xray 原生配置解析及回环 UDP 转发已验证；
+Linux 二层隧道测试已接入 CI，R619AC 实机与两地网络仍需验收。
 
 ## 安装、升级与产物
 

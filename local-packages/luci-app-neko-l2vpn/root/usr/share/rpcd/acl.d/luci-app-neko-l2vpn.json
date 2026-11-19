@@ -1,0 +1,7 @@
+{
+  "luci-app-neko-l2vpn": {
+    "description": "Configure the dedicated WireGuard VLESS transport",
+    "read": {"uci": ["neko-l2vpn"]},
+    "write": {"uci": ["neko-l2vpn"]}
+  }
+}

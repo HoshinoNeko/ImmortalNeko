@@ -1,0 +1,8 @@
+{
+  "admin/network/neko-l2vpn": {
+    "title": "Layer 2 VPN",
+    "order": 75,
+    "action": {"type": "view", "path": "network/neko-l2vpn"},
+    "depends": {"acl": ["luci-app-neko-l2vpn"], "uci": {"neko-l2vpn": true}}
+  }
+}

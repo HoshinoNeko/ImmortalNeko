@@ -1,0 +1,50 @@
+#!/bin/sh /etc/rc.common
+USE_PROCD=1
+START=99
+L2VPN_RUN=${L2VPN_RUN:-/var/run/neko-l2vpn}
+L2VPN_PYTHON=${L2VPN_PYTHON:-/usr/bin/python3}
+L2VPN_HELPER=${L2VPN_HELPER:-/usr/libexec/neko-l2vpn/l2vpn.py}
+L2VPN_CORE=${L2VPN_CORE:-/usr/bin/xray}
+L2VPN_GUARD=${L2VPN_GUARD:-/usr/libexec/firmware-ha/service-guard.sh}
+
+start_service() {
+    [ "$(uci -q get neko-l2vpn.main.enabled 2>/dev/null)" = 1 ] || return 0
+    if [ -x "$L2VPN_GUARD" ]; then
+        "$L2VPN_GUARD" neko-l2vpn || return 0
+    fi
+    [ ! -L "$L2VPN_RUN" ] || return 1
+    umask 077
+    mkdir -p "$L2VPN_RUN" && chmod 700 "$L2VPN_RUN" || return 1
+    [ ! -L "$L2VPN_RUN/xray.json" ] && [ ! -d "$L2VPN_RUN/xray.json" ] || return 1
+    local candidate status
+    candidate=$(mktemp "$L2VPN_RUN/xray.XXXXXX") || return 1
+    "$L2VPN_PYTHON" "$L2VPN_HELPER" render --output "$candidate" --check-runtime
+    status=$?
+    if [ "$status" -ne 0 ]; then
+        rm -f "$candidate"
+        [ "$status" -eq 3 ] && return 0
+        return 1
+    fi
+    if ! "$L2VPN_CORE" run -test -config "$candidate" >/dev/null 2>&1; then
+        rm -f "$candidate"
+        logger -t neko-l2vpn 'Xray configuration validation failed'
+        return 1
+    fi
+    mv -f "$candidate" "$L2VPN_RUN/xray.json" || { rm -f "$candidate"; return 1; }
+    procd_open_instance wireguard-transport
+    procd_set_param command "$L2VPN_CORE" run -config "$L2VPN_RUN/xray.json"
+    procd_set_param file "$L2VPN_RUN/xray.json"
+    procd_set_param respawn
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_close_instance
+}
+
+stop_service() {
+    [ ! -L "$L2VPN_RUN" ] || return 1
+    rm -f "$L2VPN_RUN/xray.json"
+}
+
+service_triggers() {
+    procd_add_reload_trigger neko-l2vpn
+}

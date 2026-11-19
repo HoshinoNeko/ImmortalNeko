@@ -5,7 +5,7 @@ on:
       profile:
         type: choice
         default: x86-basic
-        options: [x86-basic, x86-ha, r619ac-ha, all]
+        options: [x86-basic, x86-ha, r619ac-basic, r619ac-ha, all]
         description: Build profile (R619AC 128MiB NAND / 512MiB RAM)
       publish:
         type: boolean

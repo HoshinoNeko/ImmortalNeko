@@ -1,0 +1,42 @@
+# EXAMPLE ONLY. Keep the dorm WAN and local management network configured independently.
+config interface 'wgdorm'
+	option proto 'wireguard'
+	option private_key '<GENERATE_DORM_WIREGUARD_PRIVATE_KEY_LOCALLY>'
+	option mtu '1420'
+	list addresses '192.0.2.2/32'
+
+config wireguard_wgdorm 'home'
+	option public_key '<HOME_WIREGUARD_PUBLIC_KEY>'
+	list allowed_ips '192.0.2.1/32'
+	option route_allowed_ips '1'
+	option persistent_keepalive '25'
+	# VLESS mode: local UDP mapping from Network -> Layer 2 VPN.
+	option endpoint_host '127.0.0.1'
+	option endpoint_port '51821'
+	# Direct mode instead: replace endpoint_host with the home public IP/DDNS,
+	# and endpoint_port with the home WireGuard UDP port (example: 51820).
+
+config interface 'l2dorm'
+	option proto 'neko_l2tp'
+	option tunlink 'wgdorm'
+	option ipaddr '192.0.2.2'
+	option peeraddr '192.0.2.1'
+	option tunnel_id '102'
+	option peer_tunnel_id '101'
+	option session_id '202'
+	option peer_session_id '201'
+	option local_port '1701'
+	option peer_port '1701'
+	option mtu '1360'
+
+config device 'l2bridge'
+	option name 'br-l2vpn'
+	option type 'bridge'
+	option mtu '1360'
+	option stp '1'
+	list ports 'nl2-l2dorm'
+	# Add the selected Ethernet port or bind a dedicated SSID to l2lan.
+
+config interface 'l2lan'
+	option proto 'none'
+	option device 'br-l2vpn'

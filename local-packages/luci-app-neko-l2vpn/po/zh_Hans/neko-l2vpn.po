@@ -1,0 +1,142 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ImmortalNeko 1.0\n"
+"PO-Revision-Date: 2026-11-19 00:00+0800\n"
+"Last-Translator: ImmortalNeko contributors\n"
+"Language-Team: Simplified Chinese\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh_Hans\n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Both ends must use the same destination IP and UDP port. On a home Xray server, loopback normally reaches its local WireGuard listener."
+msgstr "两端填写相同的目标 IP 和 UDP 端口。Xray 位于家庭路由器时，通常通过回环地址访问本机 WireGuard 监听端口。"
+
+msgid "Choose an L2 MTU at least 50 bytes below WireGuard MTU. Use an interface name of at most 11 characters; bridge its nl2- device into a dedicated LAN."
+msgstr "二层 MTU 应至少比 WireGuard MTU 小 50 字节。接口名称最多 11 个字符；将其 nl2- 设备加入专用 LAN 网桥。"
+
+msgid "Configure WireGuard and L2TPv3 or VXLAN in Network → Interfaces. Enable this transport only when WireGuard needs VLESS. Choose a dedicated LAN or SSID for bridging."
+msgstr "请在“网络 → 接口”中配置 WireGuard 与 L2TPv3 或 VXLAN。需要通过 VLESS 承载 WireGuard 时再启用此转发。请选择独立的 LAN 或 SSID 用于桥接。"
+
+msgid "Dorm client"
+msgstr "宿舍客户端"
+
+msgid "Enable VLESS transport"
+msgstr "启用 VLESS 转发"
+
+msgid "Enter a complete UUID."
+msgstr "请输入完整的 UUID。"
+
+msgid "Home WireGuard UDP port"
+msgstr "家庭 WireGuard UDP 端口"
+
+msgid "Home WireGuard destination IP"
+msgstr "家庭 WireGuard 目标 IP"
+
+msgid "Home listen address"
+msgstr "家庭服务端监听地址"
+
+msgid "Home server"
+msgstr "家庭服务端"
+
+msgid "L2 MTU"
+msgstr "二层 MTU"
+
+msgid "L2TPv3 over WireGuard"
+msgstr "通过 WireGuard 承载 L2TPv3"
+
+msgid "Layer 2 VPN"
+msgstr "二层 VPN"
+
+msgid "Local L2TP UDP port"
+msgstr "本地 L2TP UDP 端口"
+
+msgid "Local UDP forwarding port"
+msgstr "本地 UDP 转发端口"
+
+msgid "Local WireGuard IPv4 address"
+msgstr "本地 WireGuard IPv4 地址"
+
+msgid "Local session ID"
+msgstr "本地会话 ID"
+
+msgid "Local tunnel ID"
+msgstr "本地隧道 ID"
+
+msgid "None"
+msgstr "无"
+
+msgid "Optional private CA certificate file"
+msgstr "私有 CA 证书文件（选填）"
+
+msgid "Point the dorm WireGuard peer endpoint to 127.0.0.1 and this port."
+msgstr "请将宿舍 WireGuard 对端的端点设为 127.0.0.1 和此端口。"
+
+msgid "REALITY private-key file"
+msgstr "REALITY 私钥文件"
+
+msgid "REALITY public key"
+msgstr "REALITY 公钥"
+
+msgid "REALITY short ID"
+msgstr "REALITY 短 ID"
+
+msgid "REALITY target host:port"
+msgstr "REALITY 目标主机:端口"
+
+msgid "Remote L2TP UDP port"
+msgstr "远端 L2TP UDP 端口"
+
+msgid "Remote WireGuard IPv4 address"
+msgstr "远端 WireGuard IPv4 地址"
+
+msgid "Remote session ID"
+msgstr "远端会话 ID"
+
+msgid "Remote tunnel ID"
+msgstr "远端隧道 ID"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Select the actual WAN device, such as a PPP device. The VLESS connection must remain outside WireGuard."
+msgstr "请选择实际 WAN 设备，例如 PPP 设备。VLESS 连接应始终通过 WireGuard 以外的上联发送。"
+
+msgid "TLS / REALITY server name"
+msgstr "TLS / REALITY 服务名称"
+
+msgid "TLS certificate file"
+msgstr "TLS 证书文件"
+
+msgid "TLS private-key file"
+msgstr "TLS 私钥文件"
+
+msgid "Transport security"
+msgstr "传输安全"
+
+msgid "Use a configured kernel WireGuard interface. Its peer Allowed IPs must cover the remote tunnel address."
+msgstr "请选择已配置的内核 WireGuard 接口。对端的允许 IP 应包含远端隧道地址。"
+
+msgid "Use up to 16 hexadecimal characters in pairs."
+msgstr "请输入成对的十六进制字符，最多 16 个。"
+
+msgid "VLESS TCP port"
+msgstr "VLESS TCP 端口"
+
+msgid "VLESS UUID"
+msgstr "VLESS UUID"
+
+msgid "VLESS flow"
+msgstr "VLESS 流控"
+
+msgid "VLESS server address"
+msgstr "VLESS 服务端地址"
+
+msgid "WAN egress device"
+msgstr "WAN 出口设备"
+
+msgid "WireGuard interface"
+msgstr "WireGuard 接口"
+
+msgid "WireGuard over VLESS"
+msgstr "通过 VLESS 承载 WireGuard"

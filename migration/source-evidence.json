@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-08",
+  "date": "2026-11-19",
   "scope": "local inspection of the pinned feed sources; package selection and UI round trips do not prove target compilation or runtime migration",
   "feed_heads": {
     "packages": "84bd86384928955b568988ca0e09e2c78c75173d",
@@ -406,7 +406,7 @@
       "source_behavior": "a bound primary interface is tracked implicitly; an explicit track_interface entry for the same interface reports CONFIG_GENERAL_ERROR and is ignored",
       "render_policy": "single-path excludes only the bound election device, deduplicates remaining gateway devices and omits an empty block; unbound dual-path retains all gateway-device tracks",
       "health_policy": "check.sh still checks LAN, WAN L2 and all extra VIP devices; strict native config-test remains unchanged",
-      "verification": "six targeted actual renderer/health tests passed with mock UCI/kernel interfaces; native Linux config-test/election after this change pending"
+      "verification": "prior Build firmware run 42396818827 at abd4f32 passed the native HA job; local renderer tests remain passed"
     },
     "ha-integration-cli": {
       "keepalived_version": "2.3.3",
@@ -426,7 +426,7 @@
         "tests/integration/keepalived_netns.py": "d82a15161e66adba822430dcc2b1701e873d7240e21ceb42ba89ad73126c73ad"
       },
       "firmware_scope": "firmware-ha init did not use -P and is unchanged",
-      "verification": "two subprocess contract-fixture tests passed; native CLI preflight, election and failover after this change pending"
+      "verification": "prior Build firmware run 42396818827 at abd4f32 passed the native HA job, including both single-path and dual-path steps"
     },
     "local-luci-package-discovery": {
       "scanner_reference": "https://github.com/immortalwrt/immortalwrt/blob/4fc16f2985a358bd43bb522e43f05395fcbd6ed5/include/scan.mk#L65",
@@ -447,6 +447,51 @@
       "verification": "four new regressions, exact scanner before/after reproduction and real pinned make defconfig for all current profiles; all ten affected app/translation package records present and selected y",
       "configuration_evidence": "docs/config-validation.json",
       "target_compile_and_runtime": "not verified"
+    },
+    "l2-vpn": {
+      "profiles": [
+        "r619ac-basic",
+        "r619ac-ha",
+        "x86-ha"
+      ],
+      "backend_references": [
+        "https://docs.kernel.org/networking/l2tp.html#unmanaged-l2tpv3-tunnels",
+        "https://docs.kernel.org/networking/vxlan.html",
+        "https://github.com/XTLS/Xray-core/blob/v26.3.27/infra/conf/dokodemo.go",
+        "https://github.com/XTLS/Xray-core/blob/v26.3.27/infra/conf/transport_internet.go",
+        "https://github.com/immortalwrt/packages/blob/84bd86384928955b568988ca0e09e2c78c75173d/net/xray-core/Makefile"
+      ],
+      "pinned_files": {
+        "feeds/packages/net/xray-core/Makefile": "fa124204193fe4d410a0912a95cd11eda87eca9e02ef5b88cb8b5a63647076dc",
+        "package/network/config/vxlan/files/vxlan.sh": "914413f54d56e533592530d4e49d779d7faae87e0d0c41b0a022cd5547f75d77",
+        "feeds/luci/protocols/luci-proto-vxlan/Makefile": "8092df3fd2e73750376e898537087c5bccbb918adeec77d59007536966c200f9"
+      },
+      "xray_test_archives": {
+        "version": "26.3.27",
+        "macos_arm64_sha256": "2e93a67e8aa1936ecefb307e120830fcbd4c643ab9b1c46a2d0838d5f8409eaf",
+        "linux_x86_64_sha256": "23cd9af937744d97776ee35ecad4972cf4b2109d1e0fe6be9930467608f7c8ae",
+        "provenance": "official XTLS/Xray-core v26.3.27 release asset digests, also recorded in scripts/fetch_test_xray.py"
+      },
+      "configuration": "L2TPv3 Ethernet static sessions owned by netifd over an explicitly selected kernel WireGuard device; official VXLAN alternative; loopback UDP mapping into dedicated VLESS TLS/REALITY client/server; default-deny server routing to one chosen UDP destination",
+      "defaults": "transport disabled, no WAN/LAN/VIP/subnet/credentials or bridge membership provisioned, independent dorm WAN and management network",
+      "local_files": {
+        "local-packages/neko-l2vpn/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/neko-l2vpn/Makefile": "91053d0d0246423bbd04ff7d5811195b526e455e877ee2e4b115986d1e5e5790",
+        "local-packages/neko-l2vpn/files/l2vpn.py": "753dbe4e115170366a5b27984258c920d32dd92551c6543c2a0906317dfff4d6",
+        "local-packages/neko-l2vpn/files/neko-l2vpn.config": "dd8cfb9b88cfeb849d627feec7d58e58604999dbddd8ffe39191d3d5e529cb48",
+        "local-packages/neko-l2vpn/files/neko-l2vpn.init": "6fdf6f5dc91abda99011097708450097c7b18c03f5ae8e0dab508bc1cd8c03e7",
+        "local-packages/neko-l2vpn/files/neko_l2tp.sh": "259ac1e16d54a874b206b52e7d741e8b8fa2544d334341d0b7c7f2b24c836fff",
+        "local-packages/luci-app-neko-l2vpn/LICENSE": "4085c169f89190b40035443a7bd821ddcc6c0cd79310530eb0d6933613073110",
+        "local-packages/luci-app-neko-l2vpn/Makefile": "2c3c3c6d1602195b7947a186b61ea016dc6e9e87ae681c27a490f0bfbb185a2a",
+        "local-packages/luci-app-neko-l2vpn/htdocs/luci-static/resources/protocol/neko_l2tp.js": "56a464ba098486fc5766d9a41f25dc9279e64d03f7bbc008c19ae87d3d9c9993",
+        "local-packages/luci-app-neko-l2vpn/htdocs/luci-static/resources/view/network/neko-l2vpn.js": "14e3a82a7b72d20771de2f28b9e67d977c72f1aaadf7cb88ce093f14a2caf005",
+        "local-packages/luci-app-neko-l2vpn/po/zh_Hans/neko-l2vpn.po": "7b4bac43b0084401c078789f5a3e09cdb81f834bf80afc93a4be656140f3a13d",
+        "local-packages/luci-app-neko-l2vpn/root/usr/share/luci/menu.d/luci-app-neko-l2vpn.json": "76ac8f571b807d781f050702a007ec5f6eb69fd24ff8f5eaf7f20c04a20a7180",
+        "local-packages/luci-app-neko-l2vpn/root/usr/share/rpcd/acl.d/luci-app-neko-l2vpn.json": "d31bd890d913361671a55b20c75021e98f8191a77e6228d51b8db6b3863cd8b4"
+      },
+      "verification": "17 targeted L2 tests and two test-tool checksum tests passed; all four current real defconfigs passed; real matching Xray parser accepted TLS/REALITY on both ends; actual VLESS/TLS UDP round trip and destination rejection passed on macOS",
+      "linux_kernel_integration": "added to CI; pending first remote run",
+      "runtime_acceptance": "R619AC boot/performance, chosen home/dorm WAN/firewall/DHCP/RA, REALITY external handshake and HA/device failover not verified"
     }
   },
   "source_commit": "4fc16f2985a358bd43bb522e43f05395fcbd6ed5",

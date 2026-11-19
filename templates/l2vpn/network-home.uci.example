@@ -1,0 +1,40 @@
+# EXAMPLE ONLY. Merge selected sections after replacing keys/addresses and choosing bridge ports.
+# These documentation-range addresses are unrelated to your current LAN/WAN.
+config interface 'wghome'
+	option proto 'wireguard'
+	option private_key '<GENERATE_HOME_WIREGUARD_PRIVATE_KEY_LOCALLY>'
+	option listen_port '51820'
+	option mtu '1420'
+	list addresses '192.0.2.1/32'
+
+config wireguard_wghome 'dorm'
+	option public_key '<DORM_WIREGUARD_PUBLIC_KEY>'
+	list allowed_ips '192.0.2.2/32'
+	option route_allowed_ips '1'
+
+config interface 'l2home'
+	option proto 'neko_l2tp'
+	option tunlink 'wghome'
+	option ipaddr '192.0.2.1'
+	option peeraddr '192.0.2.2'
+	option tunnel_id '101'
+	option peer_tunnel_id '102'
+	option session_id '201'
+	option peer_session_id '202'
+	option local_port '1701'
+	option peer_port '1701'
+	option mtu '1360'
+
+config device 'l2bridge'
+	option name 'br-l2vpn'
+	option type 'bridge'
+	option mtu '1360'
+	option stp '1'
+	list ports 'nl2-l2home'
+	# Add only the selected home VLAN/port; do not merge the whole router LAN or WAN.
+
+config interface 'l2lan'
+	option proto 'static'
+	option device 'br-l2vpn'
+	option ipaddr '198.51.100.1'
+	option netmask '255.255.255.0'
