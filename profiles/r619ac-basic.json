@@ -5,8 +5,13 @@
   "hardware_status": "user-confirmed-128m-nand-512m-ram-dorm-device-runtime-unverified",
   "flash_mib": 128,
   "ram_mib": 512,
-  "fragments": ["config/r619ac-128m.config"],
-  "packages": ["packages/base.list", "packages/dashboard.list", "packages/l2-vpn.list"],
+  "fragments": ["config/r619ac-128m.config", "config/proxy.config"],
+  "packages": [
+    "packages/base.list",
+    "packages/dashboard.list",
+    "packages/l2-vpn.list",
+    "packages/proxy-ddns.list"
+  ],
   "overlays": ["files/common", "files/r619ac-basic"],
   "required_artifacts": ["*p2w_r619ac-128m*squashfs-sysupgrade.bin", "*.manifest"]
 }

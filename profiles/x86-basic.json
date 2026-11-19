@@ -4,11 +4,13 @@
   "subtarget": "64",
   "hardware_status": "generic-x86",
   "fragments": [
-    "config/x86.config"
+    "config/x86.config",
+    "config/proxy.config"
   ],
   "packages": [
     "packages/base.list",
-    "packages/dashboard.list"
+    "packages/dashboard.list",
+    "packages/proxy-ddns.list"
   ],
   "overlays": [
     "files/common",

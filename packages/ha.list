@@ -4,8 +4,6 @@ keepalived
 iputils-ping
 openvpn-openssl
 luci-app-openvpn
-ddns-go
-luci-app-ddns-go
 zerotier
 luci-app-zerotier
 frpc

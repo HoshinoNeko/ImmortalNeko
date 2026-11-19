@@ -1,0 +1,11 @@
+# HomeProxy and ddns-go are included in every image on this maintenance branch.
+# Configure nodes, subscriptions, domains and credentials locally after flashing.
+sing-box
+luci-app-homeproxy
+luci-i18n-homeproxy-zh-cn
+ddns-go
+luci-app-ddns-go
+luci-i18n-ddns-go-zh-cn
+# HomeProxy's GFW-list mode emits dnsmasq nftset directives.
+-dnsmasq
+dnsmasq-full

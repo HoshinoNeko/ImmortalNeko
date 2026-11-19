@@ -14,7 +14,7 @@
     "packages/dashboard.list",
     "packages/l2-vpn.list",
     "packages/ha.list",
-    "packages/proxy.list"
+    "packages/proxy-ddns.list"
   ],
   "overlays": [
     "files/common",

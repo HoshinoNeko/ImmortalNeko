@@ -17,10 +17,11 @@ class BuilderTests(unittest.TestCase):
             for k in ('CONFIG_GRUB_IMAGES','CONFIG_GRUB_EFI_IMAGES','CONFIG_TARGET_ROOTFS_EXT4FS','CONFIG_TARGET_ROOTFS_SQUASHFS'):
                 self.assertEqual(c[k],'y')
             self.assertEqual(len(p['required_artifacts']),5)
-    def test_basic_excludes_optional_services(self):
+    def test_basic_excludes_ha_controller_but_keeps_proxy_and_ddns(self):
         c=requested_config(profile('x86-basic'))
         self.assertNotIn('CONFIG_PACKAGE_firmware-ha',c)
-        self.assertNotIn('CONFIG_PACKAGE_ddns-go',c)
+        for package in ('luci-app-homeproxy','sing-box','ddns-go','luci-app-ddns-go'):
+            self.assertEqual(c['CONFIG_PACKAGE_'+package],'y')
     def test_missing_package_is_fatal(self):
         with self.assertRaisesRegex(BuildError,'unavailable_pkg'):
             assert_config({'CONFIG_PACKAGE_unavailable_pkg':'y'}, {})

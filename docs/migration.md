@@ -87,8 +87,9 @@ R619AC 当前不可访问，硬件与运行功能尚未验证。
 
 这些是构建选择与源码实现，不是实机功能验收。`x86-ha` 引用独立
 [组件清单](../packages/x86-retained.list)；R619AC 保持基本服务范围。
-两种 HA Profile 都选择 [代理包清单](../packages/proxy.list)，包含官方 HomeProxy/Sing-box、
-中文 UI、dnsmasq-full 和 nftset 支持，但 **SSR Plus 仍标记 review**：
+本维护分支的四个 Profile 都选择 [HomeProxy/ddns-go 清单](../packages/proxy-ddns.list)，
+包含官方 HomeProxy/Sing-box、ddns-go、中文 UI、dnsmasq-full 和 nftset 支持；
+basic 版只增加这两个服务，不安装 HA 控制器。**SSR Plus 仍标记 review**：
 节点协议、WS/gRPC、TLS/REALITY、订阅、GFW 分流、旁路规则与服务端功能必须逐项迁移和测试。
 不把旧 shadowsocksr 配置直接当作 HomeProxy 配置，也不将原配置嵌入镜像。
 在开启 HA 前先完成代理本地配置；只把 homeproxy 交给 HA，不同时开启独立 sing-box init 实例。

@@ -2,8 +2,9 @@
 
 `r619ac-basic`、`r619ac-ha` 和 `x86-ha` 共用 `packages/l2-vpn.list`。
 宿舍 basic 版包含 LuCI 中文、WireGuard、L2TPv3 Ethernet、VXLAN、完整 ip/bridge 工具和 Xray 26.3.27；
-HA 控制器、keepalived、HomeProxy/Sing-box 及家里的附加服务由 HA Profile 选择。
-`x86-basic` 保持原先最小范围。R619AC 新 Profile 沿用 `p2w_r619ac-128m`，对应128MiB NAND；
+HA 控制器、keepalived 及家里的附加服务仍由 HA Profile 选择；本维护分支的四个 Profile
+都包含 HomeProxy/Sing-box 与 ddns-go，但 `x86-basic` 不包含二层 VPN。
+R619AC 新 Profile 沿用 `p2w_r619ac-128m`，对应128MiB NAND；
 用户已确认宿舍 R619AC 同样为128MiB NAND／512MiB RAM；basic 版使用 `p2w_r619ac-128m` 目标。实机启动与刷写验收仍待完成。
 
 所有隧道默认未配置，VLESS 转发默认关闭。软件包安装不会修改 LAN/WAN、DHCP、防火墙或创建网桥。

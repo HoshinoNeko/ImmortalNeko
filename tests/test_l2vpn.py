@@ -43,9 +43,11 @@ class L2VPNConfigTests(unittest.TestCase):
                             'kmod-vxlan', 'vxlan', 'luci-proto-vxlan', 'ip-full', 'ip-bridge', 'xray-core'):
                 self.assertEqual(config['CONFIG_PACKAGE_'+package], 'y', (name, package))
         basic = requested_config(profile('r619ac-basic'))
-        for package in ('firmware-ha', 'keepalived', 'sing-box', 'luci-app-homeproxy',
+        for package in ('firmware-ha', 'keepalived',
                         'openvpn-openssl', 'zerotier', 'frpc', 'v2ray-core', 'luci-app-dockerman'):
             self.assertNotIn('CONFIG_PACKAGE_'+package, basic)
+        for package in ('sing-box', 'luci-app-homeproxy', 'ddns-go', 'luci-app-ddns-go'):
+            self.assertEqual(basic['CONFIG_PACKAGE_'+package], 'y')
         self.assertEqual(basic['CONFIG_TARGET_ipq40xx_generic_DEVICE_p2w_r619ac-128m'], 'y')
         self.assertNotIn('CONFIG_PACKAGE_neko-l2vpn', requested_config(profile('x86-basic')))
 

@@ -48,15 +48,15 @@ class MigrationPlanTests(unittest.TestCase):
                         'luci-app-turboacc','neko-bbr','dnsproxy','kmod-tcp-bbr','luci-app-wechatpush'):
             self.assertNotIn('CONFIG_PACKAGE_'+package,requested_config(profile('r619ac-ha')))
 
-    def test_both_ha_profiles_include_the_official_proxy_stack(self):
-        for name in ('x86-ha', 'r619ac-ha'):
+    def test_all_profiles_include_the_official_proxy_and_ddns_stack(self):
+        for name in ('x86-basic', 'x86-ha', 'r619ac-basic', 'r619ac-ha'):
             config = requested_config(profile(name))
-            self.assertEqual(config['CONFIG_PACKAGE_luci-app-homeproxy'], 'y')
-            self.assertEqual(config['CONFIG_PACKAGE_sing-box'], 'y')
+            for package in ('luci-app-homeproxy', 'sing-box', 'luci-app-ddns-go', 'ddns-go',
+                            'luci-i18n-homeproxy-zh-cn', 'luci-i18n-ddns-go-zh-cn'):
+                self.assertEqual(config['CONFIG_PACKAGE_'+package], 'y', (name, package))
             self.assertEqual(config['CONFIG_PACKAGE_dnsmasq'], 'n')
             self.assertEqual(config['CONFIG_PACKAGE_dnsmasq-full'], 'y')
             self.assertEqual(config['CONFIG_PACKAGE_dnsmasq_full_nftset'], 'y')
-        self.assertNotIn('CONFIG_PACKAGE_luci-app-homeproxy', requested_config(profile('x86-basic')))
 
     def test_existing_x86_usb_nic_and_storage_drivers_are_not_applied_to_r619ac(self):
         x86=requested_config(profile('x86-ha'))

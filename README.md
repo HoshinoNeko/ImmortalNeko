@@ -44,15 +44,18 @@ artifacts/          被 Git 忽略的固件与构建记录
 
 | Profile | 硬件与镜像 | 预装范围 |
 | --- | --- | --- |
-| `x86-basic` | x86/64；Legacy/UEFI × ext4/SquashFS 四种镜像 | 上游默认 + LuCI 中文、CA、Vantage 与网络首页 |
-| `x86-ha` | 同上 | 基础 + HA 服务与代理 + 已核对的部分现有 x86 组件 |
-| `r619ac-basic` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 上游默认 + LuCI 中文 + 二层 VPN / Xray + Vantage 与网络首页 |
+| `x86-basic` | x86/64；Legacy/UEFI × ext4/SquashFS 四种镜像 | 上游默认 + LuCI 中文、CA、Vantage、网络首页、HomeProxy/Sing-box、ddns-go |
+| `x86-ha` | 同上 | 基础 + HA 服务 + 已核对的部分现有 x86 组件 |
+| `r619ac-basic` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 上游默认 + LuCI 中文 + 二层 VPN / Xray + Vantage、网络首页、HomeProxy/Sing-box、ddns-go |
 | `r619ac-ha` | ipq40xx/generic，`p2w_r619ac-128m`，NAND SquashFS | 同 HA 服务集，保留上游目标驱动默认值 |
 
 HA 服务集：DHCP/DNS（上游 dnsmasq/odhcpd）、OpenVPN、WireGuard、ddns-go、
 ZeroTier、FRP 客户端、HomeProxy/Sing-box、keepalived。WireGuard 由 netifd 管理；在设备本地用 HA 的 managed_interface
 列表指定需要随角色启停的 WireGuard 接口，默认不选择接口，不停止整个 network 服务。
-软件包选择不等同于具备可工作的 VPN/DDNS/代理配置；凭据须刷机后在设备本地填写。
+本维护分支的四个 Profile 都通过 `packages/proxy-ddns.list` 安装 HomeProxy/Sing-box 与 ddns-go
+（含中文界面和 dnsmasq nftset 支持）；basic 版只安装这两个服务，不包含 HA 控制器。
+该分支尚未重新执行完整编译和实机验证。软件包选择不等同于具备可工作的 VPN/DDNS/代理配置；
+凭据须刷机后在设备本地填写。
 `x86-ha` 另通过 `packages/x86-retained.list` 显式选择已有方案的旧插件与翻译，包括 Socat/PPTP 页面、
 文件管理器、下载/存储/打印服务、多 WAN 管理、原有主题、bonding、系统 NTP 和 Tailscale。
 根分区设为2048MiB，x86-basic 仍为512MiB；R619AC 保持基本服务范围。
