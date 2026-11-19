@@ -3,6 +3,7 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import subprocess
 import unittest
 from unittest.mock import patch
 
@@ -50,3 +51,27 @@ class KeepalivedCliTests(unittest.TestCase):
         with patch.object(integration,'daemon_command',return_value=command):
             with self.assertRaisesRegex(RuntimeError,'exit 2.*option -P not recognized'):
                 integration.check_daemon_cli(self.base,env=self.env)
+
+    def test_exact_native_fixtures_render_for_both_roles_and_paths(self):
+        for name in ('uci','ubus','jsonfilter','dnsmasq','logger'):
+            executable=self.bin/name;executable.write_text(integration.MOCK);executable.chmod(0o755)
+        lib=ROOT/'local-packages/firmware-ha/files'
+        for dual in (False,True):
+            for index in range(2):
+                with self.subTest(dual=dual,index=index):
+                    state=self.base/('dual' if dual else 'single')/str(index);state.mkdir(parents=True)
+                    settings=state/'settings.json';settings.write_text(json.dumps(integration.fixture_settings(index,dual)))
+                    env={**self.env,'HA_SETTINGS':str(settings),'HA_LIB':str(lib),'HA_RUN':str(state),'HA_INIT':str(self.bin)}
+                    # Rendering itself requires no namespace or root privileges.
+                    with patch.object(integration,'net',side_effect=lambda ns,*args,**kw:integration.run(list(map(str,args)),**kw)):
+                        config=integration.render_config('fixture',lib,env)
+                    self.assertIn('priority '+str(200 if index==0 else 100),config)
+                    self.assertIn('192.0.2.1/24 dev lan0',config)
+                    self.assertIn('198.51.100.1/24 dev iot0',config)
+                    self.assertIn('unicast_src_ip '+('198.19.0.'+str(index+1) if dual else '192.0.2.'+str(index+2)),config)
+
+    def test_failed_renderer_reports_captured_validation_instead_of_only_exit_code(self):
+        failure=subprocess.CalledProcessError(1,['sh','render.sh'],output='',stderr='firmware-ha: missing service executable\n')
+        with patch.object(integration,'net',side_effect=failure):
+            with self.assertRaisesRegex(RuntimeError,'fixture.*exit 1.*\nfirmware-ha: missing service executable'):
+                integration.render_config('fixture',self.base,self.env)

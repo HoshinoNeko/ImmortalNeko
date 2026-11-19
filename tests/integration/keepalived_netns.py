@@ -53,6 +53,29 @@ def check_daemon_cli(state,env=None):
         details=(exc.stderr or exc.stdout or '').strip()
         raise RuntimeError(f'keepalived rejected integration arguments (exit {exc.returncode}): {details}') from exc
 
+def fixture_settings(index,dual=False):
+    role=('primary','backup')[index]
+    settings={'enabled':'1','role':role,'mode':'warm','pppoe_sessions':'multiple','lan_device':'lan0','election_device':'lan0',
+        'election_source':f'192.0.2.{index+2}','election_peer':f'192.0.2.{3-index}','vip':'192.0.2.1/24',
+        'extra_vip':'198.51.100.1/24@iot0','wan_interface':'wan','wan_l2_device':'wan0','vrid':'173','preempt_delay':'1','acquire_grace':'10',
+        'retry_base':'10','retry_max':'20','probe_quorum':'1','probe':'198.18.0.1 198.18.0.254','service':'dnsmasq'}
+    if dual:
+        settings.update({'peer_mode':'dual-path','election_device':'lo','election_source':f'198.19.0.{index+1}',
+            'election_peer':f'198.19.0.{2-index}','wan_monitor_interface':'wan_monitor',
+            'wan_monitor_source':f'192.168.1.{index+2}','wan_monitor_peer':f'192.168.1.{3-index}',
+            'heartbeat_device':'hb0','heartbeat_source':f'198.18.1.{index+2}','heartbeat_peer':f'198.18.1.{3-index}',
+            'peer_status_port':'22','handoff_timeout':'5','handoff_delay':'1','unreachable_takeover':'1'})
+    return settings
+
+def render_config(namespace,lib,env):
+    # Only generated, credential-free fixtures use this traced renderer. Keep
+    # successful traces private; expose the failing validation on CI failures.
+    try:
+        return net(namespace,'sh','-x',lib/'render.sh',env=env,capture_output=True).stdout
+    except subprocess.CalledProcessError as exc:
+        details=(exc.stderr or 'renderer produced no stderr').strip()[-1800:]
+        raise RuntimeError(f'HA fixture renderer failed in {namespace} (exit {exc.returncode}):\n{details}') from exc
+
 def wait_for(predicate,reason,processes,timeout=35):
     deadline=time.monotonic()+timeout
     while time.monotonic()<deadline:
@@ -112,21 +135,12 @@ def main():
                 run(['ip','-n',namespaces[2],'addr','add',address,'dev','wan0'])
             for i,role in enumerate(('primary','backup')):
                 state=base/role;state.mkdir(mode=0o700)
-                settings={'enabled':'1','role':role,'mode':'warm','pppoe_sessions':'multiple','lan_device':'lan0','election_device':'lan0',
-                    'election_source':f'192.0.2.{i+2}','election_peer':f'192.0.2.{3-i}','vip':'192.0.2.1/24',
-                    'extra_vip':'198.51.100.1/24@iot0','wan_interface':'wan','wan_l2_device':'wan0','vrid':'173','preempt_delay':'1','acquire_grace':'10',
-                    'retry_base':'10','retry_max':'20','probe_quorum':'1','probe':'198.18.0.1 198.18.0.254','service':'dnsmasq'}
-                if dual:
-                    settings.update({'peer_mode':'dual-path','election_device':'lo','election_source':f'198.19.0.{i+1}',
-                        'election_peer':f'198.19.0.{2-i}','wan_monitor_interface':'wan_monitor',
-                        'wan_monitor_source':f'192.168.1.{i+2}','wan_monitor_peer':f'192.168.1.{3-i}',
-                        'heartbeat_device':'hb0','heartbeat_source':f'198.18.1.{i+2}','heartbeat_peer':f'198.18.1.{3-i}',
-                        'peer_status_port':'22','handoff_timeout':'5','handoff_delay':'1','unreachable_takeover':'1'})
+                settings=fixture_settings(i,dual)
                 setting_file=state/'settings.json';setting_file.write_text(json.dumps(settings))
                 env={**os.environ,'HA_SETTINGS':str(setting_file),'HA_LIB':str(lib),'HA_RUN':str(state),
                      'HA_INIT':str(bins),'PATH':str(bins)+os.pathsep+os.environ['PATH']}
                 cfg=state/'keepalived.conf'
-                cfg.write_text(net(namespaces[i],'sh',lib/'render.sh',env=env,capture_output=True).stdout)
+                cfg.write_text(render_config(namespaces[i],lib,env))
                 net(namespaces[i],'keepalived','--config-test','-f',cfg,env=env)
                 if dual:
                     net(namespaces[i],'sh',lib/'paths.sh','once',env=env)
