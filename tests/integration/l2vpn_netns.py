@@ -203,6 +203,8 @@ def main():
                     delete_l2(0, mode)
                     net(routers[0], 'ip', 'link', 'set', 'wg0', 'down'); assert_blocked()
                     net(routers[0], 'ip', 'link', 'set', 'wg0', 'up')
+                    # netifd also restores the WireGuard peer's route_allowed_ips route.
+                    net(routers[0], 'ip', 'route', 'replace', '192.0.2.2/32', 'dev', 'wg0')
                     create_l2(0, mode); check_ping(recovery='managed-wg-recovery')
                     print('::notice title=L2 VPN scenario::'+transport+'/'+mode+' WAN loss and managed WireGuard restart passed', flush=True)
                     for i in range(2): delete_l2(i, mode)
