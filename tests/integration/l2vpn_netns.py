@@ -106,10 +106,16 @@ def main():
                                         for link in links if link['ifname'] in ('wan0', 'wg0', 'lan0', 'nl2-test', 'vxlan0')}
                     with contextlib.suppress(Exception):
                         row['neighbors'] = json.loads(net(hosts[i], 'ip', '-j', 'neigh', 'show', 'dev', 'eth0').stdout)
+                    with contextlib.suppress(Exception):
+                        snmp = net(ns, 'cat', '/proc/net/snmp').stdout.splitlines()
+                        for index, line in enumerate(snmp[:-1]):
+                            if line.startswith('Udp:') and 'InErrors' in line:
+                                fields = dict(zip(line.split()[1:], snmp[index+1].split()[1:]))
+                                row['udp'] = {key: fields.get(key) for key in ('InErrors', 'NoPorts', 'InCsumErrors')}
                     result[str(i)] = row
                 return json.dumps(result, separators=(',', ':'))
 
-            def check_ping(ipv6=False, large=False):
+            def check_ping(ipv6=False, large=False, recovery=False):
                 deadline = time.monotonic()+15
                 while time.monotonic() < deadline:
                     if any(p.poll() is not None for p in processes):
@@ -121,7 +127,7 @@ def main():
                         return
                     except subprocess.CalledProcessError: time.sleep(0.1)
                 probe = 'IPv6' if ipv6 else ('MTU' if large else 'IPv4')
-                raise RuntimeError(transport+'/'+mode+'/'+probe+' connectivity failed; '+counters())
+                raise RuntimeError(transport+'/'+mode+'/'+probe+('/recovery' if recovery else '/initial')+' connectivity failed; '+counters())
 
             for transport in ('direct', 'vless'):
                 if transport == 'vless':
@@ -173,10 +179,11 @@ def main():
                     for host in hosts: net(host, 'ip', 'neigh', 'flush', 'dev', 'eth0')
                     check_ping(); check_ping(ipv6=True); check_ping(large=True)
                     print('PASS: '+mode+' over WireGuard/'+transport+' bridges IPv4, IPv6, ARP/NDP and 1360-byte IPv4 packets', flush=True)
+                    print('::notice title=L2 VPN scenario::'+transport+'/'+mode+' initial IPv4/IPv6/MTU passed', flush=True)
                     net(routers[0], 'ip', 'link', 'set', 'wg0', 'down')
                     blocked = subprocess.run(['ip', 'netns', 'exec', hosts[0], 'ping', '-4', '-n', '-c', '1', '-W', '1', '198.51.100.12'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     if not blocked.returncode: raise RuntimeError('L2 traffic escaped a down WireGuard underlay')
-                    net(routers[0], 'ip', 'link', 'set', 'wg0', 'up'); check_ping()
+                    net(routers[0], 'ip', 'link', 'set', 'wg0', 'up'); check_ping(recovery=True)
                     for i, ns in enumerate(routers):
                         if mode == 'l2tp':
                             net(ns, sys.executable, SOURCE, 'l2tp-down', '--name', 'test', env={**os.environ, 'L2VPN_LINK_RUN': str(root/f'state{i}')})
