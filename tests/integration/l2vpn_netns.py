@@ -2,6 +2,7 @@
 """Linux-only real Ethernet over WireGuard, direct and inside native VLESS/TLS."""
 import argparse
 import contextlib
+import json
 import os
 from pathlib import Path
 import platform
@@ -92,6 +93,22 @@ def main():
                     except subprocess.TimeoutExpired: process.kill(); process.wait()
                 processes.clear()
 
+            def counters():
+                result = {}
+                for i, ns in enumerate(routers):
+                    row = {}
+                    with contextlib.suppress(Exception):
+                        transfer = net(ns, 'wg', 'show', 'wg0', 'transfer').stdout.split()
+                        row['wg_bytes'] = transfer[-2:]
+                    with contextlib.suppress(Exception):
+                        links = json.loads(net(ns, 'ip', '-j', '-s', 'link', 'show').stdout)
+                        row['links'] = {link['ifname']: {direction: link.get('stats64', link.get('stats', {})).get(direction, {}).get('packets', 0) for direction in ('rx', 'tx')}
+                                        for link in links if link['ifname'] in ('wan0', 'wg0', 'lan0', 'nl2-test', 'vxlan0')}
+                    with contextlib.suppress(Exception):
+                        row['neighbors'] = json.loads(net(hosts[i], 'ip', '-j', 'neigh', 'show', 'dev', 'eth0').stdout)
+                    result[str(i)] = row
+                return json.dumps(result, separators=(',', ':'))
+
             def check_ping(ipv6=False, large=False):
                 deadline = time.monotonic()+15
                 while time.monotonic() < deadline:
@@ -103,7 +120,8 @@ def main():
                             '2001:db8:1::12' if ipv6 else '198.51.100.12')
                         return
                     except subprocess.CalledProcessError: time.sleep(0.1)
-                raise RuntimeError('Ethernet host connectivity did not recover')
+                probe = 'IPv6' if ipv6 else ('MTU' if large else 'IPv4')
+                raise RuntimeError(transport+'/'+mode+'/'+probe+' connectivity failed; '+counters())
 
             for transport in ('direct', 'vless'):
                 if transport == 'vless':
@@ -127,6 +145,15 @@ def main():
                     net(ns, 'ip', 'address', 'add', f'192.0.2.{i+1}/32', 'dev', 'wg0')
                     net(ns, 'ip', 'link', 'set', 'wg0', 'mtu', '1420', 'up')
                     net(ns, 'ip', 'route', 'add', f'192.0.2.{peer+1}/32', 'dev', 'wg0')
+                deadline = time.monotonic()+15
+                while True:
+                    try:
+                        net(routers[0], 'ping', '-4', '-n', '-c', '1', '-W', '1', '192.0.2.2')
+                        break
+                    except subprocess.CalledProcessError:
+                        if time.monotonic() >= deadline:
+                            raise RuntimeError('WireGuard/'+transport+' underlay failed; '+counters())
+                        time.sleep(0.1)
                 for mode in ('l2tp', 'vxlan'):
                     for i, ns in enumerate(routers):
                         peer = 1-i

@@ -305,7 +305,7 @@
     "scripts/fetch_test_xray.py": "c7f1d07cf37aed5dda54a946c776804a7b6b1a2855412834c4ce0823297dd1b0",
     "tests/test_l2vpn.py": "bc3bd570665172f196bac7e56f99b347d4301e17daa8587296f6f3d2438e6598",
     "tests/test_xray_test_tool.py": "6cdb19c9e58a8ee199c7f3900331357852699c79d851fdc67baa4a4e12bb2fd4",
-    "tests/integration/l2vpn_netns.py": "22b9c53f72069d152d87e22c058ed6d207e373c174bf7ee8fdfd47912f0acc68",
+    "tests/integration/l2vpn_netns.py": "b61baa11d75afc07cb91298c97c66f00865ec070e6e65449d52994f6076272c8",
     "tests/integration/l2vpn_transport.py": "de94d97c91035467e303b89a46920394d55b63707774ad1cdff851fef1b45c63",
     "tests/js/l2vpn_form.cjs": "865a8e4b021d036977ec17b059f03a84767d639a1741f772ba2fced61d43ba5e"
   },
